@@ -51,9 +51,9 @@ class Company
     private Collection $jobOffers;
 
     /**
-     * @var Collection<int, Companytag>
+     * @var Collection<int, CompanyTag>
      */
-    #[ORM\OneToMany(targetEntity: Companytag::class, mappedBy: 'company', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: CompanyTag::class, mappedBy: 'company', orphanRemoval: true)]
     private Collection $companyTags;
 
     /**
@@ -213,14 +213,14 @@ class Company
     }
 
     /**
-     * @return Collection<int, Companytag>
+     * @return Collection<int, CompanyTag>
      */
     public function getCompanyTags(): Collection
     {
         return $this->companyTags;
     }
 
-    public function addCompanyTag(Companytag $companyTag): static
+    public function addCompanyTag(CompanyTag $companyTag): static
     {
         if (!$this->companyTags->contains($companyTag)) {
             $this->companyTags->add($companyTag);
@@ -230,7 +230,7 @@ class Company
         return $this;
     }
 
-    public function removeCompanyTag(Companytag $companyTag): static
+    public function removeCompanyTag(CompanyTag $companyTag): static
     {
         if ($this->companyTags->removeElement($companyTag)) {
             // set the owning side to null (unless already changed)
