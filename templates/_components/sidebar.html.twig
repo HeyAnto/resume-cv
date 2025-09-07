@@ -14,6 +14,66 @@
         <span class="nav-tooltip text-12">Explore</span>
       </a>
     </li>
+
+    <li>
+      <a class="nav-button" href="{{ path('app_login') }}">
+        {% if app.request.pathInfo starts with '/profile' %}
+        {% include "_icons/profile-fill.html.twig" with {
+        'class': 'nav-icon active'
+        } %}
+        {% else %}
+        {% include "_icons/profile.html.twig" with {
+        'class': 'nav-icon'
+        } %}
+        {% endif %}
+        <span class="nav-tooltip text-12">Profile</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="nav-button" href="{{ path('app_login') }}">
+        {% if app.request.pathInfo starts with '/company' %}
+        {% include "_icons/suitcase-fill.html.twig" with {
+        'class': 'nav-icon active'
+        } %}
+        {% else %}
+        {% include "_icons/suitcase.html.twig" with {
+        'class': 'nav-icon'
+        } %}
+        {% endif %}
+        <span class="nav-tooltip text-12">Company</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="nav-button" href="{{ path('app_login') }}">
+        {% if app.request.pathInfo starts with '/following' %}
+        {% include "_icons/following-fill.html.twig" with {
+        'class': 'nav-icon active'
+        } %}
+        {% else %}
+        {% include "_icons/following.html.twig" with {
+        'class': 'nav-icon'
+        } %}
+        {% endif %}
+        <span class="nav-tooltip text-12">Following</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="nav-button" href="{{ path('app_login') }}">
+        {% if app.request.pathInfo starts with '/search' %}
+        {% include "_icons/search-fill.html.twig" with {
+        'class': 'nav-icon active'
+        } %}
+        {% else %}
+        {% include "_icons/search.html.twig" with {
+        'class': 'nav-icon'
+        } %}
+        {% endif %}
+        <span class="nav-tooltip text-12">Search</span>
+      </a>
+    </li>
   </ul>
 
 </div>

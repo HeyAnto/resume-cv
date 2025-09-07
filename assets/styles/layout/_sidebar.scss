@@ -8,9 +8,12 @@
     background-color: var(--color-bg-primary);
 
     ul {
+        display: flex;
+        flex-direction: column;
         list-style: none;
         padding: 0;
         margin: 0;
+        gap: var(--spacing-lg);
     }
 
     .nav-button {
