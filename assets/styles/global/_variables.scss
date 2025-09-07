@@ -1,5 +1,23 @@
+:root {
+    // Typography
+    --font-primary: "BDO Grotesk", Arial, sans-serif;
+
+    // Spacing System
+    --spacing-xxs: 0.375rem; // 6px
+    --spacing-xs: 0.5rem; // 8px
+    --spacing-sm: 0.75rem; // 12px
+    --spacing-md: 1rem; // 16px
+    --spacing-lg: 1.25rem; // 20px
+    --spacing-xl: 1.875rem; // 30px
+
+    // Border Radius
+    --radius-xs: 0.5rem; // 8px
+    --radius-sm: 0.75rem; // 12px
+    --radius-md: 1.25rem; // 20px
+    --radius-full: 9999px;
+}
+
 :root.dark {
-    // Dark Mode
     --color-overlay: #0c0c0c;
     --color-bg-primary: #222222;
     --color-bg-secondary: #333333;
@@ -11,7 +29,6 @@
 }
 
 :root.light {
-    // Light Mode
     --color-overlay: #0c0c0c;
     --color-bg-primary: #f4f4f4;
     --color-bg-secondary: #e8e8e8;
@@ -20,22 +37,4 @@
     --color-text-tertiary: #898989;
     --color-muted: #d7d7d7;
     --color-border: #d5d5d5;
-}
-
-:root {
-    // Typography
-    --font-primary: "BDO Grotesk", Arial, sans-serif;
-
-    // Spacing System
-    --spacing-xs: 0.5rem; // 8px
-    --spacing-sm: 0.75rem; // 12px
-    --spacing-md: 1rem; // 16px
-    --spacing-lg: 1.25rem; // 20px
-    --spacing-lg: 1.875rem; // 30px
-
-    // Border Radius
-    --radius-xs: 0.5rem; // 8px
-    --radius-sm: 0.75rem; // 12px
-    --radius-md: 1.25rem; // 20px
-    --radius-full: 9999px;
 }

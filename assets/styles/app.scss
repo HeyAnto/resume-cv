@@ -1,6 +1,8 @@
 // Global styles
 @use "global/variables";
+@use "global/utilities";
 @use "global/fonts";
 
 // Layout
 @use "layout/base";
+@use "layout/sidebar";

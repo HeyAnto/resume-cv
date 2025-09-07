@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html class="dark" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Resume.cv{% endblock %}</title>
     <link rel="" href="">
     {% block stylesheets %}
     {% endblock %}
@@ -14,7 +15,9 @@
 </head>
 
 <body>
-    {% block body %}{% endblock %}
+    <main>
+        {% block main %}{% endblock %}
+    </main>
 </body>
 
 </html>

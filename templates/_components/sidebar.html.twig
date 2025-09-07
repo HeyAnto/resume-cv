@@ -1,0 +1,19 @@
+<div class="sidebar">
+  <ul>
+    <li>
+      <a class="nav-button" href="{{ path('app_login') }}">
+        {% if app.request.pathInfo starts with '/explore' %}
+        {% include "_icons/explore-fill.html.twig" with {
+        'class': 'nav-icon active'
+        } %}
+        {% else %}
+        {% include "_icons/explore.html.twig" with {
+        'class': 'nav-icon'
+        } %}
+        {% endif %}
+        <span class="nav-tooltip text-12">Explore</span>
+      </a>
+    </li>
+  </ul>
+
+</div>
