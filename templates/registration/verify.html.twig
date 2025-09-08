@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vérification Email - Resume.cv{% endblock %}
+
+{% block main %}
+{% include "_components/sidebar.html.twig" %}
+<div class="main-content ">
+    {% include "_components/header-connection.html.twig" %}
+
+    <section class="section-connection">
+        <div class="container">
+            <div>
+                <h1 class="text-h1">Verify your account</h1>
+                <p class="text-16 text-color-tertiary">Verify your email to continue.</p>
+            </div>
+
+            <div class="illustration">
+                <img class="register-50" src="{{ asset('images/img-connection.webp') }}" alt="Creative Illustration">
+                <p class="text-16 text-color-tertiary">Hannah Lee</p>
+            </div>
+
+            <h2 class="text-h2">Almost there! We’ve sent a verification email.
+                <br>
+                Please check your inbox and click the link to continue.
+            </h2>
+
+            <div class="footer">
+                <p class="text-16 text-color-tertiary text-center">Didn't receive the email? Check your spam or</p>
+                <a class="btn btn-primary-rounded full" href="{{ path('app_register') }}">Try again</a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

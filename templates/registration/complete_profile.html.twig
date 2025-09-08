@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Resume.cv{% endblock %}
+
+{% block main %}
+{% include "_components/sidebar.html.twig" %}
+<div class="main-content ">
+  {% include "_components/header-connection.html.twig" %}
+
+  <section class="section-connection">
+    <div class="container">
+      {% for flash_error in app.flashes('error') %}
+      <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+      {% endfor %}
+
+      {% for flash_success in app.flashes('success') %}
+      <div class="alert alert-success" role="alert">{{ flash_success }}</div>
+      {% endfor %}
+
+      {{ form_start(profileForm) }}
+
+      <div>
+        <h1 class="text-h1">Complete your profile</h1>
+        <p class="text-16 text-color-tertiary">Your email has been successfully verified!</p>
+      </div>
+
+      <div class="illustration">
+        <img class="register-50" src="{{ asset('images/img-connection.webp') }}" alt="Creative Illustration">
+        <p class="text-16 text-color-tertiary">Hannah Lee</p>
+      </div>
+
+      <div class="form-group">
+        <label class="text-16 text-color-tertiary" for="{{ profileForm.username.vars.id }}">Username</label>
+        {{ form_widget(profileForm.username, {'attr': {'placeholder': 'Username', 'class': '', 'required': true}}) }}
+        {{ form_errors(profileForm.username) }}
+      </div>
+
+      <div class="form-group">
+        <label class="text-16 text-color-tertiary" for="{{ profileForm.displayName.vars.id }}">Display Name</label>
+        {{ form_widget(profileForm.displayName, {'attr': {'placeholder': 'Your display name', 'class': '', 'required':
+        true}}) }}
+        {{ form_errors(profileForm.displayName) }}
+      </div>
+
+      <div class="form-group">
+        <label class="text-16 text-color-tertiary" for="{{ profileForm.job.vars.id }}">Job Title</label>
+        {{ form_widget(profileForm.job, {'attr': {'placeholder': 'Your current job or profession', 'class': '',
+        'required': true}}) }}
+        {{ form_errors(profileForm.job) }}
+      </div>
+
+      <button type="submit" class="btn btn-primary-rounded">
+        Complete my profile
+      </button>
+
+      {{ form_end(profileForm) }}
+    </div>
+  </section>
+</div>
+{% endblock %}

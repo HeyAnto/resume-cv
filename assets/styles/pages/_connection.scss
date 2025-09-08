@@ -7,6 +7,25 @@
         width: 540px;
         display: flex;
         flex-direction: column;
+        gap: var(--spacing-xl);
+
+        .illustration {
+            display: flex;
+            flex-direction: column;
+            align-items: end;
+
+            img {
+                width: 100%;
+            }
+
+            .register-0 {
+                filter: saturate(0);
+            }
+
+            .register-50 {
+                filter: saturate(0.5);
+            }
+        }
 
         form {
             display: flex;
@@ -24,6 +43,10 @@
 
                 .register-0 {
                     filter: saturate(0);
+                }
+
+                .register-50 {
+                    filter: saturate(0.5);
                 }
             }
 
@@ -67,6 +90,12 @@
                     }
                 }
             }
+        }
+
+        .footer {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
         }
     }
 }

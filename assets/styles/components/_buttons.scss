@@ -1,8 +1,10 @@
 .btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
     font-family: var(--font-primary);
     font-size: 1rem; // 16px
     font-weight: 550;
-    padding: var(--spacing-sm) var(--spacing-lg);
+    text-decoration: none;
+    text-align: center;
     border-radius: none;
     border: none;
     cursor: pointer;
