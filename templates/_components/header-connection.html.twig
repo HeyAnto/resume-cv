@@ -1,0 +1,11 @@
+<div class="header-navigation">
+  <ul>
+    <li>
+      <a class="{{ app.request.pathinfo == '/login' ? 'active' : '' }}" href="{{ path('app_login') }}">Login</a>
+    </li>
+    <li>
+      <a class="{{ app.request.pathinfo == '/register' ? 'active' : '' }}"
+        href="{{ path('app_register') }}">Register</a>
+    </li>
+  </ul>
+</div>

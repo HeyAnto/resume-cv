@@ -3,21 +3,57 @@
 {% block title %}Register{% endblock %}
 
 {% block main %}
-{% for flash_error in app.flashes('verify_email_error') %}
-<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-{% endfor %}
+{% include "_components/sidebar.html.twig" %}
+<div class="main-content">
+  {% include "_components/header-connection.html.twig" %}
 
-<h1>Register</h1>
+  <section class="section-connection">
+    <div class="container">
 
-{{ form_errors(registrationForm) }}
+      {% for flash_error in app.flashes('verify_email_error') %}
+      <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+      {% endfor %}
 
-{{ form_start(registrationForm) }}
-{{ form_row(registrationForm.email) }}
-{{ form_row(registrationForm.plainPassword, {
-label: 'Password'
-}) }}
-{{ form_row(registrationForm.agreeTerms) }}
+      {{ form_start(registrationForm) }}
 
-<button type="submit" class="btn">Register</button>
-{{ form_end(registrationForm) }}
+      {% if form_errors(registrationForm) %}
+      <div class="alert alert-danger">{{ form_errors(registrationForm) }}</div>
+      {% endif %}
+
+      <div>
+        <h1 class="text-h1">Create your account</h1>
+        <p class="text-16 text-color-tertiary">Join Resume.cv and showcase your work.</p>
+      </div>
+
+      <div class="illustration">
+        <img class="register-0" src="{{ asset('images/img-connection.webp') }}" alt="Creative Illustration">
+        <p class="text-16 text-color-tertiary">Hannah Lee</p>
+      </div>
+
+      <div class="form-group">
+        <label class="text-16 text-color-tertiary" for="{{ registrationForm.email.vars.id }}">Email</label>
+        {{ form_widget(registrationForm.email, {'attr': {'placeholder': 'Email', 'class': '', 'autocomplete': 'email',
+        'required': true}}) }}
+        {{ form_errors(registrationForm.email) }}
+      </div>
+
+      <div class="form-group">
+        <label class="text-16 text-color-tertiary" for="{{ registrationForm.plainPassword.vars.id }}">Password</label>
+        {{ form_widget(registrationForm.plainPassword, {'attr': {'placeholder': 'Password', 'class': '', 'autocomplete':
+        'new-password', 'required': true}}) }}
+        {{ form_errors(registrationForm.plainPassword) }}
+      </div>
+
+      <div class="form-group check">
+        {{ form_widget(registrationForm.agreeTerms) }}
+        <label class="text-16 text-color-tertiary" for="{{ registrationForm.agreeTerms.vars.id }}">I agree to the terms
+          and conditions</label>
+        {{ form_errors(registrationForm.agreeTerms) }}
+      </div>
+
+      <button type="submit" class="btn btn-primary-rounded">Register</button>
+      {{ form_end(registrationForm) }}
+    </div>
+  </section>
+</div>
 {% endblock %}
