@@ -118,7 +118,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/profile-complete', name: 'app_profile_complete')]
-    public function profileComplete(Request $request, EntityManagerInterface $entityManager): Response
+    public function profileComplete(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         $user = $this->getUser();
 
@@ -160,6 +160,9 @@ class RegistrationController extends AbstractController
             $entityManager->persist($profile);
             $entityManager->persist($user);
             $entityManager->flush();
+
+            // Re-authenticate the user to refresh the roles in the session
+            $security->login($user, 'form_login', 'main');
 
             $this->addFlash('success', 'Your profile has been completed successfully! Welcome to Resume.cv');
             return $this->redirectToRoute('app_home');

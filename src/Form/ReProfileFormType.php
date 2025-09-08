@@ -26,7 +26,7 @@ class ReProfileFormType extends AbstractType
                         'message' => 'Username is required'
                     ]),
                     new Assert\Length([
-                        'min' => 3,
+                        'min' => 4,
                         'max' => 255,
                         'minMessage' => 'Username must be at least {{ limit }} characters long',
                         'maxMessage' => 'Username cannot be longer than {{ limit }} characters'
@@ -35,6 +35,7 @@ class ReProfileFormType extends AbstractType
                         'pattern' => '/^[a-zA-Z0-9_-]+$/',
                         'message' => 'Username can only contain letters, numbers, hyphens and underscores'
                     ]),
+                    new UniqueUsername()
                 ]
             ])
             ->add('displayName', TextType::class, [
@@ -48,7 +49,7 @@ class ReProfileFormType extends AbstractType
                         'message' => 'Display name is required'
                     ]),
                     new Assert\Length([
-                        'min' => 2,
+                        'min' => 4,
                         'max' => 48,
                         'minMessage' => 'Display name must be at least {{ limit }} characters long',
                         'maxMessage' => 'Display name cannot be longer than {{ limit }} characters'
@@ -66,7 +67,7 @@ class ReProfileFormType extends AbstractType
                         'message' => 'Job title is required'
                     ]),
                     new Assert\Length([
-                        'min' => 2,
+                        'min' => 4,
                         'max' => 32,
                         'minMessage' => 'Job title must be at least {{ limit }} characters long',
                         'maxMessage' => 'Job title cannot be longer than {{ limit }} characters'
