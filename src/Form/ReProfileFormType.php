@@ -35,7 +35,6 @@ class ReProfileFormType extends AbstractType
                         'pattern' => '/^[a-zA-Z0-9_-]+$/',
                         'message' => 'Username can only contain letters, numbers, hyphens and underscores'
                     ]),
-                    new UniqueUsername()
                 ]
             ])
             ->add('displayName', TextType::class, [

@@ -39,7 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Profile $profile = null;
 
     /**
@@ -131,7 +131,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $data = (array) $this;
         $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
-        
+
         return $data;
     }
 
@@ -223,5 +223,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function isProfileComplete(): bool
+    {
+        return $this->profile !== null &&
+            $this->profile->getUsername() !== null &&
+            $this->profile->getDisplayName() !== null &&
+            $this->profile->getJob() !== null;
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->roles, true);
     }
 }
