@@ -122,6 +122,44 @@ class RegistrationController extends AbstractController
         return $this->render('registration/verify_pending.html.twig');
     }
 
+    #[Route('/resend-verification', name: 'app_resend_verification')]
+    public function resendVerification(Request $request): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('app_register');
+        }
+
+        if ($user->isVerified()) {
+            return $this->redirectBasedOnUserStatus();
+        }
+
+        // Rate limiting - max 1 email per 15 minutes
+        $lastSent = $request->getSession()->get('last_verification_sent');
+        if ($lastSent && time() - $lastSent < 900) {
+            $this->addFlash('error', 'Please wait 15 minutes before requesting another verification email.');
+            return $this->redirectToRoute('app_verify_email_pending');
+        }
+
+        // Send verification email
+        $this->emailVerifier->sendEmailConfirmation(
+            'app_verify_email',
+            $user,
+            (new TemplatedEmail())
+                ->from(new Address('no-reply@resume.cv', 'Resume.cv'))
+                ->to((string) $user->getEmail())
+                ->subject('Please Confirm your Email')
+                ->htmlTemplate('registration/confirmation_email.html.twig')
+        );
+
+        // Set rate limit
+        $request->getSession()->set('last_verification_sent', time());
+
+        $this->addFlash('success', 'Verification email sent! Please check your inbox.');
+        return $this->redirectToRoute('app_verify_email_pending');
+    }
+
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
     {
