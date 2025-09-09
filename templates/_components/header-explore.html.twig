@@ -1,0 +1,24 @@
+<div class="header-navigation">
+  <ul>
+    <li>
+      <a class="{{ app.request.pathinfo starts with '/explore/front' ? 'active' : '' }}"
+        href="{{ path('app_explore_front') }}">Front
+        page</a>
+    </li>
+    <li>
+      <a class="{{ app.request.pathinfo starts with '/explore/job-board' ? 'active' : '' }}"
+        href="{{ path('app_explore_front') }}">Job board</a>
+    </li>
+  </ul>
+  {% if app.user and 'USER_COMPLETE' not in app.user.roles %}
+  <a class="btn btn-primary-rounded" href="{{ path('app_login') }}">Complete Profile</a>
+  {% endif %}
+
+  {% if app.user and 'USER_COMPLETE' in app.user.roles %}
+  <a class="btn btn-secondary-rounded" href="{{ path('app_logout') }}">Logout</a>
+  {% endif %}
+
+  {% if not app.user %}
+  <a class="btn btn-primary-rounded" href="{{ path('app_login') }}">Log-in to explore</a>
+  {% endif %}
+</div>

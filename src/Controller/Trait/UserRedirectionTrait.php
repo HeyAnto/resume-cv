@@ -16,7 +16,7 @@ trait UserRedirectionTrait
     }
 
     if ($user->hasRole('ROLE_USER_COMPLETE')) {
-      return $this->redirectToRoute('app_home');
+      return $this->redirectToRoute('app_index');
     }
 
     if ($user->isVerified() && !$user->isProfileComplete()) {
@@ -27,7 +27,7 @@ trait UserRedirectionTrait
       return $this->redirectToRoute('app_verify_email_pending');
     }
 
-    return $this->redirectToRoute('app_home');
+    return $this->redirectToRoute('app_index');
   }
 
   private function checkAuthAccess(): ?Response

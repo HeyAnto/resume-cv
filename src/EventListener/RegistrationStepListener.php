@@ -14,7 +14,7 @@ use Symfony\Component\Routing\RouterInterface;
 class RegistrationStepListener
 {
   private array $authRoutes = ['app_register', 'app_login', 'app_connection'];
-  private array $publicRoutes = ['app_home', 'app_logout'];
+  private array $publicRoutes = ['app_index', 'app_explore', 'app_explore_front', 'app_logout'];
 
   public function __construct(
     private Security $security,
@@ -38,7 +38,7 @@ class RegistrationStepListener
 
     // Complete users can't access auth routes
     if ($user->hasRole('ROLE_USER_COMPLETE') && in_array($route, $this->authRoutes)) {
-      $event->setResponse(new RedirectResponse($this->router->generate('app_home')));
+      $event->setResponse(new RedirectResponse($this->router->generate('app_index')));
       return;
     }
 
