@@ -19,7 +19,8 @@ class ReProfileFormType extends AbstractType
                 'label' => 'Username',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Your unique username'
+                    'placeholder' => 'johndoe',
+                    'required' => true
                 ],
                 'constraints' => [
                     new Assert\NotBlank([
@@ -32,8 +33,8 @@ class ReProfileFormType extends AbstractType
                         'maxMessage' => 'Username cannot be longer than {{ limit }} characters'
                     ]),
                     new Assert\Regex([
-                        'pattern' => '/^[a-zA-Z0-9_-]+$/',
-                        'message' => 'Username can only contain letters, numbers, hyphens and underscores'
+                        'pattern' => '/^[a-z0-9_-]+$/',
+                        'message' => 'Username can only contain lowercase letters, numbers, hyphens and underscores'
                     ]),
                     new UniqueUsername()
                 ]
@@ -42,14 +43,17 @@ class ReProfileFormType extends AbstractType
                 'label' => 'Display Name',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Your full name or nickname'
+                    'placeholder' => 'John Doe',
+                    'required' => true,
+                    'data-counter' => 'displayName-counter',
+                    'data-max' => '48'
                 ],
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'Display name is required'
                     ]),
                     new Assert\Length([
-                        'min' => 4,
+                        'min' => 2,
                         'max' => 48,
                         'minMessage' => 'Display name must be at least {{ limit }} characters long',
                         'maxMessage' => 'Display name cannot be longer than {{ limit }} characters'
@@ -60,14 +64,17 @@ class ReProfileFormType extends AbstractType
                 'label' => 'Job Title',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Your current job or profession'
+                    'placeholder' => 'Architect, painter, etc',
+                    'required' => true,
+                    'data-counter' => 'job-counter',
+                    'data-max' => '32'
                 ],
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'Job title is required'
                     ]),
                     new Assert\Length([
-                        'min' => 4,
+                        'min' => 2,
                         'max' => 32,
                         'minMessage' => 'Job title must be at least {{ limit }} characters long',
                         'maxMessage' => 'Job title cannot be longer than {{ limit }} characters'

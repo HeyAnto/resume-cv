@@ -32,15 +32,13 @@
 
       <div class="form-group">
         <label class="text-16 text-color-tertiary" for="{{ registrationForm.email.vars.id }}">Email</label>
-        {{ form_widget(registrationForm.email, {'attr': {'placeholder': 'Email', 'class': '', 'autocomplete': 'email',
-        'required': true}}) }}
+        {{ form_widget(registrationForm.email) }}
         {{ form_errors(registrationForm.email) }}
       </div>
 
       <div class="form-group">
         <label class="text-16 text-color-tertiary" for="{{ registrationForm.plainPassword.vars.id }}">Password</label>
-        {{ form_widget(registrationForm.plainPassword, {'attr': {'placeholder': 'Password', 'class': '', 'autocomplete':
-        'new-password', 'required': true}}) }}
+        {{ form_widget(registrationForm.plainPassword) }}
         {{ form_errors(registrationForm.plainPassword) }}
       </div>
 

@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/character-counter.js') }}"></script>
+{% endblock %}
+
 {% block title %}Resume.cv{% endblock %}
 
 {% block main %}
@@ -31,7 +36,7 @@
 
       <div class="form-group">
         <label class="text-16 text-color-tertiary" for="{{ profileForm.username.vars.id }}">Username*</label>
-        {{ form_widget(profileForm.username, {'attr': {'placeholder': 'johndoe', 'class': '', 'required': true}}) }}
+        {{ form_widget(profileForm.username) }}
         {{ form_errors(profileForm.username) }}
       </div>
 
@@ -40,8 +45,7 @@
           <label class="text-16 text-color-tertiary" for="{{ profileForm.displayName.vars.id }}">Display Name*</label>
           <p class="text-14 text-color-tertiary" id="displayName-counter">0 of 48</p>
         </div>
-        {{ form_widget(profileForm.displayName, {'attr': {'placeholder': 'John Doe', 'class': '', 'required':
-        true, 'data-counter': 'displayName-counter', 'data-max': '48'}}) }}
+        {{ form_widget(profileForm.displayName) }}
         {{ form_errors(profileForm.displayName) }}
       </div>
 
@@ -50,8 +54,7 @@
           <label class="text-16 text-color-tertiary" for="{{ profileForm.job.vars.id }}">What do you do?*</label>
           <p class="text-14 text-color-tertiary" id="job-counter">0 of 32</p>
         </div>
-        {{ form_widget(profileForm.job, {'attr': {'placeholder': 'Architect, painter, etc', 'class': '',
-        'required': true, 'data-counter': 'job-counter', 'data-max': '32'}}) }}
+        {{ form_widget(profileForm.job) }}
         {{ form_errors(profileForm.job) }}
       </div>
 
@@ -63,107 +66,4 @@
     </div>
   </section>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Function to update character counter
-    function updateCounter(input) {
-      const counterId = input.getAttribute('data-counter');
-      const maxLength = parseInt(input.getAttribute('data-max'));
-      const counter = document.getElementById(counterId);
-
-      if (counter) {
-        const currentLength = input.value.length;
-        counter.textContent = `${currentLength} of ${maxLength}`;
-
-        // Add visual feedback when approaching limit
-        if (currentLength >= maxLength) {
-          counter.style.color = '#ff6b6b'; // Red when at limit
-          counter.style.fontWeight = 'bold';
-        } else if (currentLength > maxLength * 0.9) {
-          counter.style.color = '#ff6b6b'; // Red when close to limit
-          counter.style.fontWeight = 'normal';
-        } else if (currentLength > maxLength * 0.7) {
-          counter.style.color = '#ffa726'; // Orange when getting close
-          counter.style.fontWeight = 'normal';
-        } else {
-          counter.style.color = ''; // Default color
-          counter.style.fontWeight = 'normal';
-        }
-      }
-    }
-
-    // Function to handle input and enforce max length
-    function handleInput(input) {
-      const maxLength = parseInt(input.getAttribute('data-max'));
-
-      // If current length exceeds max, truncate to max length
-      if (input.value.length > maxLength) {
-        input.value = input.value.substring(0, maxLength);
-      }
-
-      updateCounter(input);
-    }
-
-    // Function to handle keypress and prevent typing when at limit
-    function handleKeypress(e, input) {
-      const maxLength = parseInt(input.getAttribute('data-max'));
-      const currentLength = input.value.length;
-
-      // Allow backspace, delete, arrow keys, tab, etc.
-      const allowedKeys = [8, 9, 37, 38, 39, 40, 46]; // backspace, tab, arrows, delete
-
-      if (allowedKeys.includes(e.keyCode) || e.ctrlKey || e.metaKey) {
-        return true;
-      }
-
-      // Prevent typing if at max length
-      if (currentLength >= maxLength) {
-        e.preventDefault();
-        return false;
-      }
-
-      return true;
-    }
-
-    // Function to handle paste events
-    function handlePaste(e, input) {
-      const maxLength = parseInt(input.getAttribute('data-max'));
-
-      setTimeout(() => {
-        if (input.value.length > maxLength) {
-          input.value = input.value.substring(0, maxLength);
-        }
-        updateCounter(input);
-      }, 10);
-    }
-
-    // Find all inputs with data-counter attribute
-    const inputs = document.querySelectorAll('input[data-counter]');
-
-    inputs.forEach(function (input) {
-      // Set maxlength attribute as a fallback
-      const maxLength = parseInt(input.getAttribute('data-max'));
-      input.setAttribute('maxlength', maxLength);
-
-      // Update counter on initial load
-      updateCounter(input);
-
-      // Handle input events
-      input.addEventListener('input', function () {
-        handleInput(this);
-      });
-
-      // Handle keypress to prevent typing at limit
-      input.addEventListener('keypress', function (e) {
-        handleKeypress(e, this);
-      });
-
-      // Handle paste events
-      input.addEventListener('paste', function (e) {
-        handlePaste(e, this);
-      });
-    });
-  });
-</script>
 {% endblock %}
