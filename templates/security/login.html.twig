@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/form-submit.js') }}"></script>
+{% endblock %}
+
 {% block title %}Resume.cv{% endblock %}
 
 {% block main %}
@@ -27,13 +32,18 @@
                 <div class="form-group">
                     <label class="text-16 text-color-tertiary" for="username">Email</label>
                     <input type="email" value="{{ last_username }}" name="_username" id="username" autocomplete="email"
-                        placeholder="Email" required autofocus>
+                        placeholder="Email" required autofocus pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                    <p class="text-14 text-color-red" id="email-error" style="display: none;">Please enter a valid email
+                        address</p>
                 </div>
 
                 <div class="form-group">
                     <label class="text-16 text-color-tertiary" for="password">Password</label>
                     <input type="password" name="_password" id="password" placeholder="Password"
-                        autocomplete="current-password" required>
+                        autocomplete="current-password" required minlength="8"
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$">
+                    <p class="text-14 text-color-red" id="password-error" style="display: none;">Password must be at
+                        least 8 characters with uppercase, lowercase, number and special character</p>
                     <input type="hidden" name="_csrf_token" data-controller="csrf-protection"
                         value="{{ csrf_token('authenticate') }}">
                 </div>

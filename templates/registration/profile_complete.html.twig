@@ -37,7 +37,7 @@
       <div class="form-group">
         <label class="text-16 text-color-tertiary" for="{{ profileForm.username.vars.id }}">Username*</label>
         {{ form_widget(profileForm.username) }}
-        {{ form_errors(profileForm.username) }}
+        <div class="text-14 text-color-red">{{ form_errors(profileForm.username) }}</div>
       </div>
 
       <div class="form-group">
@@ -46,7 +46,7 @@
           <p class="text-14 text-color-tertiary" id="displayName-counter">0 of 48</p>
         </div>
         {{ form_widget(profileForm.displayName) }}
-        {{ form_errors(profileForm.displayName) }}
+        <div class="text-14 text-color-red">{{ form_errors(profileForm.displayName) }}</div>
       </div>
 
       <div class="form-group">
@@ -55,7 +55,7 @@
           <p class="text-14 text-color-tertiary" id="job-counter">0 of 32</p>
         </div>
         {{ form_widget(profileForm.job) }}
-        {{ form_errors(profileForm.job) }}
+        <div class="text-14 text-color-red">{{ form_errors(profileForm.job) }}</div>
       </div>
 
       <button type="submit" class="btn btn-primary-rounded">

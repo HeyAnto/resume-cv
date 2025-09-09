@@ -16,29 +16,18 @@ class SecurityController extends AbstractController
     #[Route('/connection', name: 'app_connection')]
     public function connection(): Response
     {
-        // If user is already authenticated, redirect based on their status
-        if ($this->getUser()) {
-            return $this->redirectBasedOnUserStatus();
-        }
-
-        return $this->redirectToRoute('app_login');
+        return $this->checkAuthAccess() ?? $this->redirectToRoute('app_login');
     }
 
     #[Route(path: '/connection/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // If user is already authenticated, redirect based on their status
-        if ($this->getUser()) {
-            return $this->redirectBasedOnUserStatus();
+        if ($redirect = $this->checkAuthAccess()) {
+            return $redirect;
         }
 
-        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
-        $user = new User();
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,

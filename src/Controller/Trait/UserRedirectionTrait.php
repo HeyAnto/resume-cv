@@ -15,22 +15,45 @@ trait UserRedirectionTrait
       return $this->redirectToRoute('app_register');
     }
 
-    // If user has complete profile, go to home
     if ($user->hasRole('ROLE_USER_COMPLETE')) {
       return $this->redirectToRoute('app_home');
     }
 
-    // If user is verified but profile incomplete, go to profile completion
     if ($user->isVerified() && !$user->isProfileComplete()) {
-      return $this->redirectToRoute('app_profile_complete');
+      return $this->redirectToRoute('app_complete');
     }
 
-    // If user is not verified, go to email verification
     if (!$user->isVerified()) {
       return $this->redirectToRoute('app_verify_email_pending');
     }
 
-    // Default fallback
     return $this->redirectToRoute('app_home');
+  }
+
+  private function checkAuthAccess(): ?Response
+  {
+    if ($this->getUser()) {
+      return $this->redirectBasedOnUserStatus();
+    }
+    return null;
+  }
+
+  private function checkUserAccess(): ?Response
+  {
+    $user = $this->getUser();
+
+    if (!$user instanceof User) {
+      return $this->redirectToRoute('app_register');
+    }
+
+    if (!$user->isVerified()) {
+      return $this->redirectToRoute('app_verify_email_pending');
+    }
+
+    if (!$user->isProfileComplete()) {
+      return $this->redirectToRoute('app_complete');
+    }
+
+    return null;
   }
 }
