@@ -18,4 +18,10 @@
         background-color: var(--color-text-primary);
         border-radius: var(--radius-full);
     }
+
+    &.btn-secondary-rounded {
+        color: var(--color-text-primary);
+        background-color: var(--color-muted);
+        border-radius: var(--radius-full);
+    }
 }
