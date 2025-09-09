@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\User;
 use App\Entity\Profile;
 use App\Form\RegistrationFormType;
@@ -23,10 +24,12 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 #[Route('/connection/register')]
 class RegistrationController extends AbstractController
 {
+    use UserRedirectionTrait;
+
     public function __construct(private EmailVerifier $emailVerifier) {}
 
     #[Route('', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         // If user is already authenticated, redirect based on their status
         if ($this->getUser()) {
@@ -38,6 +41,15 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Check if user already exists
+            $existingUser = $userRepository->findOneBy(['email' => $user->getEmail()]);
+            if ($existingUser) {
+                $this->addFlash('error', 'An account with this email already exists. Please try logging in instead.');
+                return $this->render('registration/register.html.twig', [
+                    'registrationForm' => $form,
+                ]);
+            }
+
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
@@ -47,8 +59,19 @@ class RegistrationController extends AbstractController
             // Set initial role for unverified user
             $user->setRoles(['ROLE_USER']);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            try {
+                $entityManager->persist($user);
+                $entityManager->flush();
+            } catch (\Exception $e) {
+                // Handle database constraint violations (like duplicate email)
+                if (str_contains($e->getMessage(), 'Duplicate entry') || str_contains($e->getMessage(), 'UNIQUE constraint')) {
+                    $this->addFlash('error', 'An account with this email already exists. Please try logging in instead.');
+                    return $this->render('registration/register.html.twig', [
+                        'registrationForm' => $form,
+                    ]);
+                }
+                throw $e; // Re-throw if it's a different error
+            }
 
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation(
@@ -79,9 +102,9 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        // If user is already verified, redirect to profile completion
+        // If user is already verified, redirect based on their status
         if ($user instanceof User && $user->isVerified()) {
-            return $this->redirectToRoute('app_profile_complete');
+            return $this->redirectBasedOnUserStatus();
         }
 
         return $this->render('registration/verify_pending.html.twig');
@@ -114,7 +137,7 @@ class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_profile_complete');
+        return $this->redirectBasedOnUserStatus();
     }
 
     #[Route('/profile-complete', name: 'app_profile_complete')]
@@ -134,7 +157,7 @@ class RegistrationController extends AbstractController
         // If profile is already complete
         if ($user->isProfileComplete()) {
             $this->addFlash('info', 'Your profile is already complete.');
-            return $this->redirectToRoute('app_home');
+            return $this->redirectBasedOnUserStatus();
         }
 
         // Create or get existing profile
@@ -165,38 +188,11 @@ class RegistrationController extends AbstractController
             $security->login($user, 'form_login', 'main');
 
             $this->addFlash('success', 'Your profile has been completed successfully! Welcome to Resume.cv');
-            return $this->redirectToRoute('app_home');
+            return $this->redirectBasedOnUserStatus();
         }
 
         return $this->render('registration/profile_complete.html.twig', [
             'profileForm' => $form,
         ]);
-    }
-
-    private function redirectBasedOnUserStatus(): Response
-    {
-        $user = $this->getUser();
-
-        if (!$user instanceof User) {
-            return $this->redirectToRoute('app_register');
-        }
-
-        // If user has complete profile
-        if ($user->hasRole('ROLE_USER_COMPLETE')) {
-            return $this->redirectToRoute('app_home');
-        }
-
-        // If user is verified but profile incomplete
-        if ($user->isVerified() && !$user->isProfileComplete()) {
-            return $this->redirectToRoute('app_profile_complete');
-        }
-
-        // If user is not verified
-        if (!$user->isVerified()) {
-            return $this->redirectToRoute('app_verify_email_pending');
-        }
-
-        // Default fallback
-        return $this->redirectToRoute('app_home');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -10,6 +11,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
+    use UserRedirectionTrait;
+
     #[Route('/connection', name: 'app_connection')]
     public function connection(): Response
     {
@@ -47,32 +50,5 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-    }
-
-    private function redirectBasedOnUserStatus(): Response
-    {
-        $user = $this->getUser();
-
-        if (!$user instanceof User) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        // If user has complete profile
-        if ($user->hasRole('ROLE_USER_COMPLETE')) {
-            return $this->redirectToRoute('app_home');
-        }
-
-        // If user is verified but profile incomplete
-        if ($user->isVerified() && !$user->isProfileComplete()) {
-            return $this->redirectToRoute('app_profile_complete');
-        }
-
-        // If user is not verified
-        if (!$user->isVerified()) {
-            return $this->redirectToRoute('app_verify_email_pending');
-        }
-
-        // Default fallback
-        return $this->redirectToRoute('app_home');
     }
 }
