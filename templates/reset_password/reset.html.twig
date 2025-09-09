@@ -1,12 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}Resume.cv{% endblock %}
 
 {% block main %}
-<h1>Reset your password</h1>
 
-{{ form_start(resetForm) }}
-{{ form_row(resetForm.plainPassword) }}
-<button class="btn btn-primary">Confirm</button>
-{{ form_end(resetForm) }}
+{% include "_components/sidebar.html.twig" %}
+
+<div class="main-content ">
+  {% include "_components/header-connection.html.twig" %}
+
+  <section class="section-connection">
+    <div class="container">
+
+      {{ form_start(resetForm) }}
+
+      <div>
+        <h1 class="text-h1">Reset your password</h1>
+        <p class="text-16 text-color-tertiary">
+          You can now change your password
+        </p>
+      </div>
+
+      <div class="illustration">
+        <img src="{{ asset('images/img-hannah-lee-2.webp') }}" alt="Creative Illustration">
+        <p class="text-16 text-color-tertiary">Hannah Lee</p>
+      </div>
+
+      <div class="form-group">
+        <label class="text-16 text-color-tertiary" for="{{ resetForm.plainPassword.first.vars.id }}">New
+          Password</label>
+        {{ form_widget(resetForm.plainPassword.first) }}
+        <div class="text-14 text-color-red">{{ form_errors(resetForm.plainPassword.first) }}</div>
+      </div>
+
+      <div class="form-group">
+        <label class="text-16 text-color-tertiary" for="{{ resetForm.plainPassword.second.vars.id }}">Repeat
+          Password</label>
+        {{ form_widget(resetForm.plainPassword.second) }}
+        <div class="text-14 text-color-red">{{ form_errors(resetForm.plainPassword.second) }}</div>
+        <div class="text-14 text-color-red">{{ form_errors(resetForm.plainPassword) }}</div>
+      </div>
+
+      <button class="btn btn-primary-xs">Confirm</button>
+
+      {{ form_end(resetForm) }}
+
+    </div>
+  </section>
+</div>
+
 {% endblock %}

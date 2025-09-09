@@ -43,7 +43,6 @@ class ResetPasswordController extends AbstractController
             /** @var string $email */
             $email = $form->get('email')->getData();
 
-            // Vérifier que l'email existe en base de données
             $user = $this->entityManager->getRepository(User::class)->findOneBy([
                 'email' => $email,
             ]);
@@ -93,7 +92,8 @@ class ResetPasswordController extends AbstractController
 
         $token = $this->getTokenFromSession();
         if (null === $token) {
-            throw $this->createNotFoundException('No reset password token found in the URL or in the session.');
+            $this->addFlash('error', 'The password reset link has expired or is invalid. Please request a new one.');
+            return $this->redirectToRoute('app_forgot_password_request');
         }
 
         try {
@@ -127,11 +127,14 @@ class ResetPasswordController extends AbstractController
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
 
+            $this->addFlash('success', 'Your password has been successfully reset.');
+
             return $this->redirectToRoute('app_login');
         }
 
         return $this->render('reset_password/reset.html.twig', [
             'resetForm' => $form,
+            'resetToken' => $this->getTokenObjectFromSession(),
         ]);
     }
 
@@ -171,7 +174,13 @@ class ResetPasswordController extends AbstractController
                 'resetToken' => $resetToken,
             ]);
 
-        $mailer->send($email);
+        try {
+            $mailer->send($email);
+            $this->addFlash('success', 'Password reset email sent successfully.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Failed to send password reset email. Please try again.');
+            return $this->redirectToRoute('app_forgot_password_request');
+        }
 
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);

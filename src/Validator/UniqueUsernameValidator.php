@@ -24,7 +24,7 @@ class UniqueUsernameValidator extends ConstraintValidator
       return;
     }
 
-    // Get the current profile being validated (if editing existing profile)
+    // Get the current profile being validated
     $currentProfile = $this->context->getObject();
     $currentProfileId = null;
 
@@ -32,7 +32,7 @@ class UniqueUsernameValidator extends ConstraintValidator
       $currentProfileId = $currentProfile->getId();
     }
 
-    // Check if username already exists (excluding current profile if editing)
+    // Check if username already exists
     $existingProfile = $this->profileRepository->findOneBy(['username' => $value]);
 
     if ($existingProfile && $existingProfile->getId() !== $currentProfileId) {
