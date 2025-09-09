@@ -6,14 +6,14 @@
 {% endfor %}
 {% endfor %}
 
-{# Gestion spécifique des erreurs de vérification d'email #}
+{# Email verification errors #}
 {% for flash_error in app.flashes('verify_email_error') %}
 <div class="flash-messages verify_email_error">
   <p class="text-16">{{ flash_error }}</p>
 </div>
 {% endfor %}
 
-{# Gestion des erreurs de sécurité (login) - si la variable error est passée #}
+{# Login security errors #}
 {% if error is defined and error %}
 <div class="flash-messages error">
   <p class="text-16">Email or password incorrect</p>
