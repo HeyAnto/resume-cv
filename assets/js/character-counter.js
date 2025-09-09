@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Update counter
     function updateCounter(input) {
         const counterId = input.getAttribute("data-counter");
         const maxLength = parseInt(input.getAttribute("data-max"));

@@ -1,4 +1,4 @@
-{% include "_components/flash-messages.html.twig" %}
+{% include "_components/flash-messages.html.twig" with {'error': error|default(null)} %}
 
 <div class="header-navigation">
   <ul>

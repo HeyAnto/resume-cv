@@ -13,10 +13,9 @@
 </div>
 {% endfor %}
 
-{# Gestion des erreurs de sécurité (login) #}
-{% if app.request.attributes.get('_route') starts with 'app_login' and app.session.get('_security.last_error') %}
-{% set error = app.session.get('_security.last_error') %}
+{# Gestion des erreurs de sécurité (login) - si la variable error est passée #}
+{% if error is defined and error %}
 <div class="flash-messages error">
-  <p class="text-16">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+  <p class="text-16">Email or password incorrect</p>
 </div>
 {% endif %}
