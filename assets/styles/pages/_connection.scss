@@ -17,6 +17,7 @@
 
             img {
                 width: 100%;
+                border-radius: var(--radius-xs);
             }
 
             .register-0 {
@@ -37,10 +38,6 @@
                 display: flex;
                 flex-direction: column;
                 align-items: end;
-
-                img {
-                    width: 100%;
-                }
 
                 .register-0 {
                     filter: saturate(0);
@@ -72,6 +69,13 @@
                         outline: solid 1px var(--color-border);
                         transition: all 0.2s;
                     }
+
+                    &:autofill {
+                        box-shadow: 0 0 0px 1000px var(--color-bg-secondary)
+                            inset;
+                        -webkit-text-fill-color: var(--color-text-primary);
+                        transition: all 5000s ease-in-out 0s;
+                    }
                 }
 
                 &.check {
@@ -97,6 +101,11 @@
             display: flex;
             flex-direction: column;
             gap: var(--spacing-xs);
+
+            .link {
+                text-decoration: underline;
+                text-underline-offset: 4px;
+            }
         }
     }
 }

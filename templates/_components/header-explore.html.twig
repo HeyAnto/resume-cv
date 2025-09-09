@@ -13,14 +13,14 @@
     </li>
   </ul>
   {% if app.user and 'ROLE_USER_COMPLETE' not in app.user.roles %}
-  <a class="btn btn-primary-rounded" href="{{ path('app_complete') }}">Complete Profile</a>
+  <a class="btn btn-primary-xs" href="{{ path('app_complete') }}">Complete Profile</a>
   {% endif %}
 
   {% if app.user and 'ROLE_USER_COMPLETE' in app.user.roles %}
-  <a class="btn btn-secondary-rounded" href="{{ path('app_logout') }}">Logout</a>
+  <a class="btn btn-secondary-xs" href="{{ path('app_logout') }}">Logout</a>
   {% endif %}
 
   {% if not app.user %}
-  <a class="btn btn-primary-rounded" href="{{ path('app_login') }}">Log-in to explore</a>
+  <a class="btn btn-primary-xs" href="{{ path('app_login') }}">Log-in to explore</a>
   {% endif %}
 </div>

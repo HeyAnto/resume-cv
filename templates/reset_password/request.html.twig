@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+<div class="main-content ">
+    {% include "_components/header-connection.html.twig" %}
+
+    <section class="section-connection">
+        <div class="container">
+            {{ form_start(requestForm) }}
+
+            <div>
+                <h1 class="text-h1">Reset your password</h1>
+                <p class="text-16 text-color-tertiary">
+                    Get a link to set a new password
+                </p>
+            </div>
+
+            <div class="illustration">
+                <img class="register-0" src="{{ asset('images/img-hannah-lee-2.webp') }}" alt="Creative Illustration">
+                <p class="text-16 text-color-tertiary">Hannah Lee</p>
+            </div>
+
+            <div class="form-group">
+                <label class="text-16 text-color-tertiary" for="{{ requestForm.email.vars.id }}">Email</label>
+                {{ form_widget(requestForm.email) }}
+                <div class="text-14 text-color-red">{{ form_errors(requestForm.email) }}</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary-xs">Reset Password</button>
+
+            {{ form_end(requestForm) }}
+        </div>
+    </section>
+</div>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+<div class="main-content ">
+    {% include "_components/header-connection.html.twig" %}
+
+    <section class="section-connection">
+        <div class="container">
+            <div>
+                <h1 class="text-h1">Email Sent</h1>
+                <p class="text-16 text-color-tertiary">
+                    Check your inbox
+                </p>
+            </div>
+
+            <div class="illustration">
+                <img class="register-50" src="{{ asset('images/img-hannah-lee-2.webp') }}" alt="Creative Illustration">
+                <p class="text-16 text-color-tertiary">Hannah Lee</p>
+            </div>
+
+            <h2 class="text-h2 text-center">
+                An email was just sent that contains a link that you can use to reset your password.
+            </h2>
+
+            <div class="footer">
+                <p class="text-16 text-color-tertiary text-center">
+                    This link will expire in
+                    {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData,'ResetPasswordBundle') }}
+                </p>
+                <a class="btn btn-primary-xs" href="{{ path('app_forgot_password_request') }}">Try Again</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

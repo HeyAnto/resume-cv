@@ -18,11 +18,11 @@
 
                 <div>
                     <h1 class="text-h1">Welcome back!</h1>
-                    <p class="text-16 text-color-tertiary">Please sign-in to continue.</p>
+                    <p class="text-16 text-color-tertiary">Please sign-in to continue</p>
                 </div>
 
                 <div class="illustration">
-                    <img src="{{ asset('images/img-connection.webp') }}" alt="Creative Illustration">
+                    <img src="{{ asset('images/img-hannah-lee.webp') }}" alt="Creative Illustration">
                     <p class="text-16 text-color-tertiary">Hannah Lee</p>
                 </div>
 
@@ -45,9 +45,16 @@
                     <label class="text-16 text-color-tertiary" for="_remember_me">Remember me</label>
                 </div>
 
-                <button class="btn btn-primary-rounded" type="submit">
-                    Sign-in
-                </button>
+                <div class="footer">
+                    <button class="btn btn-primary-xs" type="submit">
+                        Sign-in
+                    </button>
+                    <p class="text-16 text-color-tertiary text-center">Forgot your password?
+                        <a class="link text-16 text-color-tertiary" href="{{ path('app_forgot_password_request') }}">
+                            Reset it here
+                        </a>
+                    </p>
+                </div>
             </form>
         </div>
     </section>

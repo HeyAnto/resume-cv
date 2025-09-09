@@ -13,15 +13,20 @@
         width: 100%;
     }
 
-    &.btn-primary-rounded {
+    &.btn-primary-xs {
         color: var(--color-bg-primary);
         background-color: var(--color-text-primary);
-        border-radius: var(--radius-full);
+        border-radius: var(--radius-xs);
+        transition: opacity 0.2s ease;
+
+        &:hover {
+            opacity: 0.94;
+        }
     }
 
-    &.btn-secondary-rounded {
+    &.btn-secondary-xs {
         color: var(--color-text-primary);
         background-color: var(--color-muted);
-        border-radius: var(--radius-full);
+        border-radius: var(--radius-xs);
     }
 }
