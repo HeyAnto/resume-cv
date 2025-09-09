@@ -6,6 +6,11 @@
     padding: 0;
 }
 
+::selection {
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-primary);
+}
+
 body {
     overflow: hidden;
     display: flex;

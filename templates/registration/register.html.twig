@@ -15,15 +15,7 @@
   <section class="section-connection">
     <div class="container">
 
-      {% for flash_error in app.flashes('verify_email_error') %}
-      <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-      {% endfor %}
-
       {{ form_start(registrationForm) }}
-
-      {% if form_errors(registrationForm) %}
-      <div class="alert alert-danger">{{ form_errors(registrationForm) }}</div>
-      {% endif %}
 
       <div>
         <h1 class="text-h1">Create your account</h1>

@@ -1,0 +1,22 @@
+{% for type, messages in app.flashes %}
+{% for message in messages %}
+<div class="flash-messages {{ type }}">
+  <p class="text-16">{{ message }}</p>
+</div>
+{% endfor %}
+{% endfor %}
+
+{# Gestion spécifique des erreurs de vérification d'email #}
+{% for flash_error in app.flashes('verify_email_error') %}
+<div class="flash-messages verify_email_error">
+  <p class="text-16">{{ flash_error }}</p>
+</div>
+{% endfor %}
+
+{# Gestion des erreurs de sécurité (login) #}
+{% if app.request.attributes.get('_route') starts with 'app_login' and app.session.get('_security.last_error') %}
+{% set error = app.session.get('_security.last_error') %}
+<div class="flash-messages error">
+  <p class="text-16">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+</div>
+{% endif %}

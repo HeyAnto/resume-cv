@@ -1,3 +1,5 @@
+{% include "_components/flash-messages.html.twig" %}
+
 <div class="header-navigation">
   <ul>
     <li>
@@ -10,11 +12,11 @@
         href="{{ path('app_explore_front') }}">Job board</a>
     </li>
   </ul>
-  {% if app.user and 'USER_COMPLETE' not in app.user.roles %}
-  <a class="btn btn-primary-rounded" href="{{ path('app_login') }}">Complete Profile</a>
+  {% if app.user and 'ROLE_USER_COMPLETE' not in app.user.roles %}
+  <a class="btn btn-primary-rounded" href="{{ path('app_complete') }}">Complete Profile</a>
   {% endif %}
 
-  {% if app.user and 'USER_COMPLETE' in app.user.roles %}
+  {% if app.user and 'ROLE_USER_COMPLETE' in app.user.roles %}
   <a class="btn btn-secondary-rounded" href="{{ path('app_logout') }}">Logout</a>
   {% endif %}
 

@@ -1,0 +1,22 @@
+.flash-messages {
+    width: 100%;
+    max-width: 1920px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+    background-color: var(--color-overlay);
+    border-bottom: 1px solid var(--color-border);
+
+    &.success {
+        background-color: var(--color-green-opa);
+        border-bottom: 1px solid var(--color-green);
+        color: var(--color-green);
+    }
+
+    &.error {
+        background-color: var(--color-red-opa);
+        border-bottom: 1px solid var(--color-red);
+        color: var(--color-red);
+    }
+}
