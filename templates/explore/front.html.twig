@@ -9,9 +9,13 @@
 <div class="main-content ">
   {% include "_components/header-explore.html.twig" %}
 
-  <section>
-    <div class="container">
-      <h1>Explore / Front</h1>
+  <section class="section-explore">
+    <div class="front-grid">
+
+      {% include "_components/cards/post-card-news.html.twig" %}
+
+      {% include "_components/cards/post-card.html.twig" %}
+
     </div>
   </section>
 </div>

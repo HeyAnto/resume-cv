@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+<div class="main-content ">
+  {% include "_components/header-explore.html.twig" %}
+
+  <section class="section-explore">
+    <div class="job-grid">
+      <h2 class="text-14 text-color-secondary">Team</h2>
+      <h2 class="text-14 text-color-secondary">Position</h2>
+      <h2 class="text-14 text-color-secondary text-center">Manager</h2>
+      <h2 class="text-14 text-color-secondary text-center">Posted</h2>
+    </div>
+
+    {% include "_components/cards/job-card.html.twig" %}
+
+    {% include "_components/cards/job-card.html.twig" %}
+
+  </section>
+</div>
+
+{% endblock %}

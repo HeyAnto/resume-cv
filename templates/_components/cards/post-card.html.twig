@@ -1,0 +1,21 @@
+<div class="post-card">
+  <div class="profile-container">
+    <a href="" class="profile-img">
+      <img src="{{ asset('images/img_default_user.webp') }}" alt="Profile Image">
+    </a>
+    <a href="" class="profile-link text-14 text-color-primary">Anonymous</a>
+  </div>
+  <p class="text-body-14 text-color-secondary">
+    Step back into the 80s – neon lights, retro beats, and a classic ride parked out front. This spot is more than a
+    restaurant, it’s a time machine.
+  </p>
+  <img src="{{ asset('images/img-post-exemple.webp') }}" alt="Exemple Post Image">
+  <div class="post-interactions">
+    <a href="" class="post-interactions">
+      <p class="like-text text-14">34</p>
+      {% include "_icons/heart.html.twig" with {
+      'class': 'like-icon'
+      } %}
+    </a>
+  </div>
+</div>

@@ -8,8 +8,8 @@
         page</a>
     </li>
     <li>
-      <a class="{{ app.request.pathinfo starts with '/explore/job-board' ? 'active' : '' }}"
-        href="{{ path('app_explore_front') }}">Job board</a>
+      <a class="{{ app.request.pathinfo starts with '/explore/job' ? 'active' : '' }}"
+        href="{{ path('app_explore_job') }}">Job board</a>
     </li>
   </ul>
   {% if app.user and 'ROLE_USER_COMPLETE' not in app.user.roles %}

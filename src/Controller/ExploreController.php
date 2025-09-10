@@ -8,14 +8,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ExploreController extends AbstractController
 {
-    #[Route('/', name: 'app_index')]
+    #[Route(['/', '/explore'], name: 'app_index')]
     public function index(): Response
-    {
-        return $this->redirectToRoute('app_explore_front');
-    }
-
-    #[Route('/explore', name: 'app_explore')]
-    public function explore(): Response
     {
         return $this->redirectToRoute('app_explore_front');
     }
@@ -24,5 +18,11 @@ final class ExploreController extends AbstractController
     public function exploreFront(): Response
     {
         return $this->render('explore/front.html.twig');
+    }
+
+    #[Route('/explore/job', name: 'app_explore_job')]
+    public function exploreJob(): Response
+    {
+        return $this->render('explore/job.html.twig');
     }
 }

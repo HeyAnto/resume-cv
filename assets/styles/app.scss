@@ -8,9 +8,12 @@
 @use "layout/sidebar";
 @use "layout/header-navigation";
 
-// Page
-@use "pages/connection";
-
 // Components
 @use "components/buttons";
 @use "components/flash-messages";
+@use "components/post-card";
+@use "components/job-card";
+
+// Page
+@use "pages/connection";
+@use "pages/explore";
