@@ -16,7 +16,7 @@
     </li>
 
     <li>
-      <a class="nav-button" href="{{ path('app_login') }}">
+      <a class="nav-button" href="{{ path('app_profile_redirect') }}">
         {% if app.request.pathInfo starts with '/profile' %}
         {% include "_icons/profile-fill.html.twig" with {
         'class': 'nav-icon active'
