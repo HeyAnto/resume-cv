@@ -43,3 +43,9 @@
     </a>
   </div>
 </div>
+
+{% if app.user.profile.username == username %}
+<div class="profile-edit-btn">
+  <a href="{{ path('app_profile_edit', {'username': username}) }}" class="btn btn-secondary-xs">Edit Profile</a>
+</div>
+{% endif %}
