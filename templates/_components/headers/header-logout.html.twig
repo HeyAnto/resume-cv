@@ -1,0 +1,7 @@
+{% include "_components/flash-messages.html.twig" with {'error': error|default(null)} %}
+
+<div class="header-navigation logout">
+  {% if app.user and 'ROLE_USER_COMPLETE' in app.user.roles %}
+  <a class="btn btn-secondary-xs" href="{{ path('app_logout') }}">Logout</a>
+  {% endif %}
+</div>

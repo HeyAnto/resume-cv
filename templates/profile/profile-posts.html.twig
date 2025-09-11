@@ -16,11 +16,15 @@
     {% include "_components/headers/header-logout.html.twig" %}
 
     <section class="section-profile">
-        <div class="container">
+        <div class="container posts">
 
             {% include "_components/profiles/resume-header.html.twig" %}
 
-            {% include "_components/profiles/resume-section.html.twig" %}
+            <div class="posts-grid">
+
+                {% include "_components/cards/post-card.html.twig" %}
+
+            </div>
 
         </div>
     </section>

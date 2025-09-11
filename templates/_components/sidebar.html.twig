@@ -17,7 +17,15 @@
 
     <li>
       <a class="nav-button" href="{{ path('app_profile_redirect') }}">
-        {% if app.request.pathInfo starts with '/profile' %}
+        {% set isOnOwnProfile = false %}
+        {% if app.user and app.user.profile and app.user.profile.username %}
+        {% if app.request.pathInfo == '/profile' or (app.request.pathInfo starts with '/profile/' and
+        app.request.get('username') == app.user.profile.username) %}
+        {% set isOnOwnProfile = true %}
+        {% endif %}
+        {% endif %}
+
+        {% if isOnOwnProfile %}
         {% include "_icons/profile-fill.html.twig" with {
         'class': 'nav-icon active'
         } %}

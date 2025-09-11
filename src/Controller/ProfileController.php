@@ -29,7 +29,7 @@ final class ProfileController extends AbstractController
     }
 
     #[Route('/profile/{username}', name: 'app_profile')]
-    public function index(string $username): Response
+    public function profile(string $username): Response
     {
         $redirectResponse = $this->checkUserAccess();
         if ($redirectResponse !== null) {
@@ -37,6 +37,19 @@ final class ProfileController extends AbstractController
         }
 
         return $this->render('profile/profile.html.twig', [
+            'username' => $username,
+        ]);
+    }
+
+    #[Route('/profile/{username}/posts', name: 'app_profile_posts')]
+    public function profilePosts(string $username): Response
+    {
+        $redirectResponse = $this->checkUserAccess();
+        if ($redirectResponse !== null) {
+            return $redirectResponse;
+        }
+
+        return $this->render('profile/profile-posts.html.twig', [
             'username' => $username,
         ]);
     }
