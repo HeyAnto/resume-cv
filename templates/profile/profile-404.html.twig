@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/drag-scroll.js') }}"></script>
+<script src="{{ asset('js/image-modal.js') }}"></script>
+{% endblock %}
+
+{% block title %}Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-404">
+    <div class="container">
+
+    </div>
+  </section>
+</div>
+
+{% endblock %}

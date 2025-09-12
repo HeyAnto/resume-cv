@@ -43,15 +43,15 @@ trait UserRedirectionTrait
     $user = $this->getUser();
 
     if (!$user instanceof User) {
-      return $this->redirectToRoute('app_register');
+      return $this->redirectToRoute('app_login');
     }
 
     if (!$user->isVerified()) {
-      return $this->redirectToRoute('app_verify_email_pending');
+      return $this->redirectToRoute('app_login');
     }
 
     if (!$user->isProfileComplete()) {
-      return $this->redirectToRoute('app_complete');
+      return $this->redirectToRoute('app_login');
     }
 
     return null;

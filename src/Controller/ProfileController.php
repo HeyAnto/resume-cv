@@ -37,13 +37,24 @@ final class ProfileController extends AbstractController
         return $this->redirectToRoute('app_profile', ['username' => $user->getProfile()->getUsername()]);
     }
 
+    #[Route('/404', name: 'app_profile_404')]
+    public function profile404(): Response
+    {
+        return $this->render('profile/profile-404.html.twig');
+    }
+
     #[Route('/{username}', name: 'app_profile')]
     public function profile(string $username, EntityManagerInterface $entityManager): Response
     {
+        $redirectResponse = $this->checkUserAccess();
+        if ($redirectResponse) {
+            return $redirectResponse;
+        }
+
         $profile = $entityManager->getRepository(Profile::class)->findOneBy(['username' => $username]);
 
         if (!$profile) {
-            throw $this->createNotFoundException('Profil non trouvé');
+            return $this->redirectToRoute('app_profile_404');
         }
 
         return $this->render('profile/profile.html.twig', [
@@ -55,10 +66,15 @@ final class ProfileController extends AbstractController
     #[Route('/{username}/posts', name: 'app_profile_posts')]
     public function profilePosts(string $username, EntityManagerInterface $entityManager): Response
     {
+        $redirectResponse = $this->checkUserAccess();
+        if ($redirectResponse) {
+            return $redirectResponse;
+        }
+
         $profile = $entityManager->getRepository(Profile::class)->findOneBy(['username' => $username]);
 
         if (!$profile) {
-            throw $this->createNotFoundException('Profil non trouvé');
+            return $this->redirectToRoute('app_profile_404');
         }
 
         return $this->render('profile/profile-posts.html.twig', [
@@ -89,7 +105,7 @@ final class ProfileController extends AbstractController
             /** @var UploadedFile|null $profilePictureFile */
             $profilePictureFile = $form->get('profilePicture')->getData();
 
-            // Sauvegarder d'abord toutes les données du formulaire
+            // Save form data first
             $entityManager->flush();
 
             if ($profilePictureFile) {
@@ -110,7 +126,7 @@ final class ProfileController extends AbstractController
                         $newFilename
                     );
 
-                    // Supprimer l'ancienne image si ce n'est pas l'image par défaut
+                    // Delete old image
                     $oldPath = $profile->getProfilePicturePath();
                     if ($oldPath && $oldPath !== 'images/img_default_user.webp') {
                         $oldFile = $this->getParameter('kernel.project_dir') . '/public/' . $oldPath;
@@ -156,7 +172,7 @@ final class ProfileController extends AbstractController
         $profile = $user->getProfile();
         $oldPath = $profile->getProfilePicturePath();
 
-        // Supprimer l'ancienne image si ce n'est pas l'image par défaut
+        // Delete old image
         if ($oldPath && $oldPath !== 'images/img_default_user.webp') {
             $oldFile = $this->getParameter('kernel.project_dir') . '/public/' . $oldPath;
             if (file_exists($oldFile)) {
@@ -164,7 +180,7 @@ final class ProfileController extends AbstractController
             }
         }
 
-        // Remettre l'image par défaut
+        // Reset default image
         $profile->setProfilePicturePath('images/img_default_user.webp');
         $entityManager->flush();
 
