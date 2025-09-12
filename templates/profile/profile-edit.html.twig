@@ -4,6 +4,7 @@
 {{ parent() }}
 <script src="{{ asset('js/drag-scroll.js') }}"></script>
 <script src="{{ asset('js/image-modal.js') }}"></script>
+<script src="{{ asset('js/character-counter.js') }}"></script>
 {% endblock %}
 
 {% block title %}Resume.cv{% endblock %}
@@ -20,7 +21,97 @@
     <section class="section-profile-edit">
         <div class="container">
 
-            <h1>Edit Profile</h1>
+            <div>
+                <h1 class="text-h1">Edit Profile</h1>
+                <p class="text-16 text-color-tertiary">Update your profile information</p>
+            </div>
+
+            {{ form_start(form) }}
+
+            <img class="profile-img" src="{{ asset('images/img_default_user.webp') }}" alt="Profile Image">
+
+            <div class="flex gap-lg">
+                <button class="btn btn-secondary-xs">Upload image</button>
+                <button class="btn btn-secondary-xs danger">Remove image</button>
+            </div>
+
+            <div class="form-group">
+                <label class="text-16 text-color-tertiary" for="{{ form.username.vars.id }}">Username*</label>
+                {{ form_widget(form.username) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.username) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.displayName.vars.id }}">Display
+                        Name*</label>
+                    <p class="text-14 text-color-tertiary" id="displayName-counter">0 of 48</p>
+                </div>
+                {{ form_widget(form.displayName) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.displayName) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.job.vars.id }}">What do you
+                        do?*</label>
+                    <p class="text-14 text-color-tertiary" id="job-counter">0 of 32</p>
+                </div>
+                {{ form_widget(form.job) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.job) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.location.vars.id }}">Location</label>
+                    <p class="text-14 text-color-tertiary" id="location-counter">0 of 32</p>
+                </div>
+                {{ form_widget(form.location) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.location) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.pronouns.vars.id }}">Pronouns</label>
+                    <p class="text-14 text-color-tertiary" id="pronouns-counter">0 of 12</p>
+                </div>
+                {{ form_widget(form.pronouns) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.pronouns) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.websiteName.vars.id }}">Display Website
+                        Name</label>
+                    <p class="text-14 text-color-tertiary" id="websiteName-counter">0 of 96</p>
+                </div>
+                {{ form_widget(form.websiteName) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.websiteName) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.websiteLink.vars.id }}">Website</label>
+                    <p class="text-14 text-color-tertiary" id="websiteLink-counter">0 of 96</p>
+                </div>
+                {{ form_widget(form.websiteLink) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.websiteLink) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.description.vars.id }}">Bio</label>
+                    <p class="text-14 text-color-tertiary" id="description-counter">0 of 160</p>
+                </div>
+                {{ form_widget(form.description) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.description) }}</div>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="btn btn-secondary-xs">Done</button>
+            </div>
+
+            {{ form_end(form) }}
 
         </div>
     </section>

@@ -30,6 +30,11 @@
         border-radius: var(--radius-xs);
         transition: opacity 0.2s ease;
 
+        &.danger {
+            background-color: var(--color-red-2);
+            color: var(--color-text-primary);
+        }
+
         &:hover {
             opacity: 0.94;
         }

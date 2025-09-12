@@ -67,7 +67,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Initialize counters
-    const inputs = document.querySelectorAll("input[data-counter]");
+    const inputs = document.querySelectorAll(
+        "input[data-counter], textarea[data-counter]"
+    );
 
     inputs.forEach(function (input) {
         // Set maxlength

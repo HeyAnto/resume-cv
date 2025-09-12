@@ -12,6 +12,7 @@
 // Components
 @use "components/buttons";
 @use "components/flash-messages";
+@use "components/form";
 @use "components/post-card";
 @use "components/job-card";
 @use "components/resume-card";
@@ -21,3 +22,4 @@
 @use "pages/connection";
 @use "pages/explore";
 @use "pages/profile";
+@use "pages/profile-edit";

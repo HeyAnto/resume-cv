@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\User;
+use App\Form\ProfileFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -43,7 +46,7 @@ final class ProfileController extends AbstractController
     }
 
     #[Route('/{username}/edit', name: 'app_profile_edit')]
-    public function profileEdit(string $username): Response
+    public function profileEdit(string $username, Request $request, EntityManagerInterface $entityManager): Response
     {
         $redirectResponse = $this->checkUserAccess();
         if ($redirectResponse) {
@@ -56,7 +59,20 @@ final class ProfileController extends AbstractController
             return $this->redirectToRoute('app_profile', ['username' => $user->getProfile()->getUsername()]);
         }
 
-        return $this->render('profile/profile-edit.html.twig', ['username' => $username]);
+        $profile = $user->getProfile();
+        $form = $this->createForm(ProfileFormType::class, $profile);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_profile', ['username' => $profile->getUsername()]);
+        }
+
+        return $this->render('profile/profile-edit.html.twig', [
+            'username' => $username,
+            'form' => $form->createView(),
+        ]);
     }
 
     private function handleProfileAction(string $username, string $template, bool $requireOwnership = false): Response

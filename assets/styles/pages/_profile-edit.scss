@@ -1,0 +1,28 @@
+.section-profile-edit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 var(--spacing-xl);
+    padding-bottom: var(--spacing-huge);
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 540px;
+        gap: var(--spacing-xl);
+
+        .profile-img {
+            width: 6.875rem; // 110px
+            border-radius: var(--radius-full);
+            border: solid 1px var(--color-muted);
+            overflow: hidden;
+            object-fit: cover;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: none;
+        }
+    }
+}

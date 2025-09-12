@@ -58,6 +58,11 @@
     text-align: right;
 }
 
+// Gap
+.gap-lg {
+    gap: var(--spacing-lg);
+}
+
 // Typography
 .text-h1 {
     font-size: 2rem; // 32px
