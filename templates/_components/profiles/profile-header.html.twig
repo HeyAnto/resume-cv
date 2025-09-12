@@ -1,36 +1,41 @@
 <div class="profile-header">
   <div class="profile-info">
-    <img class="profile-img" src="{{ asset('images/img_default_user.webp') }}" alt="Profile Image">
+    <img class="profile-img" src="{{ asset(profile.profilePictureUrl) }}"
+      alt="Profile picture of {{ app.user.profile.displayName }}">
     <div class="info">
       <div class="flex flex-column">
         <div class="title">
           <h1 class="text-h1">
-            Anonymous
+            {{ profile.displayName }}
           </h1>
+          {% if profile.pronouns %}
           <p class="text-14 text-color-tertiary">
-            He/Him
+            {{ profile.pronouns }}
           </p>
+          {% endif %}
         </div>
         <p class="text-16 text-color-tertiary">
-          UI/UX Designer | New York City
+          {{ profile.job }}{% if profile.location %} in {{ profile.location }}{% endif %}
         </p>
       </div>
-      <a class="tag-website text-14 text-color-secondary" href="" target="_blank">
-        figr.design
+      {% if profile.websiteName and profile.websiteLink %}
+      <a class="tag-website text-14 text-color-secondary" href="{{ profile.websiteLink }}" target="_blank">
+        {{ profile.websiteName }}
       </a>
+      {% endif %}
     </div>
   </div>
 
+  {% if profile.description %}
   <div class="flex flex-column">
     <h2 class="text-16">
       About
     </h2>
     <p class="text-body-16 text-color-tertiary">
-      Passionate UI/UX designer with over 5 years of experience creating intuitive and dynamic user
-      interfaces for a range of digital platforms. Committed to improving user experience through
-      innovative design solutions.
+      {{ profile.description }}
     </p>
   </div>
+  {% endif %}
 
   <div class="resume-actions">
     <a class="btn-action {{ app.request.get('_route') == 'app_profile' ? 'active' : '' }} text-16"

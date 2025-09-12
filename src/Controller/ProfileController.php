@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\Trait\UserRedirectionTrait;
+use App\Entity\Profile;
 use App\Entity\User;
 use App\Form\ProfileFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,15 +38,33 @@ final class ProfileController extends AbstractController
     }
 
     #[Route('/{username}', name: 'app_profile')]
-    public function profile(string $username): Response
+    public function profile(string $username, EntityManagerInterface $entityManager): Response
     {
-        return $this->handleProfileAction($username, 'profile/profile.html.twig');
+        $profile = $entityManager->getRepository(Profile::class)->findOneBy(['username' => $username]);
+
+        if (!$profile) {
+            throw $this->createNotFoundException('Profil non trouvé');
+        }
+
+        return $this->render('profile/profile.html.twig', [
+            'username' => $username,
+            'profile' => $profile
+        ]);
     }
 
     #[Route('/{username}/posts', name: 'app_profile_posts')]
-    public function profilePosts(string $username): Response
+    public function profilePosts(string $username, EntityManagerInterface $entityManager): Response
     {
-        return $this->handleProfileAction($username, 'profile/profile-posts.html.twig');
+        $profile = $entityManager->getRepository(Profile::class)->findOneBy(['username' => $username]);
+
+        if (!$profile) {
+            throw $this->createNotFoundException('Profil non trouvé');
+        }
+
+        return $this->render('profile/profile-posts.html.twig', [
+            'username' => $username,
+            'profile' => $profile
+        ]);
     }
 
     #[Route('/{username}/edit', name: 'app_profile_edit')]
@@ -152,15 +171,5 @@ final class ProfileController extends AbstractController
         $this->addFlash('success', 'Photo de profil supprimée avec succès');
 
         return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
-    }
-
-    private function handleProfileAction(string $username, string $template, bool $requireOwnership = false): Response
-    {
-        $redirectResponse = $this->checkUserAccess();
-        if ($redirectResponse) {
-            return $redirectResponse;
-        }
-
-        return $this->render($template, ['username' => $username]);
     }
 }

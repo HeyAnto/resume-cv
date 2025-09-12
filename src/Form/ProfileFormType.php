@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class ProfileFormType extends AbstractType
 {
@@ -42,7 +43,8 @@ class ProfileFormType extends AbstractType
                     'placeholder' => 'John Doe',
                     'required' => true,
                     'data-counter' => 'displayName-counter',
-                    'data-max' => '48'
+                    'data-max' => '48',
+                    'autocomplete' => 'off'
                 ],
                 'constraints' => [
                     new Assert\NotBlank([
@@ -62,7 +64,8 @@ class ProfileFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'They/them',
                     'data-counter' => 'pronouns-counter',
-                    'data-max' => '12'
+                    'data-max' => '12',
+                    'autocomplete' => 'off'
                 ],
                 'constraints' => [
                     new Assert\Length([
@@ -77,7 +80,8 @@ class ProfileFormType extends AbstractType
                     'placeholder' => 'Architect, painter, etc',
                     'required' => true,
                     'data-counter' => 'job-counter',
-                    'data-max' => '32'
+                    'data-max' => '32',
+                    'autocomplete' => 'off'
                 ],
                 'constraints' => [
                     new Assert\NotBlank([
@@ -97,7 +101,8 @@ class ProfileFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Where you\'re based',
                     'data-counter' => 'location-counter',
-                    'data-max' => '32'
+                    'data-max' => '32',
+                    'autocomplete' => 'off'
                 ],
                 'constraints' => [
                     new Assert\Length([
@@ -112,7 +117,8 @@ class ProfileFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Tell us a little more about yourself',
                     'data-counter' => 'description-counter',
-                    'data-max' => '160'
+                    'data-max' => '160',
+                    'autocomplete' => 'off'
                 ],
                 'constraints' => [
                     new Assert\Length([
@@ -127,7 +133,8 @@ class ProfileFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Resume.cv',
                     'data-counter' => 'websiteName-counter',
-                    'data-max' => '96'
+                    'data-max' => '96',
+                    'autocomplete' => 'off'
                 ],
                 'constraints' => [
                     new Assert\Length([
@@ -142,12 +149,20 @@ class ProfileFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'https://www.resume.cv',
                     'data-counter' => 'websiteLink-counter',
-                    'data-max' => '96'
+                    'data-max' => '96',
+                    'autocomplete' => 'off'
                 ],
                 'constraints' => [
                     new Assert\Length([
                         'max' => 96,
                         'maxMessage' => 'Website link cannot be longer than {{ limit }} characters'
+                    ]),
+                    new Assert\Url([
+                        'message' => 'Please enter a valid URL (e.g., https://example.com)'
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/^https?:\/\//',
+                        'message' => 'Website URL must start with http:// or https://'
                     ])
                 ]
             ])
@@ -158,6 +173,29 @@ class ProfileFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Profile::class,
+            'constraints' => [
+                new Assert\Callback([$this, 'validateWebsiteFields'])
+            ]
         ]);
+    }
+
+    public function validateWebsiteFields($profile, ExecutionContextInterface $context): void
+    {
+        $websiteName = $profile->getWebsiteName();
+        $websiteLink = $profile->getWebsiteLink();
+
+        if ((!empty($websiteName) && empty($websiteLink)) || (empty($websiteName) && !empty($websiteLink))) {
+            if (!empty($websiteName) && empty($websiteLink)) {
+                $context->buildViolation('Website link is required when website name is provided')
+                    ->atPath('websiteLink')
+                    ->addViolation();
+            }
+
+            if (empty($websiteName) && !empty($websiteLink)) {
+                $context->buildViolation('Website name is required when website link is provided')
+                    ->atPath('websiteName')
+                    ->addViolation();
+            }
+        }
     }
 }

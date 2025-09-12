@@ -20,7 +20,8 @@ class ReProfileFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'johndoe',
                     'required' => true,
-                    'data-max' => '255'
+                    'data-max' => '255',
+                    'autocomplete' => 'off'
                 ],
                 'constraints' => [
                     new Assert\NotBlank([
@@ -45,7 +46,8 @@ class ReProfileFormType extends AbstractType
                     'placeholder' => 'John Doe',
                     'required' => true,
                     'data-counter' => 'displayName-counter',
-                    'data-max' => '48'
+                    'data-max' => '48',
+                    'autocomplete' => 'off'
                 ],
                 'constraints' => [
                     new Assert\NotBlank([
@@ -65,7 +67,8 @@ class ReProfileFormType extends AbstractType
                     'placeholder' => 'Architect, painter, etc',
                     'required' => true,
                     'data-counter' => 'job-counter',
-                    'data-max' => '32'
+                    'data-max' => '32',
+                    'autocomplete' => 'off'
                 ],
                 'constraints' => [
                     new Assert\NotBlank([
