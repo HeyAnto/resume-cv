@@ -36,30 +36,6 @@ class ProfileFormType extends AbstractType
                     ])
                 ]
             ])
-            ->add('username', TextType::class, [
-                'label' => 'Username',
-                'attr' => [
-                    'placeholder' => 'johndoe',
-                    'required' => true,
-                    'data-max' => '255'
-                ],
-                'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Username is required'
-                    ]),
-                    new Assert\Length([
-                        'min' => 4,
-                        'max' => 255,
-                        'minMessage' => 'Username must be at least {{ limit }} characters long',
-                        'maxMessage' => 'Username cannot be longer than {{ limit }} characters'
-                    ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[a-z0-9_-]+$/',
-                        'message' => 'Username can only contain lowercase letters, numbers, hyphens and underscores'
-                    ]),
-                    new UniqueUsername()
-                ]
-            ])
             ->add('displayName', TextType::class, [
                 'label' => 'Display Name',
                 'attr' => [

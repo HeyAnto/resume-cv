@@ -70,6 +70,9 @@ final class ProfileController extends AbstractController
             /** @var UploadedFile|null $profilePictureFile */
             $profilePictureFile = $form->get('profilePicture')->getData();
 
+            // Sauvegarder d'abord toutes les données du formulaire
+            $entityManager->flush();
+
             if ($profilePictureFile) {
                 // Validate MIME type
                 $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
@@ -98,14 +101,17 @@ final class ProfileController extends AbstractController
                     }
 
                     $profile->setProfilePicturePath('uploads/profile-pictures/' . $newFilename);
+                    $entityManager->flush();
+                    $this->addFlash('success', 'Photo de profil mise à jour avec succès');
                 } catch (FileException $e) {
-                    // Gérer l'erreur d'upload
+                    $this->addFlash('error', 'Erreur lors de l\'upload de l\'image');
                 }
+
+                return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
             }
 
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_profile', ['username' => $profile->getUsername()]);
+            $this->addFlash('success', 'Profil mis à jour avec succès');
+            return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
         }
 
         return $this->render('profile/profile-edit.html.twig', [
@@ -142,6 +148,8 @@ final class ProfileController extends AbstractController
         // Remettre l'image par défaut
         $profile->setProfilePicturePath('images/img_default_user.webp');
         $entityManager->flush();
+
+        $this->addFlash('success', 'Photo de profil supprimée avec succès');
 
         return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
     }
