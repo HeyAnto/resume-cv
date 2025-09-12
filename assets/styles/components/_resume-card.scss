@@ -47,6 +47,7 @@
             flex-direction: row;
             overflow-x: auto;
             gap: var(--spacing-xs);
+            padding-bottom: var(--spacing-xs);
             scroll-behavior: smooth;
 
             &::-webkit-scrollbar {
