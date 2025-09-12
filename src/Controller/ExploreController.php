@@ -17,7 +17,11 @@ final class ExploreController extends AbstractController
     #[Route('/explore/front', name: 'app_explore_front')]
     public function exploreFront(): Response
     {
-        return $this->render('explore/front.html.twig');
+        $user = $this->getUser();
+
+        return $this->render('explore/front.html.twig', [
+            'user' => $user
+        ]);
     }
 
     #[Route('/explore/job', name: 'app_explore_job')]

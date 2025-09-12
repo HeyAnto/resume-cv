@@ -1,0 +1,23 @@
+.section-404 {
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    padding: 0 var(--spacing-xl);
+    padding-bottom: var(--spacing-huge);
+
+    .container {
+        width: 540px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-xl);
+
+        .img-404 {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+        }
+    }
+}

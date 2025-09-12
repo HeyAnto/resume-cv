@@ -8,7 +8,13 @@
     </p>
   </div>
   <div class="group-container">
+    {% if user and user.profile and user.profile.username %}
+    <a href="{{ path('app_profile_edit', { 'username': user.profile.username }) }}" class="btn btn-secondary-xxs">
+      Start Now
+    </a>
+    {% else %}
     <a href="{{ path('app_register') }}" class="btn btn-secondary-xxs">Start Now</a>
+    {% endif %}
     <a href="https://github.com/HeyAnto/resume-cv" target="_blank" class="link">Source Code</a>
   </div>
 </div>

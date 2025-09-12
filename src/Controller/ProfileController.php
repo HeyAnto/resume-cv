@@ -37,12 +37,6 @@ final class ProfileController extends AbstractController
         return $this->redirectToRoute('app_profile', ['username' => $user->getProfile()->getUsername()]);
     }
 
-    #[Route('/404', name: 'app_profile_404')]
-    public function profile404(): Response
-    {
-        return $this->render('profile/profile-404.html.twig');
-    }
-
     #[Route('/{username}', name: 'app_profile')]
     public function profile(string $username, EntityManagerInterface $entityManager): Response
     {
@@ -54,7 +48,7 @@ final class ProfileController extends AbstractController
         $profile = $entityManager->getRepository(Profile::class)->findOneBy(['username' => $username]);
 
         if (!$profile) {
-            return $this->redirectToRoute('app_profile_404');
+            return $this->redirectToRoute('app_not_found');
         }
 
         return $this->render('profile/profile.html.twig', [
@@ -74,7 +68,7 @@ final class ProfileController extends AbstractController
         $profile = $entityManager->getRepository(Profile::class)->findOneBy(['username' => $username]);
 
         if (!$profile) {
-            return $this->redirectToRoute('app_profile_404');
+            return $this->redirectToRoute('app_not_found');
         }
 
         return $this->render('profile/profile-posts.html.twig', [
