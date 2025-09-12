@@ -429,4 +429,12 @@ class Profile
     {
         return $this->profilePicturePath ?: 'images/img_default_user.webp';
     }
+
+    /**
+     * Vérifie si l'utilisateur utilise l'image de profil par défaut
+     */
+    public function hasDefaultProfilePicture(): bool
+    {
+        return $this->profilePicturePath === null || $this->profilePicturePath === 'images/img_default_user.webp';
+    }
 }

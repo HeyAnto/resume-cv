@@ -5,6 +5,7 @@
 <script src="{{ asset('js/drag-scroll.js') }}"></script>
 <script src="{{ asset('js/image-modal.js') }}"></script>
 <script src="{{ asset('js/character-counter.js') }}"></script>
+<script src="{{ asset('js/profile-picture-upload.js') }}"></script>
 {% endblock %}
 
 {% block title %}Resume.cv{% endblock %}
@@ -26,29 +27,27 @@
                 <p class="text-16 text-color-tertiary">Update your profile information</p>
             </div>
 
-            <img class="profile-img" src="{{ asset(app.user.profile.profilePictureUrl) }}"
+            {{ form_start(form) }}
+
+            <img id="profile-preview" class="profile-img" src="{{ asset(app.user.profile.profilePictureUrl) }}"
                 alt="Profile picture of {{ app.user.profile.displayName }}">
 
             <div class="form-group">
-                <div class="flex gap-lg">
-                    <label for="profile_picture" class="btn btn-secondary-xs" style="cursor: pointer;">Upload
-                        image</label>
+                <!-- Hidden file input -->
+                <div style="display: none;">
+                    {{ form_widget(form.profilePicture) }}
+                </div>
 
-                    {% if app.user.profile.profilePicturePath != 'images/img_default_user.webp' %}
-                    <form action="{{ path('app_profile_remove_picture', {'username': username}) }}" method="post"
-                        style="display: inline;">
-                        <button type="submit" class="btn btn-secondary-xs danger"
-                            onclick="return confirm('Are you sure you want to remove your profile picture?')">Remove
-                            image</button>
-                    </form>
+                <div class="flex gap-lg">
+                    <button type="button" id="upload-btn" class="btn btn-secondary-xs">Upload image</button>
+                    {% if not app.user.profile.hasDefaultProfilePicture %}
+                    <button type="button" id="remove-btn" class="btn btn-secondary-xs danger"
+                        data-remove-url="{{ path('app_profile_remove_picture', {'username': username}) }}">Remove
+                        image</button>
                     {% endif %}
                 </div>
-            </div>
 
-            {{ form_start(form) }}
-
-            <div style="display: none;">
-                {{ form_widget(form.profilePicture, {'attr': {'id': 'profile_picture'}}) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.profilePicture) }}</div>
             </div>
 
             <div class="form-group">

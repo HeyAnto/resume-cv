@@ -71,6 +71,13 @@ final class ProfileController extends AbstractController
             $profilePictureFile = $form->get('profilePicture')->getData();
 
             if ($profilePictureFile) {
+                // Validate MIME type
+                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!in_array($profilePictureFile->getMimeType(), $allowedMimeTypes)) {
+                    $this->addFlash('error', 'Please upload a valid image file (JPEG, PNG, WebP)');
+                    return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
+                }
+
                 $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $profilePictureFile->guessExtension();
