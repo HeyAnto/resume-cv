@@ -1,12 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/drag-scroll.js') }}"></script>
-<script src="{{ asset('js/image-modal.js') }}"></script>
-{% endblock %}
-
-{% block title %}Resume.cv{% endblock %}
+{% block title %}Page Not Found — Resume.cv{% endblock %}
 
 {% block main %}
 
@@ -16,9 +10,26 @@
   {% include "_components/headers/header-logout.html.twig" %}
 
   <section class="section-404">
+
     <div class="container">
+
       <img class="img-404" src="{{ asset('images/img-404.webp') }}" alt="Page not found">
+
+      <div class="flex flex-column text-center">
+        <h1 class="text-h2 text-color-primary">
+          There is nothing to explore here.
+        </h1>
+
+        <p class="text-body-16 text-color-tertiary">
+          Looks like you’ve reached the end of the map,
+          no treasure, no hidden cave, not even a snack ✨
+        </p>
+      </div>
+
+      <a href="{{ path('app_explore_front') }}" class="btn btn-primary-xs">Ah S*** Here We Go Again</a>
+
     </div>
+
   </section>
 </div>
 

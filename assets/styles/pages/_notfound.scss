@@ -6,7 +6,7 @@
     padding-bottom: var(--spacing-huge);
 
     .container {
-        width: 540px;
+        width: 400px;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -16,7 +16,6 @@
 
         .img-404 {
             width: 100%;
-            max-width: 400px;
             height: auto;
         }
     }
