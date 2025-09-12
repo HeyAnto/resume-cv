@@ -26,13 +26,29 @@
                 <p class="text-16 text-color-tertiary">Update your profile information</p>
             </div>
 
+            <img class="profile-img" src="{{ asset(app.user.profile.profilePictureUrl) }}"
+                alt="Profile picture of {{ app.user.profile.displayName }}">
+
+            <div class="form-group">
+                <div class="flex gap-lg">
+                    <label for="profile_picture" class="btn btn-secondary-xs" style="cursor: pointer;">Upload
+                        image</label>
+
+                    {% if app.user.profile.profilePicturePath != 'images/img_default_user.webp' %}
+                    <form action="{{ path('app_profile_remove_picture', {'username': username}) }}" method="post"
+                        style="display: inline;">
+                        <button type="submit" class="btn btn-secondary-xs danger"
+                            onclick="return confirm('Are you sure you want to remove your profile picture?')">Remove
+                            image</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+
             {{ form_start(form) }}
 
-            <img class="profile-img" src="{{ asset('images/img_default_user.webp') }}" alt="Profile Image">
-
-            <div class="flex gap-lg">
-                <button class="btn btn-secondary-xs">Upload image</button>
-                <button class="btn btn-secondary-xs danger">Remove image</button>
+            <div style="display: none;">
+                {{ form_widget(form.profilePicture, {'attr': {'id': 'profile_picture'}}) }}
             </div>
 
             <div class="form-group">

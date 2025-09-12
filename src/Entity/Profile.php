@@ -84,6 +84,7 @@ class Profile
         $this->followers = new ArrayCollection();
         $this->likedPosts = new ArrayCollection();
         $this->resumeSections = new ArrayCollection();
+        $this->profilePicturePath = 'images/img_default_user.webp';
     }
 
     public function getId(): ?int
@@ -419,5 +420,13 @@ class Profile
         }
 
         return $this;
+    }
+
+    /**
+     * Retourne l'URL de l'image de profil avec fallback sur l'image par défaut
+     */
+    public function getProfilePictureUrl(): string
+    {
+        return $this->profilePicturePath ?: 'images/img_default_user.webp';
     }
 }

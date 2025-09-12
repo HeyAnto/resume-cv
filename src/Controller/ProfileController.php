@@ -7,9 +7,12 @@ use App\Entity\User;
 use App\Form\ProfileFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/profile')]
 final class ProfileController extends AbstractController
@@ -46,7 +49,7 @@ final class ProfileController extends AbstractController
     }
 
     #[Route('/{username}/edit', name: 'app_profile_edit')]
-    public function profileEdit(string $username, Request $request, EntityManagerInterface $entityManager): Response
+    public function profileEdit(string $username, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $redirectResponse = $this->checkUserAccess();
         if ($redirectResponse) {
@@ -64,6 +67,35 @@ final class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile|null $profilePictureFile */
+            $profilePictureFile = $form->get('profilePicture')->getData();
+
+            if ($profilePictureFile) {
+                $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $profilePictureFile->guessExtension();
+
+                try {
+                    $profilePictureFile->move(
+                        $this->getParameter('kernel.project_dir') . '/public/uploads/profile-pictures',
+                        $newFilename
+                    );
+
+                    // Supprimer l'ancienne image si ce n'est pas l'image par défaut
+                    $oldPath = $profile->getProfilePicturePath();
+                    if ($oldPath && $oldPath !== 'images/img_default_user.webp') {
+                        $oldFile = $this->getParameter('kernel.project_dir') . '/public/' . $oldPath;
+                        if (file_exists($oldFile)) {
+                            unlink($oldFile);
+                        }
+                    }
+
+                    $profile->setProfilePicturePath('uploads/profile-pictures/' . $newFilename);
+                } catch (FileException $e) {
+                    // Gérer l'erreur d'upload
+                }
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_profile', ['username' => $profile->getUsername()]);
@@ -73,6 +105,38 @@ final class ProfileController extends AbstractController
             'username' => $username,
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/{username}/remove-picture', name: 'app_profile_remove_picture', methods: ['POST'])]
+    public function removePicture(string $username, EntityManagerInterface $entityManager): Response
+    {
+        $redirectResponse = $this->checkUserAccess();
+        if ($redirectResponse) {
+            return $redirectResponse;
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+        if ($user->getProfile()->getUsername() !== $username) {
+            return $this->redirectToRoute('app_profile', ['username' => $user->getProfile()->getUsername()]);
+        }
+
+        $profile = $user->getProfile();
+        $oldPath = $profile->getProfilePicturePath();
+
+        // Supprimer l'ancienne image si ce n'est pas l'image par défaut
+        if ($oldPath && $oldPath !== 'images/img_default_user.webp') {
+            $oldFile = $this->getParameter('kernel.project_dir') . '/public/' . $oldPath;
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
+        }
+
+        // Remettre l'image par défaut
+        $profile->setProfilePicturePath('images/img_default_user.webp');
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
     }
 
     private function handleProfileAction(string $username, string $template, bool $requireOwnership = false): Response
