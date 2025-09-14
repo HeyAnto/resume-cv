@@ -2,9 +2,11 @@
 
   <div class="flex flex-column">
 
-    <a href="{{ path('app_profile_edit', {'username': app.user.profile.username}) }}" class="btn-menu {{ app.request.get('_route') == 'app_profile_edit' ? 'active' : '' }}">General</a>
+    <a href="{{ path('app_profile_edit', {'username': app.user.profile.username}) }}"
+      class="btn-menu {{ app.request.get('_route') == 'app_profile_edit' ? 'active' : '' }}">General</a>
 
-    <a href="{{ path('app_account_edit', {'username': app.user.profile.username}) }}" class="btn-menu {{ app.request.get('_route') == 'app_account_edit' ? 'active' : '' }}">Account</a>
+    <a href="{{ path('app_account_edit', {'username': app.user.profile.username}) }}"
+      class="btn-menu {{ app.request.get('_route') == 'app_account_edit' ? 'active' : '' }}">Account</a>
 
     <div class="order-menu">
 
