@@ -19,7 +19,7 @@ final class ProfileEditController extends AbstractController
 {
   use UserRedirectionTrait;
 
-  #[Route('/{username}/edit', name: 'app_profile_edit')]
+  #[Route('/{username}/general', name: 'app_profile_edit')]
   public function profileEdit(string $username, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
   {
     $redirectResponse = $this->checkUserAccess();
@@ -73,15 +73,15 @@ final class ProfileEditController extends AbstractController
 
           $profile->setProfilePicturePath('uploads/profile-pictures/' . $newFilename);
           $entityManager->flush();
-          $this->addFlash('success', 'Photo de profil mise à jour avec succès');
+          $this->addFlash('success', 'Profile picture successfully updated');
         } catch (FileException $e) {
-          $this->addFlash('error', 'Erreur lors de l\'upload de l\'image');
+          $this->addFlash('error', 'Error uploading image');
         }
 
         return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
       }
 
-      $this->addFlash('success', 'Profil mis à jour avec succès');
+      $this->addFlash('success', 'Profile successfully updated');
       return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
     }
 
@@ -91,7 +91,7 @@ final class ProfileEditController extends AbstractController
     ]);
   }
 
-  #[Route('/{username}/remove-picture', name: 'app_profile_remove_picture', methods: ['POST'])]
+  #[Route('/{username}/general/remove-picture', name: 'app_profile_remove_picture', methods: ['POST'])]
   public function removePicture(string $username, EntityManagerInterface $entityManager): Response
   {
     $redirectResponse = $this->checkUserAccess();
@@ -120,7 +120,7 @@ final class ProfileEditController extends AbstractController
     $profile->setProfilePicturePath('images/img_default_user.webp');
     $entityManager->flush();
 
-    $this->addFlash('success', 'Photo de profil supprimée avec succès');
+    $this->addFlash('success', 'Profile picture successfully deleted');
 
     return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
   }

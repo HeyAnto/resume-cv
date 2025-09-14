@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/character-counter.js') }}"></script>
+{% endblock %}
+
+{% block title %}Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+{% include "/profile-edit/_components/profile-edit-sidebar.html.twig" %}
+
+<div class="main-content">
+    {% include "_components/headers/header-logout.html.twig" %}
+
+    <section class="section-profile-edit">
+        <div class="container">
+
+            <div>
+                <h1 class="text-h1">Account</h1>
+                <p class="text-16 text-color-tertiary">Edit your account information</p>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+{% endblock %}

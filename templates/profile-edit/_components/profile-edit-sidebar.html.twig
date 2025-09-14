@@ -1,12 +1,10 @@
 <div class="profile-edit-sidebar">
 
-  <div class="header">
-    <a href="" class="nav-link active text-16">Profile</a>
-    <a href="" class="nav-link text-16">Account</a>
-  </div>
-
   <div class="flex flex-column">
-    <a href="" class="btn-menu active">General</a>
+
+    <a href="{{ path('app_profile_edit', {'username': app.user.profile.username}) }}" class="btn-menu {{ app.request.get('_route') == 'app_profile_edit' ? 'active' : '' }}">General</a>
+
+    <a href="{{ path('app_account_edit', {'username': app.user.profile.username}) }}" class="btn-menu {{ app.request.get('_route') == 'app_account_edit' ? 'active' : '' }}">Account</a>
 
     <div class="order-menu">
 

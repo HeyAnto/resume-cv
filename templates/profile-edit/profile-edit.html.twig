@@ -40,7 +40,7 @@
                     <button type="button" id="upload-btn" class="btn btn-secondary-xs">Upload image</button>
                     {% if not app.user.profile.hasDefaultProfilePicture %}
                     <button type="button" id="remove-btn" class="btn btn-secondary-xs danger"
-                        data-remove-url="{{ path('app_profile_remove_picture', {'username': username}) }}">Remove
+                        data-remove-url="{{ path('app_profile_remove_picture', {'username': app.user.profile.username}) }}">Remove
                         image</button>
                     {% endif %}
                 </div>
