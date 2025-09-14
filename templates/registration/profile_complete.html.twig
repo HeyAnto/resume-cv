@@ -3,6 +3,13 @@
 {% block javascripts %}
 {{ parent() }}
 <script src="{{ asset('js/character-counter.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('{{ profileForm.username.vars.id }}').addEventListener('input', function () {
+      this.value = this.value.toLowerCase();
+    });
+  });
+</script>
 {% endblock %}
 
 {% block title %}Register — Resume.cv{% endblock %}
