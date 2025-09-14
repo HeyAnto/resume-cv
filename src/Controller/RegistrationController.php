@@ -6,7 +6,7 @@ use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\User;
 use App\Entity\Profile;
 use App\Form\RegistrationFormType;
-use App\Form\ReProfileFormType;
+use App\Form\RegisterProfileFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
@@ -218,7 +218,7 @@ class RegistrationController extends AbstractController
         }
         $profile->setUpdatedAt(new \DateTimeImmutable());
 
-        $form = $this->createForm(ReProfileFormType::class, $profile);
+        $form = $this->createForm(RegisterProfileFormType::class, $profile);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
