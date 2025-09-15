@@ -19,6 +19,20 @@ final class ProfileEditController extends AbstractController
 {
   use UserRedirectionTrait;
 
+  private function checkUsernameAccess(string $username): ?Response
+  {
+    /** @var User $user */
+    $user = $this->getUser();
+    $profile = $user->getProfile();
+
+    // Redirect to public profile
+    if ($profile->getUsername() !== $username) {
+      return $this->redirectToRoute('app_profile', ['username' => $username]);
+    }
+
+    return null;
+  }
+
   #[Route('/{username}/general', name: 'app_profile_edit')]
   public function profileEdit(string $username, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
   {
@@ -27,13 +41,15 @@ final class ProfileEditController extends AbstractController
       return $redirectResponse;
     }
 
-    /** @var User $user */
-    $user = $this->getUser();
-    if ($user->getProfile()->getUsername() !== $username) {
-      return $this->redirectToRoute('app_profile', ['username' => $user->getProfile()->getUsername()]);
+    $usernameCheck = $this->checkUsernameAccess($username);
+    if ($usernameCheck) {
+      return $usernameCheck;
     }
 
+    /** @var User $user */
+    $user = $this->getUser();
     $profile = $user->getProfile();
+
     $form = $this->createForm(ProfileFormType::class, $profile);
     $form->handleRequest($request);
 
@@ -91,20 +107,26 @@ final class ProfileEditController extends AbstractController
     ]);
   }
 
-  #[Route('/{username}/general/remove-picture', name: 'app_profile_remove_picture', methods: ['POST'])]
-  public function removePicture(string $username, EntityManagerInterface $entityManager): Response
+  #[Route('/{username}/general/remove-picture', name: 'app_profile_remove_picture', methods: ['GET', 'POST'])]
+  public function removePicture(string $username, EntityManagerInterface $entityManager, Request $request): Response
   {
     $redirectResponse = $this->checkUserAccess();
     if ($redirectResponse) {
       return $redirectResponse;
     }
 
-    /** @var User $user */
-    $user = $this->getUser();
-    if ($user->getProfile()->getUsername() !== $username) {
-      return $this->redirectToRoute('app_profile', ['username' => $user->getProfile()->getUsername()]);
+    $usernameCheck = $this->checkUsernameAccess($username);
+    if ($usernameCheck) {
+      return $usernameCheck;
     }
 
+    // If GET -> redirect to profile edit
+    if ($request->getMethod() === 'GET') {
+      return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
+    }
+
+    /** @var User $user */
+    $user = $this->getUser();
     $profile = $user->getProfile();
     $oldPath = $profile->getProfilePicturePath();
 
