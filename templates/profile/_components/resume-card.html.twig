@@ -3,21 +3,26 @@ set item = item is defined ? item : (experience is defined ? experience : (educa
 (volunteering is defined ? volunteering : certification)))
 %}
 
-{# Determine the item type and set appropriate variables #}
+{# Check if this is an education item and use the specialized education card #}
+{% if item.schoolName is defined %}
+{# Education - Use dedicated education card #}
+{% set title = item.degree %}
+{% set organization = item.schoolName %}
+{% set link = item.schoolLink %}
+{% set startDate = item.startDate %}
+{% set endDate = item.endDate %}
+{% set location = item.location %}
+{% set description = item.description %}
+
+{% include "profile/_components/education-card.html.twig" %}
+
+{% else %}
+{# Determine the item type and set appropriate variables for other types #}
 {% if item.companyName is defined %}
 {# Experience #}
 {% set title = item.job %}
 {% set organization = item.companyName %}
 {% set link = item.companyLink %}
-{% set startDate = item.startDate %}
-{% set endDate = item.endDate %}
-{% set location = item.location %}
-{% set description = item.description %}
-{% elseif item.schoolName is defined %}
-{# Education #}
-{% set title = item.degree %}
-{% set organization = item.schoolName %}
-{% set link = item.schoolLink %}
 {% set startDate = item.startDate %}
 {% set endDate = item.endDate %}
 {% set location = item.location %}
@@ -88,3 +93,5 @@ set item = item is defined ? item : (experience is defined ? experience : (educa
     {% endif %}
   </div>
 </div>
+
+{% endif %}

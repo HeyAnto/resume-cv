@@ -7,7 +7,11 @@
     border: solid 1px var(--color-muted);
     border-radius: var(--radius-sm);
     background-color: var(--color-bg-secondary);
+    word-wrap: break-word;
+    break-inside: avoid;
+    page-break-inside: avoid;
     text-decoration: none;
+    overflow-wrap: anywhere;
     overflow: hidden;
 
     &:hover {

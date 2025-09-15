@@ -3,6 +3,7 @@
 {% block javascripts %}
 {{ parent() }}
 <script src="{{ asset('js/character-counter.js') }}"></script>
+<script src="{{ asset('js/form-submit.js') }}"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('{{ profileForm.username.vars.id }}').addEventListener('input', function () {

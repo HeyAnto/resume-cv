@@ -142,6 +142,8 @@
 
 .profile-edit-btn {
     position: absolute;
+    display: flex;
+    gap: var(--spacing-md);
     right: var(--spacing-xl);
     bottom: var(--spacing-xl);
 }

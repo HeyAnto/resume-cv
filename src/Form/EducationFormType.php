@@ -25,13 +25,13 @@ class EducationFormType extends AbstractType
           'placeholder' => 'Harvard University, MIT, etc.',
           'class' => 'form-control',
           'data-counter' => 'schoolName-counter',
-          'data-max' => '32',
+          'data-max' => '64',
           'autocomplete' => 'off'
         ],
         'constraints' => [
           new Assert\NotBlank(['message' => 'School name is required']),
           new Assert\Length([
-            'max' => 32,
+            'max' => 64,
             'maxMessage' => 'School name cannot be longer than {{ limit }} characters'
           ])
         ]

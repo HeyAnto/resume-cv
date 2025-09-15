@@ -17,7 +17,10 @@
   {% endif %}
 
   {% if app.user and 'ROLE_USER_COMPLETE' in app.user.roles %}
-  <a class="btn btn-secondary-xs" href="{{ path('app_logout') }}">Logout</a>
+  <div class="flex gap-md">
+    <a class="btn btn-primary-xs" href="{{ path('app_post_new', {'username': username}) }}">Post</a>
+    <a class="btn btn-secondary-xs" href="{{ path('app_logout') }}">Logout</a>
+  </div>
   {% endif %}
 
   {% if not app.user %}

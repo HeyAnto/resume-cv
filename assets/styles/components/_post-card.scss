@@ -8,8 +8,10 @@
     border: solid 1px var(--color-muted);
     border-radius: var(--radius-sm);
     background-color: var(--color-bg-secondary);
+    word-wrap: break-word;
     break-inside: avoid;
-    page-break-inside: avoid;
+    overflow-wrap: anywhere;
+    overflow: hidden;
 
     .profile-container {
         display: flex;
@@ -39,8 +41,9 @@
 
     .post-img {
         width: 100%;
+        height: auto;
         max-height: 350px;
-        min-height: 200px;
+        min-height: 120px;
         border-radius: var(--radius-xs);
         object-fit: cover;
     }
