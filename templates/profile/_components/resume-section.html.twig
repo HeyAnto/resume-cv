@@ -8,6 +8,9 @@
     {% for experience in section.experiences %}
     {% include "/profile/_components/resume-card.html.twig" with {'experience': experience} %}
     {% endfor %}
+    {% for education in section.educations %}
+    {% include "/profile/_components/resume-card.html.twig" with {'education': education} %}
+    {% endfor %}
   </div>
 </div>
 {% endif %}

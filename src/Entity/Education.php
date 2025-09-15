@@ -41,6 +41,10 @@ class Education
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'educations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ResumeSection $resumeSection = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -150,6 +154,18 @@ class Education
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getResumeSection(): ?ResumeSection
+    {
+        return $this->resumeSection;
+    }
+
+    public function setResumeSection(?ResumeSection $resumeSection): static
+    {
+        $this->resumeSection = $resumeSection;
 
         return $this;
     }

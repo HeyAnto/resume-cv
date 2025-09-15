@@ -25,7 +25,8 @@
         } %}
       </a>
 
-      <a href="" class="btn-menu">
+      <a href="{{ path('app_education_list', {'username': app.user.profile.username}) }}"
+        class="btn-menu {{ app.request.get('_route') in ['app_education_list', 'app_education_edit'] ? 'active' : '' }}">
         Education
         {% include "_icons/order-drag.html.twig" with {
         'class': 'menu-icon'

@@ -1,3 +1,12 @@
+{% if type is defined and type == 'education' %}
+{% set education = item %}
+<a href="{{ path('app_education_edit', {'username': username, 'id': education.id}) }}" class="resume-edit-card">
+  <p class="text-16 text-color-secondary">{{ education.startDate|date('Y') }} — {{ education.endDate ?
+    education.endDate|date('Y') : 'Now' }}</p>
+  <p class="text-16 text-color-primary">{{ education.degree }} at {{ education.schoolName }}</p>
+  <p class="text-16 text-color-secondary">{{ education.location }}</p>
+</a>
+{% else %}
 {% set experience = item %}
 <a href="{{ path('app_experience_edit', {'username': username, 'id': experience.id}) }}" class="resume-edit-card">
   <p class="text-16 text-color-secondary">{{ experience.startDate|date('Y') }} — {{ experience.endDate ?
@@ -5,3 +14,4 @@
   <p class="text-16 text-color-primary">{{ experience.job }} at {{ experience.companyName }}</p>
   <p class="text-16 text-color-secondary">{{ experience.location }}</p>
 </a>
+{% endif %}

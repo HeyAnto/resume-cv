@@ -1,28 +1,89 @@
+{%
+set item = item is defined ? item : (experience is defined ? experience : (education is defined ? education :
+(volunteering is defined ? volunteering : certification)))
+%}
+
+{# Determine the item type and set appropriate variables #}
+{% if item.companyName is defined %}
+{# Experience #}
+{% set title = item.job %}
+{% set organization = item.companyName %}
+{% set link = item.companyLink %}
+{% set startDate = item.startDate %}
+{% set endDate = item.endDate %}
+{% set location = item.location %}
+{% set description = item.description %}
+{% elseif item.schoolName is defined %}
+{# Education #}
+{% set title = item.degree %}
+{% set organization = item.schoolName %}
+{% set link = item.schoolLink %}
+{% set startDate = item.startDate %}
+{% set endDate = item.endDate %}
+{% set location = item.location %}
+{% set description = item.description %}
+{% elseif item.organizationName is defined %}
+{# Volunteering #}
+{% set title = item.role %}
+{% set organization = item.organizationName %}
+{% set link = item.organizationLink %}
+{% set startDate = item.startDate %}
+{% set endDate = item.endDate %}
+{% set location = item.location %}
+{% set description = item.description %}
+{% elseif item.authority is defined %}
+{# Certification #}
+{% set title = item.title %}
+{% set organization = item.authority %}
+{% set link = item.authorityLink %}
+{% set startDate = item.issuedDate %}
+{% set endDate = item.expirationDate %}
+{% set location = null %}
+{% set description = item.credentialId ? 'ID: ' ~ item.credentialId : null %}
+{% endif %}
+
 <div class="resume-card">
   <div>
     <p class="text-16 text-color-tertiary">
-      {{ experience.startDate|date('Y') }} — {{ experience.endDate ? experience.endDate|date('Y') : 'Now' }}
+      {{ startDate|date('Y') }} — {{ endDate ? endDate|date('Y') : (item.authority is defined ? 'Never expires' : 'Now')
+      }}
     </p>
   </div>
   <div class="info">
     <div class="flex flex-column">
-      <a class="title text-color-primary {{ experience.companyLink ? 'link-active' : '' }}"
-        href="{{ experience.companyLink ?: '#' }}" target="{{ experience.companyLink ? '_blank' : '_self' }}">
+      <a class="title text-color-primary {{ link ? 'link-active' : '' }}" href="{{ link ?: '#' }}"
+        target="{{ link ? '_blank' : '_self' }}">
         <h3 class="text-16">
-          {{ experience.job }} at {{ experience.companyName }}
+          {{ title }} at {{ organization }}
         </h3>
+        {% if link %}
+        {% include "_icons/link.html.twig" with {
+        'class': 'icon-link'
+        } %}
+        {% endif %}
+      </a>
+      {% if location %}
+      <p class="text-16 text-color-tertiary">
+        {{ location }}
+      </p>
+      {% endif %}
+    </div>
+
+    {% if description %}
+    <p class="text-body-16 text-color-tertiary">
+      {{ description }}
+    </p>
+    {% endif %}
+
+    {# Certifications credential URL #}
+    {% if item.credentialUrl is defined and item.credentialUrl %}
+    <p class="text-body-16">
+      <a href="{{ item.credentialUrl }}" target="_blank" class="link-active text-color-primary">
+        View Credential
         {% include "_icons/link.html.twig" with {
         'class': 'icon-link'
         } %}
       </a>
-      <p class="text-16 text-color-tertiary">
-        {{ experience.location }}
-      </p>
-    </div>
-
-    {% if experience.description %}
-    <p class="text-body-16 text-color-tertiary">
-      {{ experience.description }}
     </p>
     {% endif %}
   </div>

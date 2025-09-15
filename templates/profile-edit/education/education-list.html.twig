@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile Cooking — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+{% include "/profile-edit/_components/profile-edit-sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-profile-edit">
+    <div class="container">
+
+      <div>
+        <h1 class="text-h1">Education</h1>
+        <p class="text-16 text-color-tertiary">Add or modify your education background</p>
+      </div>
+
+      {% if educations is not empty %}
+      <div class="flex flex-column gap-sm">
+        <p class="text-16 text-color-tertiary">Click to edit or remove an education</p>
+
+        {% for education in educations %}
+        {% include "/profile-edit/_components/resume-edit-card.html.twig" with {'item': education, 'username': username,
+        'type': 'education'} %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="flex flex-column gap-sm">
+        <a href="{{ path('app_education_new', {'username': username}) }}" class="btn btn-primary-xs full">Add an
+          education</a>
+
+        {% if educations is not empty %}
+        <form action="{{ path('app_education_toggle_visibility', {'username': username}) }}" method="post"
+          style="display: inline;">
+          <button type="submit" class="btn btn-secondary-xs full">
+            {% if educationSection and educationSection.isVisible %}
+            Hide Section
+            {% else %}
+            Show Section
+            {% endif %}
+          </button>
+        </form>
+        {% endif %}
+      </div>
+
+      {% for message in app.flashes('success') %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {% for message in app.flashes('error') %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+    </div>
+  </section>
+</div>
+
+{% endblock %}

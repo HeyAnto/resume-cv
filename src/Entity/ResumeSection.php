@@ -58,12 +58,19 @@ class ResumeSection
     #[ORM\OneToMany(targetEntity: Volunteering::class, mappedBy: 'resumeSection', orphanRemoval: true)]
     private Collection $volunteerings;
 
+    /**
+     * @var Collection<int, Education>
+     */
+    #[ORM\OneToMany(targetEntity: Education::class, mappedBy: 'resumeSection', orphanRemoval: true)]
+    private Collection $educations;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
         $this->experiences = new ArrayCollection();
         $this->certifications = new ArrayCollection();
         $this->volunteerings = new ArrayCollection();
+        $this->educations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -257,6 +264,36 @@ class ResumeSection
             // set the owning side to null (unless already changed)
             if ($volunteering->getResumeSection() === $this) {
                 $volunteering->setResumeSection(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Education>
+     */
+    public function getEducations(): Collection
+    {
+        return $this->educations;
+    }
+
+    public function addEducation(Education $education): static
+    {
+        if (!$this->educations->contains($education)) {
+            $this->educations->add($education);
+            $education->setResumeSection($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEducation(Education $education): static
+    {
+        if ($this->educations->removeElement($education)) {
+            // set the owning side to null (unless already changed)
+            if ($education->getResumeSection() === $this) {
+                $education->setResumeSection(null);
             }
         }
 

@@ -1,0 +1,151 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\Education;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
+class EducationFormType extends AbstractType
+{
+  public function buildForm(FormBuilderInterface $builder, array $options): void
+  {
+    $builder
+      ->add('schoolName', TextType::class, [
+        'label' => 'School Name',
+        'attr' => [
+          'placeholder' => 'Harvard University, MIT, etc.',
+          'class' => 'form-control',
+          'data-counter' => 'schoolName-counter',
+          'data-max' => '98'
+        ],
+        'constraints' => [
+          new Assert\NotBlank(['message' => 'School name is required']),
+          new Assert\Length([
+            'max' => 98,
+            'maxMessage' => 'School name cannot be longer than {{ limit }} characters'
+          ])
+        ]
+      ])
+      ->add('schoolLink', UrlType::class, [
+        'label' => 'School Website',
+        'required' => false,
+        'attr' => [
+          'placeholder' => 'https://www.harvard.edu',
+          'class' => 'form-control',
+          'data-counter' => 'schoolLink-counter',
+          'data-max' => '98'
+        ],
+        'constraints' => [
+          new Assert\Length([
+            'max' => 98,
+            'maxMessage' => 'School website cannot be longer than {{ limit }} characters'
+          ])
+        ]
+      ])
+      ->add('degree', TextType::class, [
+        'label' => 'Degree',
+        'attr' => [
+          'placeholder' => 'Bachelor of Computer Science',
+          'class' => 'form-control',
+          'data-counter' => 'degree-counter',
+          'data-max' => '98'
+        ],
+        'constraints' => [
+          new Assert\NotBlank(['message' => 'Degree is required']),
+          new Assert\Length([
+            'max' => 98,
+            'maxMessage' => 'Degree cannot be longer than {{ limit }} characters'
+          ])
+        ]
+      ])
+      ->add('location', TextType::class, [
+        'label' => 'Location',
+        'attr' => [
+          'placeholder' => 'Cambridge, MA',
+          'class' => 'form-control',
+          'data-counter' => 'location-counter',
+          'data-max' => '32'
+        ],
+        'constraints' => [
+          new Assert\NotBlank(['message' => 'Location is required']),
+          new Assert\Length([
+            'max' => 32,
+            'maxMessage' => 'Location cannot be longer than {{ limit }} characters'
+          ])
+        ]
+      ])
+      ->add('description', TextareaType::class, [
+        'label' => 'Description (Optional)',
+        'required' => false,
+        'attr' => [
+          'placeholder' => 'Describe your studies, achievements...',
+          'class' => 'form-control',
+          'rows' => 3,
+          'data-counter' => 'description-counter',
+          'data-max' => '160'
+        ],
+        'constraints' => [
+          new Assert\Length([
+            'max' => 160,
+            'maxMessage' => 'Description cannot be longer than {{ limit }} characters'
+          ])
+        ]
+      ])
+      ->add('startDate', DateType::class, [
+        'label' => 'Start Date',
+        'widget' => 'single_text',
+        'attr' => [
+          'class' => 'form-control'
+        ]
+      ])
+      ->add('endDate', DateType::class, [
+        'label' => 'End Date (Leave empty if current)',
+        'required' => false,
+        'widget' => 'single_text',
+        'attr' => [
+          'class' => 'form-control'
+        ]
+      ])
+      ->add('submit', SubmitType::class, [
+        'label' => 'Save'
+      ]);
+  }
+
+  public function configureOptions(OptionsResolver $resolver): void
+  {
+    $resolver->setDefaults([
+      'data_class' => Education::class,
+      'constraints' => [
+        new Assert\Callback([$this, 'validateDates'])
+      ]
+    ]);
+  }
+
+  public function validateDates($education, ExecutionContextInterface $context): void
+  {
+    if ($education->getStartDate() && $education->getEndDate()) {
+      if ($education->getStartDate() > $education->getEndDate()) {
+        $context->buildViolation('End date must be after start date')
+          ->atPath('endDate')
+          ->addViolation();
+      }
+    }
+
+    // Check if dates are not in the future
+    $now = new \DateTimeImmutable();
+    if ($education->getStartDate() && $education->getStartDate() > $now) {
+      $context->buildViolation('Start date cannot be in the future')
+        ->atPath('startDate')
+        ->addViolation();
+    }
+  }
+}
