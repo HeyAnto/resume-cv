@@ -74,6 +74,24 @@
                     }
                 }
 
+                .tag-follow {
+                    width: fit-content;
+                    padding: var(--spacing-xxs) var(--spacing-md);
+                    color: var(--color-bg-primary);
+                    background-color: var(--color-text-primary);
+                    border-radius: var(--radius-full);
+                    text-decoration: none;
+
+                    &:hover {
+                        opacity: 0.94;
+                    }
+
+                    &.unfollow:hover {
+                        color: var(--color-text-primary);
+                        background-color: var(--color-red-2);
+                    }
+                }
+
                 .tag-website {
                     width: fit-content;
                     padding: var(--spacing-xxs) var(--spacing-md);

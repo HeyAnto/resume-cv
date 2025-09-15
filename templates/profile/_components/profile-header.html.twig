@@ -18,11 +18,14 @@
           {{ profile.job }}{% if profile.location %} in {{ profile.location }}{% endif %}
         </p>
       </div>
-      {% if profile.websiteName and profile.websiteLink %}
-      <a class="tag-website text-14 text-color-secondary" href="{{ profile.websiteLink }}" target="_blank">
-        {{ profile.websiteName }}
-      </a>
-      {% endif %}
+      <div class="flex gap-sm">
+        {# <a href="" class="tag-follow text-14 ">Follow</a> #}
+        {% if profile.websiteName and profile.websiteLink %}
+        <a class="tag-website text-14 text-color-secondary" href="{{ profile.websiteLink }}" target="_blank">
+          {{ profile.websiteName }}
+        </a>
+        {% endif %}
+      </div>
     </div>
   </div>
 
