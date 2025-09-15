@@ -1,5 +1,7 @@
-<a href="" class="resume-edit-card">
-  <p class="text-16 text-color-secondary">2021 — 2022</p>
-  <p class="text-16 text-color-primary">Senior UI/UX Designer at TechCorp</p>
-  <p class="text-16 text-color-secondary">Brooklyn, NY</p>
+{% set experience = item %}
+<a href="{{ path('app_experience_edit', {'username': username, 'id': experience.id}) }}" class="resume-edit-card">
+  <p class="text-16 text-color-secondary">{{ experience.startDate|date('Y') }} — {{ experience.endDate ?
+    experience.endDate|date('Y') : 'Now' }}</p>
+  <p class="text-16 text-color-primary">{{ experience.job }} at {{ experience.companyName }}</p>
+  <p class="text-16 text-color-secondary">{{ experience.location }}</p>
 </a>

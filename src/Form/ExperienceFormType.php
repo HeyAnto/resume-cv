@@ -71,7 +71,7 @@ class ExperienceFormType extends AbstractType
         ]
       ])
       ->add('submit', SubmitType::class, [
-        'label' => 'Add Experience'
+        'label' => 'Save'
       ]);
   }
 

@@ -10,8 +10,8 @@
 
     <div class="order-menu">
 
-      <a href="{{ path('app_experience_edit', {'username': app.user.profile.username}) }}"
-        class="btn-menu {{ app.request.get('_route') == 'app_experience_edit' ? 'active' : '' }}">
+      <a href="{{ path('app_experience_list', {'username': app.user.profile.username}) }}"
+        class="btn-menu {{ app.request.get('_route') in ['app_experience_list', 'app_experience_edit'] ? 'active' : '' }}">
         Work Experience
         {% include "_icons/order-drag.html.twig" with {
         'class': 'menu-icon'
