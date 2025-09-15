@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Post;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class ExploreController extends AbstractController
 {
@@ -15,12 +17,18 @@ final class ExploreController extends AbstractController
     }
 
     #[Route('/explore/front', name: 'app_explore_front')]
-    public function exploreFront(): Response
+    public function exploreFront(EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
 
+        $posts = $entityManager->getRepository(\App\Entity\Post::class)->findBy(
+            ['isVisible' => true],
+            ['createdAt' => 'DESC']
+        );
+
         return $this->render('explore/front.html.twig', [
-            'user' => $user
+            'user' => $user,
+            'posts' => $posts
         ]);
     }
 

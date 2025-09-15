@@ -79,9 +79,16 @@ final class ProfileController extends AbstractController
             return $this->redirectToRoute('app_not_found');
         }
 
+        // Récupérer les posts de l'utilisateur qui sont visibles, triés par date de création (plus récent en premier)
+        $posts = $entityManager->getRepository(\App\Entity\Post::class)->findBy(
+            ['user' => $profile->getUser(), 'isVisible' => true],
+            ['createdAt' => 'DESC']
+        );
+
         return $this->render('profile/profile-posts.html.twig', [
             'username' => $username,
-            'profile' => $profile
+            'profile' => $profile,
+            'posts' => $posts
         ]);
     }
 }

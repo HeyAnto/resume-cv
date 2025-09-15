@@ -14,7 +14,9 @@
 
       {% include "_components/cards/post-card-news.html.twig" %}
 
-      {% include "_components/cards/post-card.html.twig" %}
+      {% for post in posts %}
+      {% include "_components/cards/post-card.html.twig" with {'post': post} %}
+      {% endfor %}
 
     </div>
   </section>

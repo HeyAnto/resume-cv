@@ -16,7 +16,15 @@
 
             <div class="posts-grid">
 
-                {% include "/_components/cards/post-card.html.twig" %}
+                {% if posts is empty %}
+                {# <div class="no-posts">
+                    <p class="text-body-16 text-color-secondary">Aucun post publié pour le moment.</p>
+                </div> #}
+                {% else %}
+                {% for post in posts %}
+                {% include "/profile/_components/profile-post-card.html.twig" with {'post': post} %}
+                {% endfor %}
+                {% endif %}
 
             </div>
 

@@ -1,12 +1,4 @@
 <div class="post-card">
-  <div class="profile-container">
-    <a href="{{ path('app_profile', {'username': post.user.profile.username}) }}" class="profile-img">
-      <img class="profile-img" src="{{ asset(post.user.profile.profilePictureUrl) }}"
-        alt="Profile picture of {{ post.user.profile.displayName }}">
-    </a>
-    <a href="{{ path('app_profile', {'username': post.user.profile.username}) }}"
-      class="profile-link text-14 text-color-primary">{{ post.user.profile.displayName }}</a>
-  </div>
   <p class="text-body-14 text-color-secondary">
     {{ post.description }}
   </p>
