@@ -69,6 +69,38 @@ final class AccountEditController extends AbstractController
         return $this->render('profile-edit/account-edit.html.twig', [
             'usernameForm' => $usernameForm->createView(),
             'emailForm' => $emailForm->createView(),
+            'username' => $username,
         ]);
+    }
+
+    #[Route('/{username}/account/delete-account', name: 'app_account_delete', methods: ['POST'])]
+    public function deleteAccount(string $username, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $usernameCheck = $this->checkUsernameAccess($username);
+        if ($usernameCheck) {
+            return $usernameCheck;
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $profile = $user->getProfile();
+
+        // Invalidate the session
+        $request->getSession()->invalidate();
+
+        // Delete profile picture
+        $profilePicturePath = $profile->getProfilePicturePath();
+        if ($profilePicturePath && $profilePicturePath !== 'images/img_default_user.webp') {
+            $pictureFile = $this->getParameter('kernel.project_dir') . '/public/' . $profilePicturePath;
+            if (file_exists($pictureFile)) {
+                unlink($pictureFile);
+            }
+        }
+
+        // Remove the user
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_login');
     }
 }
