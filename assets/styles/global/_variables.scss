@@ -33,16 +33,18 @@
     --color-text-secondary: #9c9c9c;
     --color-text-tertiary: #848484;
     --color-muted: #474747;
+    --color-muted-2: #474747;
     --color-border: #383838;
 }
 
 :root.light {
     --color-overlay: #0c0c0c;
     --color-bg-primary: #f4f4f4;
-    --color-bg-secondary: #e8e8e8;
+    --color-bg-secondary: #dfdfdf;
     --color-text-primary: #222222;
-    --color-text-secondary: #666666;
+    --color-text-secondary: #4f4f4f;
     --color-text-tertiary: #696969;
-    --color-muted: #d7d7d7;
+    --color-muted: #c4c4c4;
+    --color-muted-2: #d7d7d7;
     --color-border: #d5d5d5;
 }

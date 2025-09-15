@@ -1,10 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/character-counter.js') }}"></script>
-{% endblock %}
-
 {% block title %}Resume.cv{% endblock %}
 
 {% block main %}
@@ -22,6 +17,49 @@
             <div>
                 <h1 class="text-h1">Account</h1>
                 <p class="text-16 text-color-tertiary">Edit your account information</p>
+            </div>
+
+            {{ form_start(usernameForm, {'attr': {'id': 'username-form'}}) }}
+
+            <div class="form-group full">
+                <label class="text-16 text-color-tertiary" for="{{ usernameForm.username.vars.id }}">Username</label>
+                <div class="flex gap-sm">
+                    {{ form_widget(usernameForm.username) }}
+                    <button type="submit" class="btn btn-secondary-xs">Modify</button>
+                </div>
+                <div class="text-14 text-color-red">{{ form_errors(usernameForm.username) }}</div>
+            </div>
+
+            {{ form_end(usernameForm) }}
+
+            {{ form_start(emailForm, {'attr': {'id': 'email-form'}}) }}
+
+            <div class="form-group disabled">
+                <label class="text-16 text-color-tertiary" for="{{ emailForm.email.vars.id }}">Email</label>
+                <div class="flex gap-sm">
+                    {{ form_widget(emailForm.email, {'attr': {'disabled': true, 'style': 'cursor: not-allowed;
+                    pointer-events: none;'}}) }}
+                    <button type="button" class="btn btn-secondary-xs" disabled
+                        style="cursor: not-allowed; pointer-events: none;">Modify</button>
+                </div>
+                <div class="text-14 text-color-red">{{ form_errors(emailForm.email) }}</div>
+            </div>
+
+            {{ form_end(emailForm) }}
+
+            <div class="flex gap-xl">
+                <div class="flex flex-column gap-xs">
+                    <p class="text-16 text-color-tertiary">Security</p>
+                    <a href="" class="btn btn-secondary-xs">Change Password</a>
+                </div>
+
+                <div class="flex flex-column gap-xs">
+                    <p class="text-16 text-color-tertiary">Theme</p>
+                    <select name="theme" id="theme-select" class="form-control">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                    </select>
+                </div>
             </div>
 
         </div>
