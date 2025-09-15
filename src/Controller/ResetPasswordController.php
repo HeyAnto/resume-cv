@@ -92,7 +92,7 @@ class ResetPasswordController extends AbstractController
 
         $token = $this->getTokenFromSession();
         if (null === $token) {
-            $this->addFlash('error', 'The password reset link has expired or is invalid. Please request a new one.');
+            $this->addFlash('error', 'The password reset link has expired or is invalid. Please request a new one');
             return $this->redirectToRoute('app_forgot_password_request');
         }
 
@@ -127,7 +127,7 @@ class ResetPasswordController extends AbstractController
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
 
-            $this->addFlash('success', 'Your password has been successfully reset.');
+            $this->addFlash('success', 'Your password has been successfully reset');
 
             return $this->redirectToRoute('app_login');
         }
@@ -176,9 +176,9 @@ class ResetPasswordController extends AbstractController
 
         try {
             $mailer->send($email);
-            $this->addFlash('success', 'Password reset email sent successfully.');
+            $this->addFlash('success', 'Password reset email sent successfully');
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Failed to send password reset email. Please try again.');
+            $this->addFlash('error', 'Failed to send password reset email. Please try again');
             return $this->redirectToRoute('app_forgot_password_request');
         }
 
@@ -186,5 +186,38 @@ class ResetPasswordController extends AbstractController
         $this->setTokenObjectInSession($resetToken);
 
         return $this->redirectToRoute('app_check_email');
+    }
+
+    /**
+     * Allow logged-in users to change their password.
+     */
+    #[Route('/change-password', name: 'app_change_password')]
+    public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        // Ensure user is logged in
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $form = $this->createForm(ChangePasswordFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var string $plainPassword */
+            $plainPassword = $form->get('plainPassword')->getData();
+
+            // Hash and set the new password
+            $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Your password has been successfully changed');
+
+            return $this->redirectToRoute('app_account_edit', ['username' => $user->getProfile()->getUsername()]);
+        }
+
+        return $this->render('reset_password/change_password.html.twig', [
+            'changeForm' => $form,
+        ]);
     }
 }
