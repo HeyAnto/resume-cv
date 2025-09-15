@@ -49,7 +49,7 @@ final class ProfileController extends AbstractController
         // Sort experiences by date
         foreach ($profile->getResumeSections() as $section) {
             $experiences = $section->getExperiences()->toArray();
-            usort($experiences, function($a, $b) {
+            usort($experiences, function ($a, $b) {
                 return $b->getStartDate() <=> $a->getStartDate();
             });
             $section->getExperiences()->clear();

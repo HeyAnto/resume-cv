@@ -48,7 +48,7 @@ final class ExperienceEditController extends AbstractController
             if ($section->getLabel() === 'Work Experience') {
                 $experiences = $section->getExperiences()->toArray();
                 // Sort by startDate desc
-                usort($experiences, function($a, $b) {
+                usort($experiences, function ($a, $b) {
                     return $b->getStartDate() <=> $a->getStartDate();
                 });
                 $workExperienceSection = $section;
