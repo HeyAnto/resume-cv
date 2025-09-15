@@ -12,6 +12,20 @@
         gap: var(--spacing-sm);
         overflow: auto;
 
+        &::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: var(--color-border);
+            border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--color-text-tertiary);
+            border-radius: 4px;
+        }
+
         .title {
             width: fit-content;
             display: flex;

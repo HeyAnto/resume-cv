@@ -2,6 +2,11 @@
 
 {% block title %}Edit Experience — Resume.cv{% endblock %}
 
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/character-counter.js') }}"></script>
+{% endblock %}
+
 {% block main %}
 
 {% include "_components/sidebar.html.twig" %}
@@ -34,41 +39,58 @@
             {{ form_start(form) }}
 
             <div class="form-group">
-                <label class="text-16 text-color-tertiary" for="{{ form.companyName.vars.id }}">{{
-                    form.companyName.vars.label }}*</label>
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.companyName.vars.id }}">{{
+                        form.companyName.vars.label }}*</label>
+                    <p class="text-14 text-color-tertiary" id="companyName-counter"></p>
+                </div>
                 {{ form_widget(form.companyName) }}
                 <div class="text-14 text-color-red">{{ form_errors(form.companyName) }}</div>
             </div>
 
             <div class="form-group">
-                <label class="text-16 text-color-tertiary" for="{{ form.companyLink.vars.id }}">{{
-                    form.companyLink.vars.label }}</label>
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.companyLink.vars.id }}">{{
+                        form.companyLink.vars.label }}</label>
+                    <p class="text-14 text-color-tertiary" id="companyLink-counter"></p>
+                </div>
                 {{ form_widget(form.companyLink) }}
                 <div class="text-14 text-color-red">{{ form_errors(form.companyLink) }}</div>
             </div>
 
             <div class="form-group">
-                <label class="text-16 text-color-tertiary" for="{{ form.job.vars.id }}">{{ form.job.vars.label
-                    }}*</label>
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.job.vars.id }}">{{ form.job.vars.label
+                        }}*</label>
+                    <p class="text-14 text-color-tertiary" id="job-counter"></p>
+                </div>
                 {{ form_widget(form.job) }}
                 <div class="text-14 text-color-red">{{ form_errors(form.job) }}</div>
             </div>
 
             <div class="form-group">
-                <label class="text-16 text-color-tertiary" for="{{ form.location.vars.id }}">{{ form.location.vars.label
-                    }}*</label>
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.location.vars.id }}">{{
+                        form.location.vars.label
+                        }}*</label>
+                    <p class="text-14 text-color-tertiary" id="location-counter"></p>
+                </div>
                 {{ form_widget(form.location) }}
                 <div class="text-14 text-color-red">{{ form_errors(form.location) }}</div>
             </div>
 
             <div class="form-group">
-                <label class="text-16 text-color-tertiary" for="{{ form.description.vars.id }}">{{
-                    form.description.vars.label }}</label>
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.description.vars.id }}">{{
+                        form.description.vars.label }}</label>
+                    <p class="text-14 text-color-tertiary" id="description-counter"></p>
+                </div>
                 {{ form_widget(form.description) }}
                 <div class="text-14 text-color-red">{{ form_errors(form.description) }}</div>
             </div>
 
             <div class="form-group">
+                <div class="flex justify-between items-center"></div>
                 <label class="text-16 text-color-tertiary" for="{{ form.startDate.vars.id }}">{{
                     form.startDate.vars.label }}*</label>
                 {{ form_widget(form.startDate) }}
@@ -76,16 +98,21 @@
             </div>
 
             <div class="form-group">
-                <label class="text-16 text-color-tertiary" for="{{ form.endDate.vars.id }}">{{ form.endDate.vars.label
-                    }}</label>
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.endDate.vars.id }}">{{
+                        form.endDate.vars.label
+                        }}</label>
+                </div>
                 {{ form_widget(form.endDate) }}
                 <div class="text-14 text-color-red">{{ form_errors(form.endDate) }}</div>
             </div>
 
-            {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary-xs full'}}) }}
+            <div class="flex flex-column gap-sm">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary-xs full'}}) }}
 
-            <a href="{{ path('app_experience_list', {'username': username}) }}"
-                class="btn btn-secondary-xs full">Cancel</a>
+                <a href="{{ path('app_experience_list', {'username': username}) }}"
+                    class="btn btn-secondary-xs full">Cancel</a>
+            </div>
 
             {{ form_end(form) }}
 
