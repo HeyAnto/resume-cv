@@ -7,7 +7,6 @@ use App\Form\EmailFormType;
 use App\Form\UsernameFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use App\Controller\Trait\UserRedirectionTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,8 +27,9 @@ final class AccountEditController extends AbstractController
 
         return null;
     }
+
     #[Route('/{username}/account', name: 'app_account_edit')]
-    public function index(Request $request, EntityManagerInterface $entityManager, string $username): Response
+    public function accountEdit(Request $request, EntityManagerInterface $entityManager, string $username): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {

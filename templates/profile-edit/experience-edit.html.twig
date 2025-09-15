@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile Cooking — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+{% include "/profile-edit/_components/profile-edit-sidebar.html.twig" %}
+
+<div class="main-content">
+    {% include "_components/headers/header-logout.html.twig" %}
+
+    <section class="section-profile-edit">
+        <div class="container">
+
+            <div>
+                <h1 class="text-h1">Work Experience</h1>
+                <p class="text-16 text-color-tertiary">Add or modify your professional experiences</p>
+            </div>
+
+            <div class="flex flex-column gap-sm">
+                <p class="text-16 text-color-tertiary">Click to edit or remove an experience</p>
+
+                {% include "/profile-edit/_components/resume-edit-card.html.twig" %}
+            </div>
+
+            <div class="flex justify-center">
+                <button class="btn btn-primary-xs">Add an expérience</button>
+            </div>
+
+            {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                <label class="text-16 text-color-tertiary" for="{{ form.companyName.vars.id }}">{{
+                    form.companyName.vars.label }}*</label>
+                {{ form_widget(form.companyName) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.companyName) }}</div>
+            </div>
+
+            <div class="form-group">
+                <label class="text-16 text-color-tertiary" for="{{ form.companyLink.vars.id }}">{{
+                    form.companyLink.vars.label }}</label>
+                {{ form_widget(form.companyLink) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.companyLink) }}</div>
+            </div>
+
+            <div class="form-group">
+                <label class="text-16 text-color-tertiary" for="{{ form.job.vars.id }}">{{ form.job.vars.label
+                    }}*</label>
+                {{ form_widget(form.job) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.job) }}</div>
+            </div>
+
+            <div class="form-group">
+                <label class="text-16 text-color-tertiary" for="{{ form.location.vars.id }}">{{ form.location.vars.label
+                    }}*</label>
+                {{ form_widget(form.location) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.location) }}</div>
+            </div>
+
+            <div class="form-group">
+                <label class="text-16 text-color-tertiary" for="{{ form.description.vars.id }}">{{
+                    form.description.vars.label }}</label>
+                {{ form_widget(form.description) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.description) }}</div>
+            </div>
+
+            <div class="form-group">
+                <label class="text-16 text-color-tertiary" for="{{ form.startDate.vars.id }}">{{
+                    form.startDate.vars.label }}*</label>
+                {{ form_widget(form.startDate) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.startDate) }}</div>
+            </div>
+
+            <div class="form-group">
+                <label class="text-16 text-color-tertiary" for="{{ form.endDate.vars.id }}">{{ form.endDate.vars.label
+                    }}</label>
+                {{ form_widget(form.endDate) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.endDate) }}</div>
+            </div>
+
+            <div class="flex justify-center">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn btn-secondary-xs full'}}) }}
+            </div>
+
+            {{ form_end(form) }}
+
+        </div>
+    </section>
+</div>
+
+{% endblock %}
