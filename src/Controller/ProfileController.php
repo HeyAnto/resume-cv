@@ -46,6 +46,18 @@ final class ProfileController extends AbstractController
             return $this->redirectToRoute('app_not_found');
         }
 
+        // Sort experiences by date
+        foreach ($profile->getResumeSections() as $section) {
+            $experiences = $section->getExperiences()->toArray();
+            usort($experiences, function($a, $b) {
+                return $b->getStartDate() <=> $a->getStartDate();
+            });
+            $section->getExperiences()->clear();
+            foreach ($experiences as $experience) {
+                $section->getExperiences()->add($experience);
+            }
+        }
+
         return $this->render('profile/profile.html.twig', [
             'username' => $username,
             'profile' => $profile,
