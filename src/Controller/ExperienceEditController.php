@@ -56,7 +56,7 @@ final class ExperienceEditController extends AbstractController
             }
         }
 
-        return $this->render('profile-edit/experience-list.html.twig', [
+        return $this->render('profile-edit/experience/experience-list.html.twig', [
             'username' => $username,
             'experiences' => $experiences,
             'workExperienceSection' => $workExperienceSection,
@@ -147,7 +147,7 @@ final class ExperienceEditController extends AbstractController
             return $this->redirectToRoute('app_experience_list', ['username' => $username]);
         }
 
-        return $this->render('profile-edit/experience-edit.html.twig', [
+        return $this->render('profile-edit/experience/experience-edit.html.twig', [
             'form' => $form,
             'username' => $username,
             'experience' => $experience,
