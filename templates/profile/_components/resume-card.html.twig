@@ -1,0 +1,29 @@
+<div class="resume-card">
+  <div>
+    <p class="text-16 text-color-tertiary">
+      {{ experience.startDate|date('Y') }} — {{ experience.endDate ? experience.endDate|date('Y') : 'Now' }}
+    </p>
+  </div>
+  <div class="info">
+    <div class="flex flex-column">
+      <a class="title text-color-primary {{ experience.companyLink ? 'link-active' : '' }}"
+        href="{{ experience.companyLink ?: '#' }}" target="{{ experience.companyLink ? '_blank' : '_self' }}">
+        <h3 class="text-16">
+          {{ experience.job }} at {{ experience.companyName }}
+        </h3>
+        {% include "_icons/link.html.twig" with {
+        'class': 'icon-link'
+        } %}
+      </a>
+      <p class="text-16 text-color-tertiary">
+        {{ experience.location }}
+      </p>
+    </div>
+
+    {% if experience.description %}
+    <p class="text-body-16 text-color-tertiary">
+      {{ experience.description }}
+    </p>
+    {% endif %}
+  </div>
+</div>

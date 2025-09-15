@@ -1,21 +1,14 @@
+{% for section in resumeSections %}
+{% if section.isVisible %}
 <div class="resume-section">
   <h2 class="text-16">
-    Section Title
+    {{ section.label }}
   </h2>
   <div class="section-list">
-
-    {% include "/profile/_components/experience-card.html.twig" %}
-
+    {% for experience in section.experiences %}
+    {% include "/profile/_components/resume-card.html.twig" with {'experience': experience} %}
+    {% endfor %}
   </div>
 </div>
-
-<div class="resume-section">
-  <h2 class="text-16">
-    Section Title
-  </h2>
-  <div class="section-list">
-
-    {% include "/profile/_components/project-card.html.twig" %}
-
-  </div>
-</div>
+{% endif %}
+{% endfor %}

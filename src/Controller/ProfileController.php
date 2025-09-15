@@ -48,7 +48,8 @@ final class ProfileController extends AbstractController
 
         return $this->render('profile/profile.html.twig', [
             'username' => $username,
-            'profile' => $profile
+            'profile' => $profile,
+            'resumeSections' => $profile->getResumeSections()
         ]);
     }
 
