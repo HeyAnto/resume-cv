@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile Cooking — Resume.cv{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/character-counter.js') }}"></script>
+{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+{% include "/profile-edit/_components/profile-edit-sidebar.html.twig" %}
+
+<div class="main-content">
+    {% include "_components/headers/header-logout.html.twig" %}
+
+    <section class="section-profile-edit">
+        <div class="container">
+
+            <div>
+                <h1 class="text-h1">{{ post ? 'Edit Post' : 'Create Post' }}</h1>
+                <p class="text-16 text-color-tertiary">{{ post ? 'Craft your post, make changes, and share it' : 'Create
+                    a new post to share with others' }}</p>
+            </div>
+
+            {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.description.vars.id }}">
+                        {{ form.description.vars.label }}*
+                    </label>
+                    <p class="text-14 text-color-tertiary" id="description-counter"></p>
+                </div>
+                {{ form_widget(form.description) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.description) }}</div>
+            </div>
+
+            <div class="form-group">
+                <label class="text-16 text-color-tertiary" for="{{ form.imageFile.vars.id }}">
+                    {{ form.imageFile.vars.label }}
+                </label>
+                {{ form_widget(form.imageFile) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.imageFile) }}</div>
+                {% if post and post.imagePath %}
+                <img src="{{ asset('uploads/posts/' ~ post.imagePath) }}" alt="Current post image"
+                    class="img-edit-postform">
+                {% endif %}
+            </div>
+
+            <div class="flex items-center gap-sm">
+                {{ form_widget(form.isVisible) }}
+                <label class="text-16 text-color-tertiary" for="{{ form.isVisible.vars.id }}">
+                    {{ form.isVisible.vars.label }}
+                </label>
+            </div>
+            <div class="text-14 text-color-red">{{ form_errors(form.isVisible) }}</div>
+
+            {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary-xs full'}}) }}
+
+            {{ form_end(form) }}
+
+            {% if post %}
+            <form action="{{ path('app_post_delete', {'username': username, 'id': post.id}) }}" method="post"
+                style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this post?')">
+                <div class="flex justify-end">
+                    <button type="submit" class="btn btn-secondary-xs danger full">Delete</button>
+                </div>
+            </form>
+            {% endif %}
+
+        </div>
+    </section>
+</div>
+
+{% endblock %}

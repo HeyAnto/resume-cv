@@ -1,10 +1,13 @@
 .resume-edit-card {
+    min-height: 95px;
     display: flex;
     flex-direction: column;
     padding: var(--spacing-sm) var(--spacing-lg);
-    border-radius: var(--radius-xs);
+    border: solid 1px var(--color-muted);
+    border-radius: var(--radius-sm);
     background-color: var(--color-bg-secondary);
     text-decoration: none;
+    overflow: hidden;
 
     &:hover {
         opacity: 0.94;

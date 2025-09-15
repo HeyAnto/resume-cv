@@ -20,8 +20,9 @@
     <div class="container">
 
       <div>
-        <h1 class="text-h1">Edit Education</h1>
-        <p class="text-16 text-color-tertiary">Update your education background</p>
+        <h1 class="text-h1">{{ education ? 'Edit Education' : 'Create Education' }}</h1>
+        <p class="text-16 text-color-tertiary">{{ education ? 'Update your education background' : 'Add your education
+          background' }}</p>
       </div>
 
       {% for message in app.flashes('success') %}
@@ -112,19 +113,18 @@
       <div class="flex flex-column gap-sm">
         {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary-xs full'}}) }}
 
-        <a href="{{ path('app_education_list', {'username': username}) }}" class="btn btn-secondary-xs full">Cancel</a>
+        {{ form_end(form) }}
+
+        {% if education %}
+        <form action="{{ path('app_education_delete', {'username': username, 'id': education.id}) }}" method="post"
+          style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this education?')">
+          <div class="flex justify-end">
+            <button type="submit" class="btn btn-secondary-xs danger full">Delete</button>
+          </div>
+        </form>
+        {% endif %}
+
       </div>
-
-      {{ form_end(form) }}
-
-      <form action="{{ path('app_education_delete', {'username': username, 'id': education.id}) }}" method="post"
-        style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this education?')">
-        <div class="flex justify-end">
-          <button type="submit" class="btn btn-secondary-xs danger full">Delete</button>
-        </div>
-      </form>
-
-    </div>
   </section>
 </div>
 

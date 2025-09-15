@@ -75,45 +75,47 @@ final class ExperienceEditController extends AbstractController
         $user = $this->getUser();
         $profile = $user->getProfile();
 
-        // Create new experience
         $experience = new Experience();
 
-        // Find Work Experience section
-        $workExperienceSection = null;
-        foreach ($profile->getResumeSections() as $section) {
-            if ($section->getLabel() === 'Work Experience') {
-                $workExperienceSection = $section;
-                break;
+        $form = $this->createForm(ExperienceFormType::class, $experience);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Find Work Experience section
+            $workExperienceSection = null;
+            foreach ($profile->getResumeSections() as $section) {
+                if ($section->getLabel() === 'Work Experience') {
+                    $workExperienceSection = $section;
+                    break;
+                }
             }
+
+            if (!$workExperienceSection) {
+                $workExperienceSection = new ResumeSection();
+                $workExperienceSection->setLabel('Work Experience');
+                $workExperienceSection->setOrderIndex(1);
+                $workExperienceSection->setIsVisible(true);
+                $workExperienceSection->setCreatedAt(new \DateTimeImmutable());
+                $workExperienceSection->setUpdatedAt(new \DateTimeImmutable());
+                $workExperienceSection->setProfile($profile);
+                $entityManager->persist($workExperienceSection);
+            }
+
+            $experience->setResumeSection($workExperienceSection);
+            $experience->setCreatedAt(new \DateTimeImmutable());
+            $experience->setUpdatedAt(new \DateTimeImmutable());
+
+            $entityManager->persist($experience);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Experience created successfully!');
+            return $this->redirectToRoute('app_experience_list', ['username' => $username]);
         }
 
-        if (!$workExperienceSection) {
-            $workExperienceSection = new ResumeSection();
-            $workExperienceSection->setLabel('Work Experience');
-            $workExperienceSection->setOrderIndex(1);
-            $workExperienceSection->setIsVisible(true);
-            $workExperienceSection->setCreatedAt(new \DateTimeImmutable());
-            $workExperienceSection->setUpdatedAt(new \DateTimeImmutable());
-            $workExperienceSection->setProfile($profile);
-            $entityManager->persist($workExperienceSection);
-        }
-
-        // Save empty experience
-        $experience->setResumeSection($workExperienceSection);
-        $experience->setCompanyName('');
-        $experience->setJob('');
-        $experience->setLocation('');
-        $experience->setStartDate(new \DateTimeImmutable());
-        $experience->setCreatedAt(new \DateTimeImmutable());
-        $experience->setUpdatedAt(new \DateTimeImmutable());
-
-        $entityManager->persist($experience);
-        $entityManager->flush();
-
-        // Redirect to edit
-        return $this->redirectToRoute('app_experience_edit', [
+        return $this->render('profile-edit/experience/experience-edit.html.twig', [
+            'form' => $form,
             'username' => $username,
-            'id' => $experience->getId()
+            'experience' => null,
         ]);
     }
 

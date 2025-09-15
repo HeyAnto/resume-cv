@@ -75,45 +75,47 @@ final class EducationEditController extends AbstractController
     $user = $this->getUser();
     $profile = $user->getProfile();
 
-    // Create new education
     $education = new Education();
 
-    // Find Education section
-    $educationSection = null;
-    foreach ($profile->getResumeSections() as $section) {
-      if ($section->getLabel() === 'Education') {
-        $educationSection = $section;
-        break;
+    $form = $this->createForm(EducationFormType::class, $education);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+      // Find Education section
+      $educationSection = null;
+      foreach ($profile->getResumeSections() as $section) {
+        if ($section->getLabel() === 'Education') {
+          $educationSection = $section;
+          break;
+        }
       }
+
+      if (!$educationSection) {
+        $educationSection = new ResumeSection();
+        $educationSection->setLabel('Education');
+        $educationSection->setOrderIndex(2);
+        $educationSection->setIsVisible(true);
+        $educationSection->setCreatedAt(new \DateTimeImmutable());
+        $educationSection->setUpdatedAt(new \DateTimeImmutable());
+        $educationSection->setProfile($profile);
+        $entityManager->persist($educationSection);
+      }
+
+      $education->setResumeSection($educationSection);
+      $education->setCreatedAt(new \DateTimeImmutable());
+      $education->setUpdatedAt(new \DateTimeImmutable());
+
+      $entityManager->persist($education);
+      $entityManager->flush();
+
+      $this->addFlash('success', 'Education created successfully!');
+      return $this->redirectToRoute('app_education_list', ['username' => $username]);
     }
 
-    if (!$educationSection) {
-      $educationSection = new ResumeSection();
-      $educationSection->setLabel('Education');
-      $educationSection->setOrderIndex(2);
-      $educationSection->setIsVisible(true);
-      $educationSection->setCreatedAt(new \DateTimeImmutable());
-      $educationSection->setUpdatedAt(new \DateTimeImmutable());
-      $educationSection->setProfile($profile);
-      $entityManager->persist($educationSection);
-    }
-
-    // Save empty education
-    $education->setResumeSection($educationSection);
-    $education->setSchoolName('');
-    $education->setDegree('');
-    $education->setLocation('');
-    $education->setStartDate(new \DateTimeImmutable());
-    $education->setCreatedAt(new \DateTimeImmutable());
-    $education->setUpdatedAt(new \DateTimeImmutable());
-
-    $entityManager->persist($education);
-    $entityManager->flush();
-
-    // Redirect to edit
-    return $this->redirectToRoute('app_education_edit', [
+    return $this->render('profile-edit/education/education-edit.html.twig', [
+      'form' => $form,
       'username' => $username,
-      'id' => $education->getId()
+      'education' => null,
     ]);
   }
 

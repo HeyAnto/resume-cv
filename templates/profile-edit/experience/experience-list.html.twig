@@ -19,21 +19,10 @@
                 <p class="text-16 text-color-tertiary">Add or modify your professional experiences</p>
             </div>
 
-            {% if experiences is not empty %}
             <div class="flex flex-column gap-sm">
-                <p class="text-16 text-color-tertiary">Click to edit or remove an experience</p>
-
-                {% for experience in experiences %}
-                {% include "/profile-edit/_components/resume-edit-card.html.twig" with {'item': experience, 'username':
-                username} %}
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <div class="flex flex-column gap-sm">
-                <a href="{{ path('app_experience_new', {'username': username}) }}" class="btn btn-primary-xs full">Add
-                    an
-                    experience</a>
+                <a href="{{ path('app_experience_new', {'username': username}) }}" class="btn btn-primary-xs full">
+                    Add an experience
+                </a>
 
                 {% if experiences is not empty %}
                 <form action="{{ path('app_experience_toggle_visibility', {'username': username}) }}" method="post"
@@ -48,6 +37,17 @@
                 </form>
                 {% endif %}
             </div>
+
+            {% if experiences is not empty %}
+            <div class="flex flex-column gap-sm">
+                <p class="text-16 text-color-tertiary">Click to edit or remove an experience</p>
+
+                {% for experience in experiences %}
+                {% include "/profile-edit/_components/resume-edit-card.html.twig" with {'item': experience, 'username':
+                username} %}
+                {% endfor %}
+            </div>
+            {% endif %}
 
             {% for message in app.flashes('success') %}
             <div class="alert alert-success">

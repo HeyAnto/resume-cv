@@ -1,0 +1,39 @@
+.post-edit-card {
+    min-height: 240px;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg) var(--spacing-lg);
+    border: solid 1px var(--color-muted);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-secondary);
+    text-decoration: none;
+    overflow: hidden;
+
+    &:hover {
+        opacity: 0.94;
+    }
+
+    .img-post-edit {
+        width: 100%;
+        max-width: 160px;
+        min-width: 160px;
+        height: auto;
+        max-height: 200px;
+        min-height: 90px;
+        border-radius: var(--radius-xs);
+        object-fit: cover;
+    }
+}
+
+.img-edit-postform {
+    width: 100%;
+    max-width: 200px;
+    min-width: 200px;
+    height: auto;
+    max-height: 300px;
+    min-height: 200px;
+    border: solid 1px var(--color-muted);
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+}

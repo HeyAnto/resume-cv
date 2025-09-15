@@ -95,11 +95,11 @@ class EducationFormType extends AbstractType
           'class' => 'form-control',
           'rows' => 3,
           'data-counter' => 'description-counter',
-          'data-max' => '160'
+          'data-max' => '120'
         ],
         'constraints' => [
           new Assert\Length([
-            'max' => 160,
+            'max' => 120,
             'maxMessage' => 'Description cannot be longer than {{ limit }} characters'
           ])
         ]
