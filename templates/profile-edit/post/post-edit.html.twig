@@ -4,6 +4,7 @@
 {{ parent() }}
 <script src="{{ asset('js/character-counter.js') }}"></script>
 <script src="{{ asset('js/form-submit.js') }}"></script>
+<script src="{{ asset('js/image-preview.js') }}"></script>
 {% endblock %}
 
 {% block title %}Profile Cooking — Resume.cv{% endblock %}
@@ -57,10 +58,12 @@
                 </label>
                 {{ form_widget(form.imageFile) }}
                 <div class="text-14 text-color-red">{{ form_errors(form.imageFile) }}</div>
-                {% if post and post.imagePath %}
-                <img src="{{ asset('uploads/posts/' ~ post.imagePath) }}" alt="Current post image"
-                    class="img-edit-postform">
-                {% endif %}
+                <div id="image-preview-container">
+                    {% if post and post.imagePath %}
+                    <img src="{{ asset('uploads/posts/' ~ post.imagePath) }}" alt="Current post image"
+                        class="img-edit-postform">
+                    {% endif %}
+                </div>
             </div>
 
             <div class="flex items-center gap-sm">

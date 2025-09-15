@@ -32,11 +32,9 @@
 
 .img-edit-postform {
     width: 100%;
-    max-width: 200px;
-    min-width: 200px;
     height: auto;
-    max-height: 300px;
-    min-height: 200px;
+    max-height: 350px;
+    min-height: 120px;
     border: solid 1px var(--color-muted);
     border-radius: var(--radius-sm);
     object-fit: cover;

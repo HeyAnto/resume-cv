@@ -19,6 +19,8 @@ final class ProfileEditController extends AbstractController
 {
   use UserRedirectionTrait;
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   private function checkUsernameAccess(string $username): ?Response
   {
     /** @var User $user */
@@ -32,6 +34,8 @@ final class ProfileEditController extends AbstractController
 
     return null;
   }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/general', name: 'app_profile_edit')]
   public function profileEdit(string $username, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
@@ -57,14 +61,19 @@ final class ProfileEditController extends AbstractController
       /** @var UploadedFile|null $profilePictureFile */
       $profilePictureFile = $form->get('profilePicture')->getData();
 
-      // Save form data first
       $entityManager->flush();
 
       if ($profilePictureFile) {
-        // Validate MIME type
         $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
         if (!in_array($profilePictureFile->getMimeType(), $allowedMimeTypes)) {
           $this->addFlash('error', 'Please upload a valid image file (JPEG, PNG, WebP)');
+          return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
+        }
+
+        // Validate file size (2MB max)
+        $maxSize = 2 * 1024 * 1024; // 2MB in bytes
+        if ($profilePictureFile->getSize() > $maxSize) {
+          $this->addFlash('error', 'Profile picture file is too large. Max size is 2MB.');
           return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
         }
 
@@ -106,6 +115,8 @@ final class ProfileEditController extends AbstractController
       'form' => $form->createView(),
     ]);
   }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/general/remove-picture', name: 'app_profile_remove_picture', methods: ['GET', 'POST'])]
   public function removePicture(string $username, EntityManagerInterface $entityManager, Request $request): Response

@@ -15,6 +15,8 @@ final class ProfileController extends AbstractController
 {
     use UserRedirectionTrait;
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('', name: 'app_profile_redirect')]
     public function redirectToUserProfile(): Response
     {
@@ -31,6 +33,8 @@ final class ProfileController extends AbstractController
 
         return $this->redirectToRoute('app_profile', ['username' => $user->getProfile()->getUsername()]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}', name: 'app_profile')]
     public function profile(string $username, EntityManagerInterface $entityManager): Response
@@ -65,6 +69,8 @@ final class ProfileController extends AbstractController
         ]);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/{username}/posts', name: 'app_profile_posts')]
     public function profilePosts(string $username, EntityManagerInterface $entityManager): Response
     {
@@ -79,7 +85,7 @@ final class ProfileController extends AbstractController
             return $this->redirectToRoute('app_not_found');
         }
 
-        // Récupérer les posts de l'utilisateur qui sont visibles, triés par date de création (plus récent en premier)
+        // User posts visible sorted -> most recent
         $posts = $entityManager->getRepository(\App\Entity\Post::class)->findBy(
             ['user' => $profile->getUser(), 'isVisible' => true],
             ['createdAt' => 'DESC']

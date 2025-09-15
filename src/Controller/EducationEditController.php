@@ -29,6 +29,8 @@ final class EducationEditController extends AbstractController
     return null;
   }
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   #[Route('/{username}/education', name: 'app_education_list')]
   public function educationList(string $username, EntityManagerInterface $entityManager): Response
   {
@@ -62,6 +64,8 @@ final class EducationEditController extends AbstractController
       'educationSection' => $educationSection,
     ]);
   }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/education/new', name: 'app_education_new')]
   public function educationNew(Request $request, EntityManagerInterface $entityManager, string $username): Response
@@ -119,6 +123,8 @@ final class EducationEditController extends AbstractController
     ]);
   }
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   #[Route('/{username}/education/{id}', name: 'app_education_edit', requirements: ['id' => '\d+'])]
   public function educationEdit(Request $request, EntityManagerInterface $entityManager, string $username, int $id): Response
   {
@@ -156,6 +162,8 @@ final class EducationEditController extends AbstractController
     ]);
   }
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   #[Route('/{username}/education/{id}/delete', name: 'app_education_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
   public function educationDelete(EntityManagerInterface $entityManager, string $username, int $id): Response
   {
@@ -178,7 +186,7 @@ final class EducationEditController extends AbstractController
     $entityManager->remove($education);
 
     // Check remaining educations
-    $remainingEducations = $resumeSection->getEducations()->count() - 1; // -1 for deletion
+    $remainingEducations = $resumeSection->getEducations()->count() - 1;
 
     if ($remainingEducations === 0) {
       $resumeSection->setIsVisible(false);

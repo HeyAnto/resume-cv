@@ -29,6 +29,8 @@ final class ExperienceEditController extends AbstractController
         return null;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/{username}/experience', name: 'app_experience_list')]
     public function experienceList(string $username, EntityManagerInterface $entityManager): Response
     {
@@ -62,6 +64,8 @@ final class ExperienceEditController extends AbstractController
             'workExperienceSection' => $workExperienceSection,
         ]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/experience/new', name: 'app_experience_new')]
     public function experienceNew(Request $request, EntityManagerInterface $entityManager, string $username): Response
@@ -119,6 +123,8 @@ final class ExperienceEditController extends AbstractController
         ]);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/{username}/experience/{id}', name: 'app_experience_edit', requirements: ['id' => '\d+'])]
     public function experienceEdit(Request $request, EntityManagerInterface $entityManager, string $username, int $id): Response
     {
@@ -156,6 +162,8 @@ final class ExperienceEditController extends AbstractController
         ]);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/{username}/experience/{id}/delete', name: 'app_experience_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function experienceDelete(EntityManagerInterface $entityManager, string $username, int $id): Response
     {
@@ -178,7 +186,7 @@ final class ExperienceEditController extends AbstractController
         $entityManager->remove($experience);
 
         // Check remaining experiences
-        $remainingExperiences = $resumeSection->getExperiences()->count() - 1; // -1 for deletion
+        $remainingExperiences = $resumeSection->getExperiences()->count() - 1;
 
         if ($remainingExperiences === 0) {
             $resumeSection->setIsVisible(false);
@@ -189,6 +197,8 @@ final class ExperienceEditController extends AbstractController
         $this->addFlash('success', 'Experience deleted successfully!');
         return $this->redirectToRoute('app_experience_list', ['username' => $username]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/experience/toggle-visibility', name: 'app_experience_toggle_visibility', methods: ['POST'])]
     public function toggleVisibility(EntityManagerInterface $entityManager, string $username): Response

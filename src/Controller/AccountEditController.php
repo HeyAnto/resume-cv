@@ -28,6 +28,8 @@ final class AccountEditController extends AbstractController
         return null;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/{username}/account', name: 'app_account_edit')]
     public function accountEdit(Request $request, EntityManagerInterface $entityManager, string $username): Response
     {
@@ -72,6 +74,8 @@ final class AccountEditController extends AbstractController
             'username' => $username,
         ]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/account/delete-account', name: 'app_account_delete', methods: ['POST'])]
     public function deleteAccount(string $username, EntityManagerInterface $entityManager, Request $request): Response

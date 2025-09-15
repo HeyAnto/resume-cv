@@ -1,6 +1,6 @@
 <a href="{{ path('app_post_edit', {'username': username, 'id': post.id}) }}" class="post-edit-card">
   <p class="text-16 text-color-secondary">
-    {{ post.description|slice(0, 150) }}{% if post.description|length > 150 %}...{% endif %}
+    {{ post.description }}
   </p>
   {% if post.imagePath %}
   <img class="img-post-edit" src="{{ asset('uploads/posts/' ~ post.imagePath) }}" alt="Post image">

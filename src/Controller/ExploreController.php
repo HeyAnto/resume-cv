@@ -17,6 +17,8 @@ final class ExploreController extends AbstractController
         return $this->redirectToRoute('app_explore_front');
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/explore/front', name: 'app_explore_front')]
     public function exploreFront(EntityManagerInterface $entityManager): Response
     {
@@ -37,6 +39,8 @@ final class ExploreController extends AbstractController
             'posts' => $posts
         ]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/explore/job', name: 'app_explore_job')]
     public function exploreJob(): Response

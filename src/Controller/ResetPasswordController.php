@@ -30,6 +30,8 @@ class ResetPasswordController extends AbstractController
         private EntityManagerInterface $entityManager
     ) {}
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Display & process form to request a password reset.
      */
@@ -59,6 +61,8 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Confirmation page after a user has requested a password reset.
      */
@@ -75,6 +79,8 @@ class ResetPasswordController extends AbstractController
             'resetToken' => $resetToken,
         ]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Validates and process the reset URL that the user clicked in their email.
@@ -109,7 +115,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_forgot_password_request');
         }
 
-        // The token is valid; allow the user to change their password.
+        // Token valid -> allow user to change
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
 
@@ -137,6 +143,8 @@ class ResetPasswordController extends AbstractController
             'resetToken' => $this->getTokenObjectFromSession(),
         ]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
     {
@@ -188,13 +196,11 @@ class ResetPasswordController extends AbstractController
         return $this->redirectToRoute('app_check_email');
     }
 
-    /**
-     * Allow logged-in users to change their password.
-     */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/change-password', name: 'app_change_password')]
     public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
-        // Ensure user is logged in
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         /** @var User $user */
@@ -207,7 +213,7 @@ class ResetPasswordController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
-            // Hash and set the new password
+            // Hash -> new password
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
             $this->entityManager->flush();
 

@@ -30,6 +30,8 @@ final class PostEditController extends AbstractController
         return null;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/{username}/post', name: 'app_post_list')]
     public function postList(string $username, EntityManagerInterface $entityManager): Response
     {
@@ -41,7 +43,7 @@ final class PostEditController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        // Get user's posts, sorted by most recent
+        // Posts sorted -> most recent
         $posts = $entityManager->getRepository(Post::class)->findBy(
             ['user' => $user],
             ['createdAt' => 'DESC']
@@ -52,6 +54,8 @@ final class PostEditController extends AbstractController
             'posts' => $posts,
         ]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/post/new', name: 'app_post_new')]
     public function postNew(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, string $username): Response
@@ -77,6 +81,28 @@ final class PostEditController extends AbstractController
             // Handle image upload
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
+                // Validate file type
+                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+                if (!in_array($imageFile->getMimeType(), $allowedMimeTypes)) {
+                    $this->addFlash('error', 'Please upload a valid image file (JPEG, PNG, WebP, or GIF)');
+                    return $this->render('profile-edit/post/post-edit.html.twig', [
+                        'form' => $form,
+                        'username' => $username,
+                        'post' => null,
+                    ]);
+                }
+
+                // Validate file size (5MB max)
+                $maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                if ($imageFile->getSize() > $maxSize) {
+                    $this->addFlash('error', 'Image file is too large. Max size is 5MB.');
+                    return $this->render('profile-edit/post/post-edit.html.twig', [
+                        'form' => $form,
+                        'username' => $username,
+                        'post' => null,
+                    ]);
+                }
+
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
@@ -106,6 +132,8 @@ final class PostEditController extends AbstractController
         ]);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/{username}/post/{id}', name: 'app_post_edit', requirements: ['id' => '\d+'])]
     public function postEdit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, string $username, int $id): Response
     {
@@ -130,6 +158,28 @@ final class PostEditController extends AbstractController
             // Handle image upload
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
+                // Validate file type
+                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+                if (!in_array($imageFile->getMimeType(), $allowedMimeTypes)) {
+                    $this->addFlash('error', 'Please upload a valid image file (JPEG, PNG, WebP, or GIF)');
+                    return $this->render('profile-edit/post/post-edit.html.twig', [
+                        'form' => $form,
+                        'username' => $username,
+                        'post' => $post,
+                    ]);
+                }
+
+                // Validate file size (5MB max)
+                $maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                if ($imageFile->getSize() > $maxSize) {
+                    $this->addFlash('error', 'Image file is too large. Max size is 5MB.');
+                    return $this->render('profile-edit/post/post-edit.html.twig', [
+                        'form' => $form,
+                        'username' => $username,
+                        'post' => $post,
+                    ]);
+                }
+
                 // Delete old image if exists
                 if ($post->getImagePath()) {
                     $oldImagePath = $this->getParameter('kernel.project_dir') . '/public/uploads/posts/' . $post->getImagePath();
@@ -167,6 +217,8 @@ final class PostEditController extends AbstractController
         ]);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/{username}/post/{id}/delete', name: 'app_post_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function postDelete(EntityManagerInterface $entityManager, string $username, int $id): Response
     {
@@ -198,6 +250,8 @@ final class PostEditController extends AbstractController
         $this->addFlash('success', 'Post deleted successfully!');
         return $this->redirectToRoute('app_post_list', ['username' => $username]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/post/{id}/toggle-visibility', name: 'app_post_toggle_visibility', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function toggleVisibility(EntityManagerInterface $entityManager, string $username, int $id): Response

@@ -13,11 +13,15 @@ class SecurityController extends AbstractController
 {
     use UserRedirectionTrait;
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/connection', name: 'app_connection')]
     public function connection(): Response
     {
         return $this->checkAuthAccess() ?? $this->redirectToRoute('app_login');
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route(path: '/connection/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -34,6 +38,8 @@ class SecurityController extends AbstractController
             'error' => $error,
         ]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void

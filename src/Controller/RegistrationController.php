@@ -28,6 +28,8 @@ class RegistrationController extends AbstractController
 
     public function __construct(private EmailVerifier $emailVerifier) {}
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
@@ -46,7 +48,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Mark as submitted
             $request->getSession()->set('form_submitted', true);
 
             // Check existing user
@@ -106,6 +107,9 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form,
         ]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/verify', name: 'app_verify_email_pending')]
     public function verifyUserEmailPending(): Response
     {
@@ -122,6 +126,8 @@ class RegistrationController extends AbstractController
         return $this->render('registration/verify_pending.html.twig');
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/resend-verification', name: 'app_resend_verification')]
     public function resendVerification(Request $request): Response
     {
@@ -135,7 +141,7 @@ class RegistrationController extends AbstractController
             return $this->redirectBasedOnUserStatus();
         }
 
-        // Rate limiting - max 1 email per 15 minutes
+        // Rate limiting -> per 15 minutes
         $lastSent = $request->getSession()->get('last_verification_sent');
         if ($lastSent && time() - $lastSent < 900) {
             $this->addFlash('error', 'Please wait 15 minutes before requesting another verification email.');
@@ -159,6 +165,8 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Verification email sent! Please check your inbox.');
         return $this->redirectToRoute('app_verify_email_pending');
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
@@ -185,6 +193,8 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Your email address has been verified.');
         return $this->redirectBasedOnUserStatus();
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/complete', name: 'app_complete')]
     public function profileComplete(Request $request, EntityManagerInterface $entityManager, Security $security): Response
