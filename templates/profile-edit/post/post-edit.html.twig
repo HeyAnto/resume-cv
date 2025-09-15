@@ -5,6 +5,7 @@
 <script src="{{ asset('js/character-counter.js') }}"></script>
 <script src="{{ asset('js/form-submit.js') }}"></script>
 <script src="{{ asset('js/image-preview.js') }}"></script>
+<script src="{{ asset('js/image-modal.js') }}"></script>
 {% endblock %}
 
 {% block title %}Profile Cooking — Resume.cv{% endblock %}
@@ -61,7 +62,7 @@
                 <div id="image-preview-container">
                     {% if post and post.imagePath %}
                     <img src="{{ asset('uploads/posts/' ~ post.imagePath) }}" alt="Current post image"
-                        class="img-edit-postform">
+                        class="img-edit-postform post-img">
                     {% endif %}
                 </div>
             </div>

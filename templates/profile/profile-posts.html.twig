@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/image-modal.js') }}"></script>
+{% endblock %}
+
 {% block title %}{{ profile.displayName }} — Resume.cv{% endblock %}
 
 {% block main %}

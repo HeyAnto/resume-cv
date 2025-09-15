@@ -47,7 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     const preview = document.createElement("img");
                     preview.src = e.target.result;
                     preview.alt = "Preview";
-                    preview.className = "image-preview img-edit-postform";
+                    preview.className =
+                        "image-preview img-edit-postform post-img";
+                    preview.style.cursor = "pointer";
 
                     // Add to preview container
                     previewContainer.appendChild(preview);

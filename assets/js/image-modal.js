@@ -30,13 +30,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Click events
+    document.addEventListener("click", function (e) {
+        if (
+            e.target.matches(".project-img img") ||
+            e.target.matches(".post-img")
+        ) {
+            e.stopPropagation();
+            openModal(e.target.src, e.target.alt);
+        }
+    });
+
+    // Set cursor
     const projectImages = document.querySelectorAll(".project-img img");
+    const postImages = document.querySelectorAll(".post-img");
+
     projectImages.forEach((img) => {
         img.style.cursor = "pointer";
-        img.addEventListener("click", function (e) {
-            e.stopPropagation();
-            openModal(this.src, this.alt);
-        });
+    });
+
+    postImages.forEach((img) => {
+        img.style.cursor = "pointer";
     });
 
     // Close handlers
