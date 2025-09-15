@@ -25,12 +25,13 @@ class EducationFormType extends AbstractType
           'placeholder' => 'Harvard University, MIT, etc.',
           'class' => 'form-control',
           'data-counter' => 'schoolName-counter',
-          'data-max' => '98'
+          'data-max' => '32',
+          'autocomplete' => 'off'
         ],
         'constraints' => [
           new Assert\NotBlank(['message' => 'School name is required']),
           new Assert\Length([
-            'max' => 98,
+            'max' => 32,
             'maxMessage' => 'School name cannot be longer than {{ limit }} characters'
           ])
         ]
@@ -42,7 +43,8 @@ class EducationFormType extends AbstractType
           'placeholder' => 'https://www.harvard.edu',
           'class' => 'form-control',
           'data-counter' => 'schoolLink-counter',
-          'data-max' => '98'
+          'data-max' => '98',
+          'autocomplete' => 'off'
         ],
         'constraints' => [
           new Assert\Length([
@@ -57,7 +59,8 @@ class EducationFormType extends AbstractType
           'placeholder' => 'Bachelor of Computer Science',
           'class' => 'form-control',
           'data-counter' => 'degree-counter',
-          'data-max' => '98'
+          'data-max' => '98',
+          'autocomplete' => 'off'
         ],
         'constraints' => [
           new Assert\NotBlank(['message' => 'Degree is required']),
@@ -73,7 +76,8 @@ class EducationFormType extends AbstractType
           'placeholder' => 'Cambridge, MA',
           'class' => 'form-control',
           'data-counter' => 'location-counter',
-          'data-max' => '32'
+          'data-max' => '32',
+          'autocomplete' => 'off'
         ],
         'constraints' => [
           new Assert\NotBlank(['message' => 'Location is required']),

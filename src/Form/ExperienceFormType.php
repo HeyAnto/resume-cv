@@ -25,7 +25,8 @@ class ExperienceFormType extends AbstractType
           'placeholder' => 'Google, Microsoft, etc.',
           'class' => 'form-control',
           'data-counter' => 'companyName-counter',
-          'data-max' => '32'
+          'data-max' => '32',
+          'autocomplete' => 'off'
         ],
         'constraints' => [
           new Assert\NotBlank(['message' => 'Company name is required']),
@@ -42,7 +43,8 @@ class ExperienceFormType extends AbstractType
           'placeholder' => 'https://www.example.com',
           'class' => 'form-control',
           'data-counter' => 'companyLink-counter',
-          'data-max' => '98'
+          'data-max' => '98',
+          'autocomplete' => 'off'
         ],
         'constraints' => [
           new Assert\Length([
@@ -57,7 +59,8 @@ class ExperienceFormType extends AbstractType
           'placeholder' => 'Full Stack Developer',
           'class' => 'form-control',
           'data-counter' => 'job-counter',
-          'data-max' => '32'
+          'data-max' => '32',
+          'autocomplete' => 'off'
         ],
         'constraints' => [
           new Assert\NotBlank(['message' => 'Job title is required']),
@@ -73,7 +76,8 @@ class ExperienceFormType extends AbstractType
           'placeholder' => 'Paris, France',
           'class' => 'form-control',
           'data-counter' => 'location-counter',
-          'data-max' => '32'
+          'data-max' => '32',
+          'autocomplete' => 'off'
         ],
         'constraints' => [
           new Assert\NotBlank(['message' => 'Location is required']),
