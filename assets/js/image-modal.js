@@ -54,11 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Close handlers
     closeButton.addEventListener("click", closeModal);
-    modalOverlay.addEventListener("click", function (e) {
-        if (e.target === modalOverlay) {
-            closeModal();
-        }
-    });
+    modalOverlay.addEventListener("click", closeModal);
 
     // Escape key
     document.addEventListener("keydown", function (e) {
