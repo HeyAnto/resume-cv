@@ -20,6 +20,8 @@ class FollowingController extends AbstractController
     private EntityManagerInterface $entityManager
   ) {}
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   #[Route('/following', name: 'app_following')]
   public function index(): Response
   {
@@ -32,10 +34,10 @@ class FollowingController extends AbstractController
     $user = $this->getUser();
     $currentProfile = $user->getProfile();
 
-    // Récupérer les profils suivis par l'utilisateur connecté
+    // Retrieve followed
     $followedProfiles = $currentProfile->getFollowing();
 
-    // Récupérer les posts des profils suivis seulement
+    // Retrieve followed posts
     $posts = [];
     if (!$followedProfiles->isEmpty()) {
       $posts = $this->entityManager->getRepository(Post::class)
@@ -51,7 +53,7 @@ class FollowingController extends AbstractController
         ->getResult();
     }
 
-    // Récupérer des suggestions de profils si l'utilisateur ne suit personne
+    // Profile suggestions
     $suggestedProfiles = [];
     if ($followedProfiles->isEmpty()) {
       $suggestedProfiles = $this->entityManager->getRepository(Profile::class)
