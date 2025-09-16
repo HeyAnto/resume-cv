@@ -17,10 +17,10 @@
   <section class="section-explore">
     <div class="front-grid">
 
-      {% include "_components/cards/post-card-news.html.twig" %}
+      {% include "/explore/_components/post-card-news.html.twig" %}
 
       {% for post in posts %}
-      {% include "_components/cards/post-card.html.twig" with {'post': post} %}
+      {% include "/explore/_components/post-card.html.twig" with {'post': post} %}
       {% endfor %}
 
     </div>

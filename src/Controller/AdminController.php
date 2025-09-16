@@ -19,6 +19,8 @@ final class AdminController extends AbstractController
         return $this->redirectToRoute('admin_users_list');
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/users', name: 'admin_users_list')]
     public function userList(UserRepository $userRepository): Response
     {
@@ -28,6 +30,8 @@ final class AdminController extends AbstractController
             'users' => $users,
         ]);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/users/{id}/verify', name: 'admin_user_verify', methods: ['POST'])]
     public function verifyUser(int $id, EntityManagerInterface $entityManager): JsonResponse
@@ -44,6 +48,8 @@ final class AdminController extends AbstractController
         return new JsonResponse(['success' => true, 'message' => 'User verified successfully']);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/users/{id}/unverify', name: 'admin_user_unverify', methods: ['POST'])]
     public function unverifyUser(int $id, EntityManagerInterface $entityManager): JsonResponse
     {
@@ -58,6 +64,8 @@ final class AdminController extends AbstractController
 
         return new JsonResponse(['success' => true, 'message' => 'User unverified successfully']);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/users/{id}/toggle-verified', name: 'admin_user_toggle_verified', methods: ['POST'])]
     public function toggleUserVerified(int $id, EntityManagerInterface $entityManager): JsonResponse

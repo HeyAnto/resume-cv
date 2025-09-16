@@ -247,6 +247,8 @@ final class EducationEditController extends AbstractController
     return $this->redirectToRoute('app_education_list', ['username' => $username]);
   }
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   #[Route('/{username}/education/toggle-visibility', name: 'app_education_toggle_visibility', methods: ['POST'])]
   public function toggleVisibility(EntityManagerInterface $entityManager, string $username): Response
   {
