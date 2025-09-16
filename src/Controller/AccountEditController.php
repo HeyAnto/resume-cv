@@ -77,15 +77,18 @@ final class AccountEditController extends AbstractController
 
             if (!$usernameChanged || $usernameForm->isValid()) {
                 if ($usernameChanged) {
+                    $profile->setUpdatedAt(new \DateTimeImmutable());
                     $entityManager->flush();
                     $this->addFlash('success', 'Username updated successfully');
                     return $this->redirectToRoute('app_account_edit', ['username' => $profile->getUsername()]);
                 }
+                $profile->setUpdatedAt(new \DateTimeImmutable());
                 $entityManager->flush();
             }
         }
 
         if ($emailForm->isSubmitted() && $emailForm->isValid()) {
+            $profile->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
             $this->addFlash('success', 'Email updated successfully');
         }

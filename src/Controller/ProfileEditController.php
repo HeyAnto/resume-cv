@@ -72,6 +72,7 @@ final class ProfileEditController extends AbstractController
       /** @var UploadedFile|null $profilePictureFile */
       $profilePictureFile = $form->get('profilePicture')->getData();
 
+      $profile->setUpdatedAt(new \DateTimeImmutable());
       $entityManager->flush();
 
       if ($profilePictureFile) {
@@ -108,6 +109,7 @@ final class ProfileEditController extends AbstractController
           }
 
           $profile->setProfilePicturePath('uploads/profile-pictures/' . $newFilename);
+          $profile->setUpdatedAt(new \DateTimeImmutable());
           $entityManager->flush();
           $this->addFlash('success', 'Profile picture successfully updated');
         } catch (FileException $e) {
@@ -173,6 +175,7 @@ final class ProfileEditController extends AbstractController
 
     // Reset default image
     $profile->setProfilePicturePath('images/img_default_user.webp');
+    $profile->setUpdatedAt(new \DateTimeImmutable());
     $entityManager->flush();
 
     $this->addFlash('success', 'Profile picture successfully deleted');

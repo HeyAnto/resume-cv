@@ -139,6 +139,7 @@ final class EducationEditController extends AbstractController
       $education->setUpdatedAt(new \DateTimeImmutable());
 
       $entityManager->persist($education);
+      $profile->setUpdatedAt(new \DateTimeImmutable());
       $entityManager->flush();
 
       $this->addFlash('success', 'Education created successfully!');
@@ -188,6 +189,7 @@ final class EducationEditController extends AbstractController
 
     if ($form->isSubmitted() && $form->isValid()) {
       $education->setUpdatedAt(new \DateTimeImmutable());
+      $profile->setUpdatedAt(new \DateTimeImmutable());
       $entityManager->flush();
 
       $this->addFlash('success', 'Education updated successfully!');
@@ -241,6 +243,7 @@ final class EducationEditController extends AbstractController
       $resumeSection->setIsVisible(false);
     }
 
+    $profile->setUpdatedAt(new \DateTimeImmutable());
     $entityManager->flush();
 
     $this->addFlash('success', 'Education deleted successfully!');
@@ -275,6 +278,7 @@ final class EducationEditController extends AbstractController
     foreach ($profile->getResumeSections() as $section) {
       if ($section->getLabel() === 'Education') {
         $section->setIsVisible(!$section->isVisible());
+        $profile->setUpdatedAt(new \DateTimeImmutable());
         $entityManager->flush();
 
         $status = $section->isVisible() ? 'visible' : 'hidden';

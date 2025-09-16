@@ -139,6 +139,7 @@ final class ExperienceEditController extends AbstractController
             $experience->setUpdatedAt(new \DateTimeImmutable());
 
             $entityManager->persist($experience);
+            $profile->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
 
             $this->addFlash('success', 'Experience created successfully!');
@@ -188,6 +189,7 @@ final class ExperienceEditController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $experience->setUpdatedAt(new \DateTimeImmutable());
+            $profile->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
 
             $this->addFlash('success', 'Experience updated successfully!');
@@ -241,6 +243,7 @@ final class ExperienceEditController extends AbstractController
             $resumeSection->setIsVisible(false);
         }
 
+        $profile->setUpdatedAt(new \DateTimeImmutable());
         $entityManager->flush();
 
         $this->addFlash('success', 'Experience deleted successfully!');
@@ -275,6 +278,7 @@ final class ExperienceEditController extends AbstractController
         foreach ($profile->getResumeSections() as $section) {
             if ($section->getLabel() === 'Work Experience') {
                 $section->setIsVisible(!$section->isVisible());
+                $profile->setUpdatedAt(new \DateTimeImmutable());
                 $entityManager->flush();
 
                 $status = $section->isVisible() ? 'visible' : 'hidden';
