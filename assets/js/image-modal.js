@@ -5,15 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="modal-overlay">
             <div class="modal-content">
                 <img class="modal-image" src="" alt="">
-                <button class="modal-close btn btn-secondary-xs text-14">Close</button>
             </div>
         </div>
     `;
     document.body.appendChild(modal);
 
     const modalOverlay = modal.querySelector(".modal-overlay");
+    const modalContent = modal.querySelector(".modal-content");
     const modalImage = modal.querySelector(".modal-image");
-    const closeButton = modal.querySelector(".modal-close");
 
     // Open modal
     function openModal(imageSrc, imageAlt) {
@@ -53,8 +52,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Close handlers
-    closeButton.addEventListener("click", closeModal);
-    modalOverlay.addEventListener("click", closeModal);
+    modalContent.addEventListener("click", closeModal);
+
+    // Prevent image click from closing modal
+    modalImage.addEventListener("click", function (e) {
+        e.stopPropagation();
+    });
 
     // Escape key
     document.addEventListener("keydown", function (e) {
