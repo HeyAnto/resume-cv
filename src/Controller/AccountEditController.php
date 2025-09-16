@@ -77,7 +77,9 @@ final class AccountEditController extends AbstractController
 
             if (!$usernameChanged || $usernameForm->isValid()) {
                 if ($usernameChanged) {
+                    $entityManager->flush();
                     $this->addFlash('success', 'Username updated successfully');
+                    return $this->redirectToRoute('app_account_edit', ['username' => $profile->getUsername()]);
                 }
                 $entityManager->flush();
             }
