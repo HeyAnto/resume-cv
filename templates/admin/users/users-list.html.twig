@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Cooking — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+{% include "/admin/_components/admin-sidebar.html.twig" %}
+
+<div class="main-content">
+    {% include "_components/headers/header-logout.html.twig" %}
+
+    <section class="section-admin-list">
+        <div class="container">
+
+            <div>
+                <h1 class="text-h1">Manage Users</h1>
+                <p class="text-16 text-color-tertiary">View and manage all registered users</p>
+            </div>
+
+            <div class="users-grid">
+                {% if users is not empty %}
+                {% for user in users %}
+                {% include "/admin/_components/admin-user-card.html.twig" with {'user': user} %}
+                {% endfor %}
+                {% else %}
+                <p class="text-16 text-color-secondary">No users found.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </section>
+</div>
+
+{% endblock %}

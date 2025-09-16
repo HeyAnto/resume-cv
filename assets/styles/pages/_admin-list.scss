@@ -1,0 +1,34 @@
+.section-admin-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 var(--spacing-xl);
+    padding-bottom: var(--spacing-huge);
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: var(--spacing-xl);
+
+        .users-grid {
+            width: 100%;
+            --max-columns: 4;
+            --grid-gap: var(--spacing-xl);
+            columns: var(--max-columns);
+            column-gap: var(--grid-gap);
+
+            @media (max-width: 1700px) {
+                --max-columns: 3;
+            }
+
+            @media (max-width: 1400px) {
+                --max-columns: 2;
+            }
+
+            @media (max-width: 1040px) {
+                --max-columns: 1;
+            }
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{% set profile = user.profile %}
+{% set profileUrl = profile and profile.username ? path('app_profile', {'username': profile.username}) : '#' %}
+
+<a href="{{ profileUrl }}" class="admin-user-card">
+  <div class="header-card">
+    <img class="profile-img" src="{{ asset(profile ? profile.profilePictureUrl : 'images/img_default_user.webp') }}"
+      alt="Profile picture of {{ profile ? profile.displayName : user.email }}">
+
+    {% if 'ROLE_ADMIN' in user.roles %}
+    <p class="text-14 text-color-primary">Admin</p>
+    {% elseif not user.isVerified %}
+    <p class="text-14 text-color-secondary">Unverified</p>
+    {% elseif not user.isProfileComplete %}
+    <p class="text-14 text-color-secondary">Incomplete</p>
+    {% else %}
+    <p class="text-14 text-color-secondary">User</p>
+    {% endif %}
+  </div>
+
+  <div class="flex flex-column">
+    <p class="text-14 text-color-primary">{{ profile ? profile.displayName ?? 'No display name' : 'No profile' }}</p>
+    <p class="text-14 text-color-secondary">
+      {% if profile and profile.job and profile.location %}
+      {{ profile.job }} at {{ profile.location }}
+      {% elseif profile and profile.job %}
+      {{ profile.job }}
+      {% elseif profile and profile.location %}
+      {{ profile.location }}
+      {% else %}
+      No job/location
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="flex flex-column">
+    <p class="text-14 text-color-primary">{{ profile ? profile.username ?? 'No username' : 'No username' }}</p>
+    <p class="text-14 text-color-primary">{{ user.email }}</p>
+  </div>
+
+  <div class="flex flex-column">
+    <p class="text-14 text-color-secondary">Created At {{ profile and profile.createdAt ? profile.createdAt|date('d/m/Y
+      H:i') : 'Unknown' }}</p>
+    <p class="text-14 text-color-secondary">Updated At {{ profile and profile.updatedAt ? profile.updatedAt|date('d/m/Y
+      H:i') : 'Never' }}</p>
+  </div>
+</a>

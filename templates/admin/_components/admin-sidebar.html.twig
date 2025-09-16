@@ -1,0 +1,12 @@
+<div class="profile-edit-sidebar">
+
+  <div class="flex flex-column">
+
+    <a href="{{ path('admin_users_list') }}"
+      class="btn-menu {{ app.request.get('_route') == 'admin_users_list' ? 'active' : '' }}">
+      Manage Users
+    </a>
+
+  </div>
+
+</div>
