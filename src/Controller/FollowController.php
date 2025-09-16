@@ -35,7 +35,7 @@ class FollowController extends AbstractController
       return $this->redirectToRoute('app_profile_edit');
     }
 
-    // Trouver le profil à follow
+    // Profile to follow
     $profileToFollow = $entityManager->getRepository(Profile::class)->findOneBy(['username' => $username]);
 
     if (!$profileToFollow) {
@@ -43,7 +43,7 @@ class FollowController extends AbstractController
       return $this->redirect($request->headers->get('referer') ?: '/');
     }
 
-    // Empêcher de se suivre soi-même
+    // Prevent self-following
     if ($currentProfile === $profileToFollow) {
       $this->addFlash('error', 'Vous ne pouvez pas vous suivre vous-même');
       return $this->redirect($request->headers->get('referer') ?: '/');
