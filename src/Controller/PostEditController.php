@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Form\PostFormType;
@@ -16,8 +17,15 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/profile')]
 final class PostEditController extends AbstractController
 {
+    use UserRedirectionTrait;
     private function checkUsernameAccess(string $username): ?Response
     {
+        // Check user access first
+        $userCheck = $this->checkUserAccess();
+        if ($userCheck) {
+            return $userCheck;
+        }
+
         /** @var User $user */
         $user = $this->getUser();
         $profile = $user->getProfile();

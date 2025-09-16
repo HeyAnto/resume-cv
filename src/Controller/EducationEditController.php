@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\Education;
 use App\Entity\ResumeSection;
 use App\Entity\User;
@@ -15,8 +16,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/profile')]
 final class EducationEditController extends AbstractController
 {
+  use UserRedirectionTrait;
   private function checkUsernameAccess(string $username): ?Response
   {
+    // Check user access first
+    $userCheck = $this->checkUserAccess();
+    if ($userCheck) {
+      return $userCheck;
+    }
+
     /** @var User $user */
     $user = $this->getUser();
     $profile = $user->getProfile();

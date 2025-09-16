@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\User;
 use App\Form\EmailFormType;
 use App\Form\UsernameFormType;
@@ -10,12 +11,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 #[Route('/profile')]
 final class AccountEditController extends AbstractController
 {
+    use UserRedirectionTrait;
     private function checkUsernameAccess(string $username): ?Response
     {
+        // Check user access first
+        $userCheck = $this->checkUserAccess();
+        if ($userCheck) {
+            return $userCheck;
+        }
+
         /** @var User $user */
         $user = $this->getUser();
         $profile = $user->getProfile();
@@ -78,7 +87,7 @@ final class AccountEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/account/delete-account', name: 'app_account_delete', methods: ['POST'])]
-    public function deleteAccount(string $username, EntityManagerInterface $entityManager, Request $request): Response
+    public function deleteAccount(string $username, EntityManagerInterface $entityManager, Request $request, TokenStorageInterface $tokenStorage): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -89,9 +98,6 @@ final class AccountEditController extends AbstractController
         $user = $this->getUser();
         $profile = $user->getProfile();
 
-        // Invalidate the session
-        $request->getSession()->invalidate();
-
         // Delete profile picture
         $profilePicturePath = $profile->getProfilePicturePath();
         if ($profilePicturePath && $profilePicturePath !== 'images/img_default_user.webp') {
@@ -101,7 +107,13 @@ final class AccountEditController extends AbstractController
             }
         }
 
-        // Remove the user
+        // Disconnect user
+        $tokenStorage->setToken(null);
+
+        // Invalidate session
+        $request->getSession()->invalidate();
+
+        // Remove user
         $entityManager->remove($user);
         $entityManager->flush();
 
