@@ -65,7 +65,17 @@
 
 {% if app.user.profile.username == username or is_granted('ROLE_ADMIN') %}
 <div class="profile-edit-btn">
+  {% if app.user.profile.username == username %}
   <a class="btn btn-primary-xs" href="{{ path('app_post_new', {'username': username}) }}">Post</a>
+  {% endif %}
   <a href="{{ path('app_profile_edit', {'username': username}) }}" class="btn btn-secondary-xs">Edit Profile</a>
+
+  {% if is_granted('ROLE_ADMIN') and app.user.profile.username != username %}
+  <button class="btn btn-warning-xs admin-verify-btn" data-user-id="{{ profile.user.id }}"
+    data-verified="{{ profile.user.isVerified ? 1 : 0 }}">
+    {{ profile.user.isVerified ? 'Unverify' : 'Verify' }}
+  </button>
+  <button class="btn btn-danger-xs admin-delete-btn" data-username="{{ username }}">Delete Account</button>
+  {% endif %}
 </div>
 {% endif %}

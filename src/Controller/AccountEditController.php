@@ -144,4 +144,35 @@ final class AccountEditController extends AbstractController
 
         return $this->redirectToRoute('app_login');
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #[Route('/{username}/admin-delete', name: 'app_admin_delete_account', methods: ['POST'])]
+    public function adminDeleteAccount(string $username, EntityManagerInterface $entityManager): Response
+    {
+        // Only admins
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Access denied.');
+        }
+
+        // Find user by username
+        $userRepository = $entityManager->getRepository(User::class);
+        $targetUser = $userRepository->findOneBy(['profile.username' => $username]);
+
+        if (!$targetUser) {
+            throw $this->createNotFoundException('User not found.');
+        }
+
+        if ($this->getUser() === $targetUser) {
+            $this->addFlash('error', 'You cannot delete your own account using this method.');
+            return $this->redirectToRoute('app_profile', ['username' => $username]);
+        }
+
+        // Remove user
+        $entityManager->remove($targetUser);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'User account has been deleted successfully.');
+        return $this->redirectToRoute('admin_users_list');
+    }
 }

@@ -28,10 +28,17 @@ final class ExploreController extends AbstractController
             $username = $user->getProfile()->getUsername();
         }
 
-        $posts = $entityManager->getRepository(\App\Entity\Post::class)->findBy(
-            ['isVisible' => true],
-            ['createdAt' => 'DESC']
-        );
+        // Show posts from verified users
+        $posts = $entityManager->getRepository(\App\Entity\Post::class)
+            ->createQueryBuilder('p')
+            ->join('p.user', 'u')
+            ->where('p.isVisible = :visible')
+            ->andWhere('u.isVerified = :verified')
+            ->setParameter('visible', true)
+            ->setParameter('verified', true)
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
 
         return $this->render('explore/front.html.twig', [
             'user' => $user,

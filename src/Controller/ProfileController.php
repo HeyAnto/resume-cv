@@ -50,6 +50,15 @@ final class ProfileController extends AbstractController
             return $this->redirectToRoute('app_not_found');
         }
 
+        // Hide unverified users
+        if (!$profile->getUser()->isVerified() && !$this->isGranted('ROLE_ADMIN')) {
+            /** @var User|null $currentUser */
+            $currentUser = $this->getUser();
+            if (!$currentUser || $currentUser->getProfile()->getUsername() !== $username) {
+                return $this->redirectToRoute('app_not_found');
+            }
+        }
+
         // Sort experiences by date
         foreach ($profile->getResumeSections() as $section) {
             $experiences = $section->getExperiences()->toArray();
@@ -83,6 +92,15 @@ final class ProfileController extends AbstractController
 
         if (!$profile) {
             return $this->redirectToRoute('app_not_found');
+        }
+
+        // Hide unverified users' profiles unless you're admin or the owner
+        if (!$profile->getUser()->isVerified() && !$this->isGranted('ROLE_ADMIN')) {
+            /** @var User|null $currentUser */
+            $currentUser = $this->getUser();
+            if (!$currentUser || $currentUser->getProfile()->getUsername() !== $username) {
+                return $this->redirectToRoute('app_not_found');
+            }
         }
 
         // User posts visible sorted -> most recent

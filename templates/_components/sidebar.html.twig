@@ -82,9 +82,15 @@
     {% if app.user and is_granted('ROLE_ADMIN') %}
     <li>
       <a class="nav-button" href="{{ path('admin_index') }}">
-        {% include "_icons/admin-badge.html.twig" with {
-        'class': 'nav-icon' ~ (app.request.pathInfo starts with '/admin' ? ' active' : '')
+        {% if app.request.pathInfo starts with '/admin' %}
+        {% include "_icons/admin-badge-fill.html.twig" with {
+        'class': 'nav-icon active'
         } %}
+        {% else %}
+        {% include "_icons/admin-badge.html.twig" with {
+        'class': 'nav-icon'
+        } %}
+        {% endif %}
         <span class="nav-tooltip text-12">Admin</span>
       </a>
     </li>

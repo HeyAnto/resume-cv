@@ -35,4 +35,15 @@
             object-fit: cover;
         }
     }
+
+    .admin-actions {
+        display: flex;
+        gap: var(--spacing-xs);
+        margin-top: var(--spacing-sm);
+
+        .btn {
+            font-size: 0.75rem; // 12px
+            padding: var(--spacing-xs) var(--spacing-sm);
+        }
+    }
 }

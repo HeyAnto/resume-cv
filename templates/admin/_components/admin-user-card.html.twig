@@ -1,7 +1,7 @@
 {% set profile = user.profile %}
 {% set profileUrl = profile and profile.username ? path('app_profile', {'username': profile.username}) : '#' %}
 
-<a href="{{ profileUrl }}" class="admin-user-card">
+<a href="{{ profileUrl }}" target="_blank" class="admin-user-card">
   <div class="header-card">
     <img class="profile-img" src="{{ asset(profile ? profile.profilePictureUrl : 'images/img_default_user.webp') }}"
       alt="Profile picture of {{ profile ? profile.displayName : user.email }}">
@@ -43,4 +43,15 @@
     <p class="text-14 text-color-secondary">Updated At {{ profile and profile.updatedAt ? profile.updatedAt|date('d/m/Y
       H:i') : 'Never' }}</p>
   </div>
+
+  {% if app.user != user %}
+  <div class="admin-actions" onclick="event.preventDefault();">
+    <button class="btn btn-warning-xs admin-verify-btn" data-user-id="{{ user.id }}"
+      data-verified="{{ user.isVerified ? 1 : 0 }}">
+      {{ user.isVerified ? 'Unverify' : 'Verify' }}
+    </button>
+    <button class="btn btn-danger-xs admin-delete-btn"
+      data-username="{{ profile ? profile.username : 'no-username' }}">Delete Account</button>
+  </div>
+  {% endif %}
 </a>
