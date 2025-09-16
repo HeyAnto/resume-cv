@@ -241,7 +241,11 @@ class RegistrationController extends AbstractController
             }
 
             // Update role
-            $user->setRoles(['ROLE_USER_COMPLETE']);
+            $roles = $user->getRoles();
+            if (!in_array('ROLE_USER_COMPLETE', $roles)) {
+                $roles[] = 'ROLE_USER_COMPLETE';
+                $user->setRoles($roles);
+            }
 
             $entityManager->persist($profile);
             $entityManager->persist($user);
