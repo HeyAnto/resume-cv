@@ -23,9 +23,9 @@
 
     <div class="following-users">
       {% if suggestedProfiles is not empty %}
-        {% for profile in suggestedProfiles %}
-        {% include "/following/_components/following-card.html.twig" with {'profile': profile} %}
-        {% endfor %}
+      {% for profile in suggestedProfiles %}
+      {% include "/following/_components/following-card.html.twig" with {'profile': profile} %}
+      {% endfor %}
       {% endif %}
     </div>
     {% else %}
