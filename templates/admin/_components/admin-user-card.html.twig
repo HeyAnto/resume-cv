@@ -2,11 +2,11 @@
 {% set profileUrl = profile and profile.username ? path('app_profile', {'username': profile.username}) : '#' %}
 
 <div class="admin-user-card">
+
   <a href="{{ profileUrl }}" target="_blank" class="card-info">
     <div class="header-card">
       <img class="profile-img" src="{{ asset(profile ? profile.profilePictureUrl : 'images/img_default_user.webp') }}"
         alt="Profile picture of {{ profile ? profile.displayName : user.email }}">
-
       {% if 'ROLE_ADMIN' in user.roles %}
       <p class="text-14 text-color-primary">Admin</p>
       {% elseif not user.isVerified %}
@@ -35,7 +35,7 @@
 
     <div class="flex flex-column">
       <p class="text-14 text-color-primary">{{ profile ? profile.username ?? 'No username' : 'No username' }}</p>
-      <p class="text-14 text-color-primary">{{ user.email }}</p>
+      <p class="text-14 text-color-secondary">{{ user.email }}</p>
     </div>
 
     <div class="flex flex-column">

@@ -20,17 +20,17 @@
         <div class="container">
 
             <div>
-                <h1 class="text-h1">Manage Users</h1>
-                <p class="text-16 text-color-tertiary">View and manage all registered users</p>
+                <h1 class="text-h1">Manage Posts</h1>
+                <p class="text-16 text-color-tertiary">View and manage all published posts</p>
             </div>
 
-            <form method="GET" action="{{ path('admin_users_list') }}" class="flex-row flex-wrap items-end">
+            <form method="GET" action="{{ path('admin_posts_list') }}" class="flex-row flex-wrap items-end">
                 <div class="form-group full-width">
                     <label class="text-16 text-color-tertiary">
                         Search
                     </label>
                     <input type="text" name="search" value="{{ search }}"
-                        placeholder="John Doe, johndoe, john@gmail.com, designer..." autocomplete="off">
+                        placeholder="Post description, author name, username, email..." autocomplete="off">
                 </div>
 
                 <div class="form-group">
@@ -49,17 +49,17 @@
 
                 <div class="flex gap-xs">
                     <button type="submit" class="btn btn-primary-xs">Search</button>
-                    <a href="{{ path('admin_users_list') }}" class="btn btn-secondary-xs">Clear</a>
+                    <a href="{{ path('admin_posts_list') }}" class="btn btn-secondary-xs">Clear</a>
                 </div>
             </form>
 
             <div class="admin-list-grid">
-                {% if users is not empty %}
-                {% for user in users %}
-                {% include "/admin/_components/admin-user-card.html.twig" with {'user': user} %}
+                {% if posts is not empty %}
+                {% for post in posts %}
+                {% include "/admin/_components/admin-post-card.html.twig" with {'post': post} %}
                 {% endfor %}
                 {% else %}
-                <p class="text-16 text-color-secondary">No users found.</p>
+                <p class="text-16 text-color-secondary">No posts found.</p>
                 {% endif %}
             </div>
 

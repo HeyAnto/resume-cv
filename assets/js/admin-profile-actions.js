@@ -50,12 +50,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     `Are you sure you want to delete the account "${username}"? This action cannot be undone.`
                 )
             ) {
-                // Create a form and submit it
+                // Create a form -> submit
                 const form = document.createElement("form");
                 form.method = "POST";
                 form.action = `/profile/${username}/admin-delete`;
 
-                // Add CSRF token if available
+                // Add CSRF token
                 const csrfToken = document.querySelector(
                     'meta[name="csrf-token"]'
                 );
@@ -69,6 +69,76 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 document.body.appendChild(form);
                 form.submit();
+            }
+        });
+    });
+
+    // Handle post visibility
+    const postVisibilityBtns = document.querySelectorAll(
+        ".admin-post-visibility-btn"
+    );
+    postVisibilityBtns.forEach(function (visibilityBtn) {
+        visibilityBtn.addEventListener("click", function () {
+            const postId = this.getAttribute("data-post-id");
+
+            fetch(`/admin/posts/${postId}/toggle-visibility`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        // Update button text
+                        this.textContent = data.isVisible
+                            ? "Hide Post"
+                            : "Show Post";
+                        alert(data.message);
+                    } else {
+                        alert("Error: " + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("An error occurred while updating post visibility.");
+                });
+        });
+    });
+
+    // Handle post delete
+    const postDeleteBtns = document.querySelectorAll(".admin-post-delete-btn");
+    postDeleteBtns.forEach(function (deleteBtn) {
+        deleteBtn.addEventListener("click", function () {
+            const postId = this.getAttribute("data-post-id");
+
+            if (
+                confirm(
+                    "Are you sure you want to delete this post? This action cannot be undone."
+                )
+            ) {
+                fetch(`/admin/posts/${postId}/delete`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            // Remove the post
+                            this.closest(".admin-post-card").remove();
+                            alert(data.message);
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("An error occurred while deleting the post.");
+                    });
             }
         });
     });

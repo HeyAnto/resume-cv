@@ -7,6 +7,11 @@
       Manage Users
     </a>
 
+    <a href="{{ path('admin_posts_list') }}"
+      class="btn-menu {{ app.request.get('_route') == 'admin_posts_list' ? 'active' : '' }}">
+      Manage Posts
+    </a>
+
   </div>
 
 </div>

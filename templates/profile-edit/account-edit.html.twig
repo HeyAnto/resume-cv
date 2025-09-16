@@ -26,7 +26,7 @@
 
             {{ form_start(usernameForm, {'attr': {'id': 'username-form'}}) }}
 
-            <div class="form-group full">
+            <div class="form-group">
                 <label class="text-16 text-color-tertiary" for="{{ usernameForm.username.vars.id }}">Username</label>
                 <div class="flex gap-sm">
                     {{ form_widget(usernameForm.username) }}
@@ -39,13 +39,11 @@
 
             {{ form_start(emailForm, {'attr': {'id': 'email-form'}}) }}
 
-            <div class="form-group disabled">
+            <div class="form-group">
                 <label class="text-16 text-color-tertiary" for="{{ emailForm.email.vars.id }}">Email</label>
                 <div class="flex gap-sm">
-                    {{ form_widget(emailForm.email, {'attr': {'disabled': true, 'style': 'cursor: not-allowed;
-                    pointer-events: none;'}}) }}
-                    <button type="button" class="btn btn-secondary-xs" disabled
-                        style="cursor: not-allowed; pointer-events: none;">Modify</button>
+                    {{ form_widget(emailForm.email) }}
+                    <button type="submit" class="btn btn-secondary-xs">Modify</button>
                 </div>
                 <div class="text-14 text-color-red">{{ form_errors(emailForm.email) }}</div>
             </div>

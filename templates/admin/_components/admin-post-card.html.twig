@@ -1,0 +1,50 @@
+<div class="admin-post-card">
+
+  <div class="card-info">
+    <a href="{{ path('admin_users_list', {'search': post.user.profile.username}) }}" class="flex flex-column gap-lg">
+      <div class="header-card">
+        <img class="profile-img"
+          src="{{ asset(post.user.profile.profilePicturePath ? post.user.profile.profilePicturePath : 'images/img_default_user.webp') }}"
+          alt="Profile picture of {{ post.user.profile.displayName }}">
+        <p class="text-14 text-color-secondary">{{ 'ROLE_ADMIN' in post.user.roles ? 'Admin' : 'User' }}</p>
+      </div>
+
+      <div class="flex flex-column">
+        <p class="text-14 text-color-primary">
+          {{ post.user.profile.displayName }}
+        </p>
+        <p class="text-14 text-color-secondary">
+          {{ post.user.profile.username }}
+        </p>
+        <p class="text-14 text-color-secondary">
+          {{ post.user.email }}
+        </p>
+      </div>
+
+      <p class="text-14 text-color-secondary">
+        {{ post.description|length > 100 ? post.description|slice(0, 100) ~ '...' : post.description }}
+      </p>
+
+      <div class="flex flex-column">
+        <p class="text-14 text-color-secondary">Created At {{ post.createdAt|date('d/m/Y H:i') }}</p>
+        <p class="text-14 text-color-secondary">Updated At {{ post.updatedAt|date('d/m/Y H:i') }}</p>
+      </div>
+    </a>
+
+    {% if post.imagePath %}
+    <img class="post-img" src="{{ asset('uploads/posts/' ~ post.imagePath) }}"
+      alt="Post image by {{ post.user.profile.displayName }}">
+    {% endif %}
+  </div>
+
+  <div class="admin-actions" onclick="event.preventDefault();">
+    <button class="btn btn-warning-xs admin-post-visibility-btn" data-post-id="{{ post.id }}">
+      {{ post.isVisible ? 'Hide Post' : 'Show Post' }}
+    </button>
+
+    <button class="btn btn-danger-xs admin-post-delete-btn" data-post-id="{{ post.id }}">
+      Delete
+    </button>
+  </div>
+
+</div>

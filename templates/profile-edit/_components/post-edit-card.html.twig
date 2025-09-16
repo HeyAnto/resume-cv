@@ -3,6 +3,7 @@
     {{ post.description }}
   </p>
   {% if post.imagePath %}
-  <img class="img-post-edit" src="{{ asset('uploads/posts/' ~ post.imagePath) }}" alt="Post image">
+  <img class="img-post-edit" src="{{ asset('uploads/posts/' ~ post.imagePath) }}"
+    alt="Post image by {{ post.user.profile.displayName }}">
   {% endif %}
 </a>
