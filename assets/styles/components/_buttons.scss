@@ -51,4 +51,26 @@
             opacity: 0.94;
         }
     }
+
+    &.btn-warning-xs {
+        color: #f4f4f4;
+        background-color: var(--color-yellow);
+        border-radius: var(--radius-xs);
+        transition: opacity 0.2s ease;
+
+        &:hover {
+            opacity: 0.94;
+        }
+    }
+
+    &.btn-danger-xs {
+        color: #f4f4f4;
+        background-color: var(--color-red-2);
+        border-radius: var(--radius-xs);
+        transition: opacity 0.2s ease;
+
+        &:hover {
+            opacity: 0.94;
+        }
+    }
 }
