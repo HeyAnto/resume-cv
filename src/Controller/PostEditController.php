@@ -30,12 +30,13 @@ final class PostEditController extends AbstractController
         $user = $this->getUser();
         $profile = $user->getProfile();
 
-        // Redirect to public profile
-        if ($profile->getUsername() !== $username) {
-            return $this->redirectToRoute('app_profile', ['username' => $username]);
+        // Allow access
+        if ($this->isGranted('ROLE_ADMIN') || $profile->getUsername() === $username) {
+            return null;
         }
 
-        return null;
+        // Redirect to public profile
+        return $this->redirectToRoute('app_profile', ['username' => $username]);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,12 +49,23 @@ final class PostEditController extends AbstractController
             return $usernameCheck;
         }
 
-        /** @var User $user */
-        $user = $this->getUser();
+        // Get user and profile by username
+        $targetUser = $entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->join('u.profile', 'p')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$targetUser) {
+            throw $this->createNotFoundException('User not found');
+        }
+        $profile = $targetUser->getProfile();
 
         // Posts sorted -> most recent
         $posts = $entityManager->getRepository(Post::class)->findBy(
-            ['user' => $user],
+            ['user' => $targetUser],
             ['createdAt' => 'DESC']
         );
 
@@ -73,11 +85,22 @@ final class PostEditController extends AbstractController
             return $usernameCheck;
         }
 
-        /** @var User $user */
-        $user = $this->getUser();
+        // Get user and profile by username
+        $targetUser = $entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->join('u.profile', 'p')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$targetUser) {
+            throw $this->createNotFoundException('User not found');
+        }
+        $profile = $targetUser->getProfile();
 
         $post = new Post();
-        $post->setUser($user);
+        $post->setUser($targetUser);
         $post->setCreatedAt(new \DateTimeImmutable());
         $post->setUpdatedAt(new \DateTimeImmutable());
         $post->setIsVisible(true);
@@ -150,12 +173,23 @@ final class PostEditController extends AbstractController
             return $usernameCheck;
         }
 
-        /** @var User $user */
-        $user = $this->getUser();
+        // Get user and profile by username
+        $targetUser = $entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->join('u.profile', 'p')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$targetUser) {
+            throw $this->createNotFoundException('User not found');
+        }
+        $profile = $targetUser->getProfile();
 
         $post = $entityManager->getRepository(Post::class)->find($id);
 
-        if (!$post || $post->getUser() !== $user) {
+        if (!$post || $post->getUser() !== $targetUser) {
             throw $this->createNotFoundException('Post not found');
         }
 
@@ -235,12 +269,23 @@ final class PostEditController extends AbstractController
             return $usernameCheck;
         }
 
-        /** @var User $user */
-        $user = $this->getUser();
+        // Get user and profile by username
+        $targetUser = $entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->join('u.profile', 'p')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$targetUser) {
+            throw $this->createNotFoundException('User not found');
+        }
+        $profile = $targetUser->getProfile();
 
         $post = $entityManager->getRepository(Post::class)->find($id);
 
-        if (!$post || $post->getUser() !== $user) {
+        if (!$post || $post->getUser() !== $targetUser) {
             throw $this->createNotFoundException('Post not found');
         }
 
@@ -269,12 +314,23 @@ final class PostEditController extends AbstractController
             return $usernameCheck;
         }
 
-        /** @var User $user */
-        $user = $this->getUser();
+        // Get user and profile by username
+        $targetUser = $entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->join('u.profile', 'p')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$targetUser) {
+            throw $this->createNotFoundException('User not found');
+        }
+        $profile = $targetUser->getProfile();
 
         $post = $entityManager->getRepository(Post::class)->find($id);
 
-        if (!$post || $post->getUser() !== $user) {
+        if (!$post || $post->getUser() !== $targetUser) {
             throw $this->createNotFoundException('Post not found');
         }
 

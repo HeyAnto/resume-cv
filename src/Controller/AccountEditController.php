@@ -29,12 +29,13 @@ final class AccountEditController extends AbstractController
         $user = $this->getUser();
         $profile = $user->getProfile();
 
-        // Redirect to public profile
-        if ($profile->getUsername() !== $username) {
-            return $this->redirectToRoute('app_profile', ['username' => $username]);
+        // Allow access
+        if ($this->isGranted('ROLE_ADMIN') || $profile->getUsername() === $username) {
+            return null;
         }
 
-        return null;
+        // Redirect to public profile
+        return $this->redirectToRoute('app_profile', ['username' => $username]);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,12 +48,22 @@ final class AccountEditController extends AbstractController
             return $usernameCheck;
         }
 
-        /** @var User $user */
-        $user = $this->getUser();
-        $profile = $user->getProfile();
+        // Get user and profile by username
+        $targetUser = $entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->join('u.profile', 'p')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$targetUser) {
+            throw $this->createNotFoundException('User not found');
+        }
+        $profile = $targetUser->getProfile();
 
         $usernameForm = $this->createForm(UsernameFormType::class, $profile);
-        $emailForm = $this->createForm(EmailFormType::class, $user);
+        $emailForm = $this->createForm(EmailFormType::class, $targetUser);
 
         // Store original username
         $originalUsername = $profile->getUsername();
@@ -94,9 +105,19 @@ final class AccountEditController extends AbstractController
             return $usernameCheck;
         }
 
-        /** @var User $user */
-        $user = $this->getUser();
-        $profile = $user->getProfile();
+        // Get user and profile by username
+        $targetUser = $entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->join('u.profile', 'p')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$targetUser) {
+            throw $this->createNotFoundException('User not found');
+        }
+        $profile = $targetUser->getProfile();
 
         // Delete profile picture
         $profilePicturePath = $profile->getProfilePicturePath();
@@ -107,14 +128,16 @@ final class AccountEditController extends AbstractController
             }
         }
 
-        // Disconnect user
-        $tokenStorage->setToken(null);
-
-        // Invalidate session
-        $request->getSession()->invalidate();
+        // Only disconnect if admin is deleting their own account
+        if ($this->getUser() === $targetUser) {
+            // Disconnect user
+            $tokenStorage->setToken(null);
+            // Invalidate session
+            $request->getSession()->invalidate();
+        }
 
         // Remove user
-        $entityManager->remove($user);
+        $entityManager->remove($targetUser);
         $entityManager->flush();
 
         return $this->redirectToRoute('app_login');

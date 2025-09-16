@@ -27,12 +27,13 @@ final class ProfileEditController extends AbstractController
     $user = $this->getUser();
     $profile = $user->getProfile();
 
-    // Redirect to public profile
-    if ($profile->getUsername() !== $username) {
-      return $this->redirectToRoute('app_profile', ['username' => $username]);
+    // Allow access
+    if ($this->isGranted('ROLE_ADMIN') || $profile->getUsername() === $username) {
+      return null;
     }
 
-    return null;
+    // Redirect to public profile
+    return $this->redirectToRoute('app_profile', ['username' => $username]);
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,9 +51,19 @@ final class ProfileEditController extends AbstractController
       return $usernameCheck;
     }
 
-    /** @var User $user */
-    $user = $this->getUser();
-    $profile = $user->getProfile();
+    // Get user and profile by username
+    $targetUser = $entityManager->getRepository(User::class)
+      ->createQueryBuilder('u')
+      ->join('u.profile', 'p')
+      ->where('p.username = :username')
+      ->setParameter('username', $username)
+      ->getQuery()
+      ->getOneOrNullResult();
+
+    if (!$targetUser) {
+      throw $this->createNotFoundException('User not found');
+    }
+    $profile = $targetUser->getProfile();
 
     $form = $this->createForm(ProfileFormType::class, $profile);
     $form->handleRequest($request);
@@ -112,6 +123,7 @@ final class ProfileEditController extends AbstractController
 
     return $this->render('profile-edit/profile-edit.html.twig', [
       'username' => $username,
+      'profile' => $profile,
       'form' => $form->createView(),
     ]);
   }
@@ -136,9 +148,19 @@ final class ProfileEditController extends AbstractController
       return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
     }
 
-    /** @var User $user */
-    $user = $this->getUser();
-    $profile = $user->getProfile();
+    // Get user and profile by username
+    $targetUser = $entityManager->getRepository(User::class)
+      ->createQueryBuilder('u')
+      ->join('u.profile', 'p')
+      ->where('p.username = :username')
+      ->setParameter('username', $username)
+      ->getQuery()
+      ->getOneOrNullResult();
+
+    if (!$targetUser) {
+      throw $this->createNotFoundException('User not found');
+    }
+    $profile = $targetUser->getProfile();
     $oldPath = $profile->getProfilePicturePath();
 
     // Delete old image

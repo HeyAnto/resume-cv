@@ -2,24 +2,24 @@
 
   <div class="flex flex-column">
 
-    <a href="{{ path('app_profile_edit', {'username': app.user.profile.username}) }}"
+    <a href="{{ path('app_profile_edit', {'username': username}) }}"
       class="btn-menu {{ app.request.get('_route') == 'app_profile_edit' ? 'active' : '' }}">
       General
     </a>
 
-    <a href="{{ path('app_account_edit', {'username': app.user.profile.username}) }}"
+    <a href="{{ path('app_account_edit', {'username': username}) }}"
       class="btn-menu {{ app.request.get('_route') == 'app_account_edit' ? 'active' : '' }}">
       Account
     </a>
 
-    <a href="{{ path('app_post_list', {'username': app.user.profile.username}) }}"
+    <a href="{{ path('app_post_list', {'username': username}) }}"
       class="btn-menu {{ app.request.get('_route') == 'app_post_list' ? 'active' : '' }}">
       Post
     </a>
 
     <div class="order-menu">
 
-      <a href="{{ path('app_experience_list', {'username': app.user.profile.username}) }}"
+      <a href="{{ path('app_experience_list', {'username': username}) }}"
         class="btn-menu {{ app.request.get('_route') in ['app_experience_list', 'app_experience_edit'] ? 'active' : '' }}">
         Work Experience
         {% include "_icons/order-drag.html.twig" with {
@@ -34,7 +34,7 @@
         } %}
       </a> #}
 
-      <a href="{{ path('app_education_list', {'username': app.user.profile.username}) }}"
+      <a href="{{ path('app_education_list', {'username': username}) }}"
         class="btn-menu {{ app.request.get('_route') in ['app_education_list', 'app_education_edit'] ? 'active' : '' }}">
         Education
         {% include "_icons/order-drag.html.twig" with {

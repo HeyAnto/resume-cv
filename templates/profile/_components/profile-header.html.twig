@@ -52,7 +52,7 @@
   </div>
 </div>
 
-{% if app.user.profile.username == username %}
+{% if app.user.profile.username == username or is_granted('ROLE_ADMIN') %}
 <div class="profile-edit-btn">
   <a class="btn btn-primary-xs" href="{{ path('app_post_new', {'username': username}) }}">Post</a>
   <a href="{{ path('app_profile_edit', {'username': username}) }}" class="btn btn-secondary-xs">Edit Profile</a>
