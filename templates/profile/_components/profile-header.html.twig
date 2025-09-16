@@ -1,7 +1,9 @@
 <div class="profile-header">
   <div class="profile-info">
+
     <img class="profile-img" src="{{ asset(profile.profilePictureUrl) }}"
       alt="Profile picture of {{ profile.displayName }}">
+
     <div class="info">
       <div class="flex flex-column">
         <div class="title">
@@ -18,12 +20,21 @@
           {{ profile.job }}{% if profile.location %} in {{ profile.location }}{% endif %}
         </p>
       </div>
-      <div class="flex gap-sm">
+
+      <div class="flex items-center gap-sm">
         {# <a href="" class="tag-follow text-14 ">Follow</a> #}
+
         {% if profile.websiteName and profile.websiteLink %}
         <a class="tag-website text-14 text-color-secondary" href="{{ profile.websiteLink }}" target="_blank">
           {{ profile.websiteName }}
         </a>
+        {% endif %}
+
+        {% if 'ROLE_ADMIN' in profile.user.roles %}
+        <div class="badge-container">
+          {% include "_icons/admin-badge.html.twig" with {'class': 'badge-icon admin'} %}
+          <span class="badge-tooltip text-12">Admin</span>
+        </div>
         {% endif %}
       </div>
     </div>

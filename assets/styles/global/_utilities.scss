@@ -59,6 +59,9 @@
 }
 
 // Gap
+.gap-xxs {
+    gap: var(--spacing-xxs);
+}
 .gap-xs {
     gap: var(--spacing-xs);
 }
