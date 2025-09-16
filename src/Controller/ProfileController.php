@@ -63,6 +63,13 @@ final class ProfileController extends AbstractController
         foreach ($profile->getResumeSections() as $section) {
             $experiences = $section->getExperiences()->toArray();
             usort($experiences, function ($a, $b) {
+                if ($a->getEndDate() === null && $b->getEndDate() !== null) {
+                    return -1;
+                }
+                if ($a->getEndDate() !== null && $b->getEndDate() === null) {
+                    return 1;
+                }
+
                 return $b->getStartDate() <=> $a->getStartDate();
             });
             $section->getExperiences()->clear();

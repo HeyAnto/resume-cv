@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/admin-profile-actions.js') }}"></script>
+{% endblock %}
+
 {% block title %}Admin Cooking — Resume.cv{% endblock %}
 
 {% block main %}

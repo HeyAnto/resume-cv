@@ -155,9 +155,14 @@ final class AccountEditController extends AbstractController
             throw $this->createAccessDeniedException('Access denied.');
         }
 
-        // Find user by username
-        $userRepository = $entityManager->getRepository(User::class);
-        $targetUser = $userRepository->findOneBy(['profile.username' => $username]);
+        // Find user by username using QueryBuilder
+        $targetUser = $entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->join('u.profile', 'p')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found.');

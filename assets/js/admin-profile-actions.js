@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Handle verify/unverify button
-    const verifyBtn = document.querySelector(".admin-verify-btn");
-    if (verifyBtn) {
+    // Handle verify/unverify buttons
+    const verifyBtns = document.querySelectorAll(".admin-verify-btn");
+    verifyBtns.forEach(function (verifyBtn) {
         verifyBtn.addEventListener("click", function () {
             const userId = this.getAttribute("data-user-id");
 
@@ -37,11 +37,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
                 });
         });
-    }
+    });
 
-    // Handle delete button
-    const deleteBtn = document.querySelector(".admin-delete-btn");
-    if (deleteBtn) {
+    // Handle delete buttons
+    const deleteBtns = document.querySelectorAll(".admin-delete-btn");
+    deleteBtns.forEach(function (deleteBtn) {
         deleteBtn.addEventListener("click", function () {
             const username = this.getAttribute("data-username");
 
@@ -71,5 +71,5 @@ document.addEventListener("DOMContentLoaded", function () {
                 form.submit();
             }
         });
-    }
+    });
 });
