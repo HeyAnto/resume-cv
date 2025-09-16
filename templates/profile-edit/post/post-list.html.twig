@@ -34,11 +34,19 @@
                 username} %}
                 {% endfor %}
             </div>
-            {% else %}
-            <div class="flex flex-column gap-sm">
-                <p class="text-16 text-color-tertiary">No posts yet. Create your first post!</p>
-            </div>
             {% endif %}
+
+            {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+            {% endfor %}
 
         </div>
     </section>

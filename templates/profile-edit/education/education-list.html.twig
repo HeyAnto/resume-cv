@@ -35,6 +35,22 @@
             {% endif %}
           </button>
         </form>
+
+        {% if educationSection %}
+        <div class="flex gap-sm">
+          <form action="{{ path('app_education_change_order', {'username': username}) }}" method="post"
+            style="display: inline; width: 100%;">
+            <input type="hidden" name="direction" value="up">
+            <button type="submit" class="btn full btn-secondary-xs">↑ Move Up (Order: {{ educationSection.orderIndex
+              }})</button>
+          </form>
+          <form action="{{ path('app_education_change_order', {'username': username}) }}" method="post"
+            style="display: inline; width: 100%;">
+            <input type="hidden" name="direction" value="down">
+            <button type="submit" class="btn full btn-secondary-xs">↓ Move Down</button>
+          </form>
+        </div>
+        {% endif %}
         {% endif %}
       </div>
 

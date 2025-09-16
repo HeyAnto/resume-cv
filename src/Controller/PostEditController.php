@@ -159,6 +159,7 @@ final class PostEditController extends AbstractController
         return $this->render('profile-edit/post/post-edit.html.twig', [
             'form' => $form,
             'username' => $username,
+            'profile' => $profile,
             'post' => null,
         ]);
     }
@@ -255,6 +256,7 @@ final class PostEditController extends AbstractController
         return $this->render('profile-edit/post/post-edit.html.twig', [
             'form' => $form,
             'username' => $username,
+            'profile' => $profile,
             'post' => $post,
         ]);
     }

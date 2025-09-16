@@ -78,10 +78,16 @@ final class ProfileController extends AbstractController
             }
         }
 
+        // Sort resume sections by orderIndex
+        $resumeSections = $profile->getResumeSections()->toArray();
+        usort($resumeSections, function ($a, $b) {
+            return $a->getOrderIndex() <=> $b->getOrderIndex();
+        });
+
         return $this->render('profile/profile.html.twig', [
             'username' => $username,
             'profile' => $profile,
-            'resumeSections' => $profile->getResumeSections()
+            'resumeSections' => $resumeSections
         ]);
     }
 

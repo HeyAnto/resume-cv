@@ -79,6 +79,7 @@ final class EducationEditController extends AbstractController
 
     return $this->render('profile-edit/education/education-list.html.twig', [
       'username' => $username,
+      'profile' => $profile,
       'educations' => $educations,
       'educationSection' => $educationSection,
     ]);
@@ -149,6 +150,7 @@ final class EducationEditController extends AbstractController
     return $this->render('profile-edit/education/education-edit.html.twig', [
       'form' => $form,
       'username' => $username,
+      'profile' => $profile,
       'education' => null,
     ]);
   }
@@ -199,6 +201,7 @@ final class EducationEditController extends AbstractController
     return $this->render('profile-edit/education/education-edit.html.twig', [
       'form' => $form,
       'username' => $username,
+      'profile' => $profile,
       'education' => $education,
     ]);
   }
@@ -285,6 +288,74 @@ final class EducationEditController extends AbstractController
         $this->addFlash('success', "Education section is now {$status}!");
         break;
       }
+    }
+
+    return $this->redirectToRoute('app_education_list', ['username' => $username]);
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  #[Route('/{username}/education/change-order', name: 'app_education_change_order', methods: ['POST'])]
+  public function changeOrder(Request $request, EntityManagerInterface $entityManager, string $username): Response
+  {
+    $usernameCheck = $this->checkUsernameAccess($username);
+    if ($usernameCheck) {
+      return $usernameCheck;
+    }
+
+    // Get user and profile by username
+    $targetUser = $entityManager->getRepository(User::class)
+      ->createQueryBuilder('u')
+      ->join('u.profile', 'p')
+      ->where('p.username = :username')
+      ->setParameter('username', $username)
+      ->getQuery()
+      ->getOneOrNullResult();
+
+    if (!$targetUser) {
+      throw $this->createNotFoundException('User not found');
+    }
+    $profile = $targetUser->getProfile();
+
+    $direction = $request->request->get('direction');
+
+    // Find Education section
+    $educationSection = null;
+    foreach ($profile->getResumeSections() as $section) {
+      if ($section->getLabel() === 'Education') {
+        $educationSection = $section;
+        break;
+      }
+    }
+
+    if (!$educationSection) {
+      $this->addFlash('error', 'Education section not found');
+      return $this->redirectToRoute('app_education_list', ['username' => $username]);
+    }
+
+    $currentOrder = $educationSection->getOrderIndex();
+    $newOrder = $direction === 'up' ? $currentOrder - 1 : $currentOrder + 1;
+
+    // Find section with the target order index
+    $targetSection = null;
+    foreach ($profile->getResumeSections() as $section) {
+      if ($section->getOrderIndex() === $newOrder) {
+        $targetSection = $section;
+        break;
+      }
+    }
+
+    if ($targetSection) {
+      // Swap order indexes
+      $targetSection->setOrderIndex($currentOrder);
+      $educationSection->setOrderIndex($newOrder);
+
+      $profile->setUpdatedAt(new \DateTimeImmutable());
+      $entityManager->flush();
+
+      $this->addFlash('success', 'Section order updated successfully!');
+    } else {
+      $this->addFlash('error', 'Cannot move section in that direction');
     }
 
     return $this->redirectToRoute('app_education_list', ['username' => $username]);

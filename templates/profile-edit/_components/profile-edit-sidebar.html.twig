@@ -21,46 +21,49 @@
       Post
     </a>
 
-    <div class="order-menu">
+    {# Get sections info first #}
+    {% set workExperienceOrder = null %}
+    {% set educationOrder = null %}
+    {% set targetProfile = profile is defined ? profile : app.user.profile %}
+    {% if targetProfile and targetProfile.resumeSections %}
+    {% for section in targetProfile.resumeSections %}
+    {% if section.label == 'Work Experience' %}
+    {% set workExperienceOrder = section.orderIndex %}
+    {% elseif section.label == 'Education' %}
+    {% set educationOrder = section.orderIndex %}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
 
-      <a href="{{ path('app_experience_list', {'username': username}) }}"
-        class="btn-menu {{ app.request.get('_route') in ['app_experience_list', 'app_experience_edit'] ? 'active' : '' }}">
-        Work Experience
-        {% include "_icons/order-drag.html.twig" with {
-        'class': 'menu-icon'
-        } %}
+    {# Set default orders if sections don't exist #}
+    {% set workExperienceOrder = workExperienceOrder ?? 1 %}
+    {% set educationOrder = educationOrder ?? 2 %}
+
+    {# Display sections in order based on orderIndex #}
+    {% if workExperienceOrder <= educationOrder %} <a href="{{ path('app_experience_list', {'username': username}) }}"
+      class="btn-menu {{ app.request.get('_route') in ['app_experience_list', 'app_experience_edit'] ? 'active' : '' }}">
+      Work Experience
+      <span class="text-12 text-color-tertiary">{{ workExperienceOrder }}</span>
       </a>
-
-      {# <a href="" class="btn-menu">
-        Projects
-        {% include "_icons/order-drag.html.twig" with {
-        'class': 'menu-icon'
-        } %}
-      </a> #}
 
       <a href="{{ path('app_education_list', {'username': username}) }}"
         class="btn-menu {{ app.request.get('_route') in ['app_education_list', 'app_education_edit'] ? 'active' : '' }}">
         Education
-        {% include "_icons/order-drag.html.twig" with {
-        'class': 'menu-icon'
-        } %}
+        <span class="text-12 text-color-tertiary">{{ educationOrder }}</span>
+      </a>
+      {% else %}
+      <a href="{{ path('app_education_list', {'username': username}) }}"
+        class="btn-menu {{ app.request.get('_route') in ['app_education_list', 'app_education_edit'] ? 'active' : '' }}">
+        Education
+        <span class="text-12 text-color-tertiary">{{ educationOrder }}</span>
       </a>
 
-      {# <a href="" class="btn-menu">
-        Certifications
-        {% include "_icons/order-drag.html.twig" with {
-        'class': 'menu-icon'
-        } %}
-      </a> #}
-
-      {# <a href="" class="btn-menu">
-        Volunteering
-        {% include "_icons/order-drag.html.twig" with {
-        'class': 'menu-icon'
-        } %}
-      </a> #}
-
-    </div>
+      <a href="{{ path('app_experience_list', {'username': username}) }}"
+        class="btn-menu {{ app.request.get('_route') in ['app_experience_list', 'app_experience_edit'] ? 'active' : '' }}">
+        Work Experience
+        <span class="text-12 text-color-tertiary">{{ workExperienceOrder }}</span>
+      </a>
+      {% endif %}
 
   </div>
 

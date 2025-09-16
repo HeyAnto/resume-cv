@@ -79,6 +79,7 @@ final class ExperienceEditController extends AbstractController
 
         return $this->render('profile-edit/experience/experience-list.html.twig', [
             'username' => $username,
+            'profile' => $profile,
             'experiences' => $experiences,
             'workExperienceSection' => $workExperienceSection,
         ]);
@@ -149,6 +150,7 @@ final class ExperienceEditController extends AbstractController
         return $this->render('profile-edit/experience/experience-edit.html.twig', [
             'form' => $form,
             'username' => $username,
+            'profile' => $profile,
             'experience' => null,
         ]);
     }
@@ -199,6 +201,7 @@ final class ExperienceEditController extends AbstractController
         return $this->render('profile-edit/experience/experience-edit.html.twig', [
             'form' => $form,
             'username' => $username,
+            'profile' => $profile,
             'experience' => $experience,
         ]);
     }
@@ -285,6 +288,74 @@ final class ExperienceEditController extends AbstractController
                 $this->addFlash('success', "Work Experience section is now {$status}!");
                 break;
             }
+        }
+
+        return $this->redirectToRoute('app_experience_list', ['username' => $username]);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #[Route('/{username}/experience/change-order', name: 'app_experience_change_order', methods: ['POST'])]
+    public function changeOrder(Request $request, EntityManagerInterface $entityManager, string $username): Response
+    {
+        $usernameCheck = $this->checkUsernameAccess($username);
+        if ($usernameCheck) {
+            return $usernameCheck;
+        }
+
+        // Get user and profile by username
+        $targetUser = $entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->join('u.profile', 'p')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$targetUser) {
+            throw $this->createNotFoundException('User not found');
+        }
+        $profile = $targetUser->getProfile();
+
+        $direction = $request->request->get('direction');
+
+        // Find Work Experience section
+        $workExperienceSection = null;
+        foreach ($profile->getResumeSections() as $section) {
+            if ($section->getLabel() === 'Work Experience') {
+                $workExperienceSection = $section;
+                break;
+            }
+        }
+
+        if (!$workExperienceSection) {
+            $this->addFlash('error', 'Work Experience section not found');
+            return $this->redirectToRoute('app_experience_list', ['username' => $username]);
+        }
+
+        $currentOrder = $workExperienceSection->getOrderIndex();
+        $newOrder = $direction === 'up' ? $currentOrder - 1 : $currentOrder + 1;
+
+        // Find section with the target order index
+        $targetSection = null;
+        foreach ($profile->getResumeSections() as $section) {
+            if ($section->getOrderIndex() === $newOrder) {
+                $targetSection = $section;
+                break;
+            }
+        }
+
+        if ($targetSection) {
+            // Swap order indexes
+            $targetSection->setOrderIndex($currentOrder);
+            $workExperienceSection->setOrderIndex($newOrder);
+
+            $profile->setUpdatedAt(new \DateTimeImmutable());
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Section order updated successfully!');
+        } else {
+            $this->addFlash('error', 'Cannot move section in that direction');
         }
 
         return $this->redirectToRoute('app_experience_list', ['username' => $username]);

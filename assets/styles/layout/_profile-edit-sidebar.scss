@@ -14,11 +14,6 @@
         text-decoration: none;
         color: var(--color-text-tertiary);
 
-        .menu-icon {
-            width: 1.25rem; // 20px
-            height: 1.25rem; // 20px
-        }
-
         &:hover {
             background-color: var(--color-bg-secondary);
         }

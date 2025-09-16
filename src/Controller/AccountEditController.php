@@ -97,6 +97,7 @@ final class AccountEditController extends AbstractController
             'usernameForm' => $usernameForm->createView(),
             'emailForm' => $emailForm->createView(),
             'username' => $username,
+            'profile' => $profile,
         ]);
     }
 
