@@ -29,12 +29,19 @@
     alt="Post image by {{ post.user.profile.displayName }}">
   {% endif %}
 
-  {# <div class="post-interactions">
-    <a href="" class="post-interactions">
-      <p class="like-text text-14">{{ post.likedBy|length }}</p>
-      {% include "_icons/heart.html.twig" with {
-      'class': 'like-icon'
-      } %}
-    </a>
-  </div> #}
+  <div class="flex justify-end">
+    <form method="get" action="{{ path('app_post_like', {'id': post.id}) }}" style="display: inline;">
+      <button type="submit"
+        class="post-interactions{{ app.user and app.user.profile and post.isLikedBy(app.user.profile) ? ' active' : '' }}">
+        <span
+          class="like-text text-14{{ app.user and app.user.profile and post.isLikedBy(app.user.profile) ? ' active' : '' }}">{{
+          post.likesCount }}</span>
+        {% if app.user and app.user.profile and post.isLikedBy(app.user.profile) %}
+        {% include "_icons/heart-fill.html.twig" with {'class': 'like-icon'} %}
+        {% else %}
+        {% include "_icons/heart.html.twig" with {'class': 'like-icon'} %}
+        {% endif %}
+      </button>
+    </form>
+  </div>
 </div>
