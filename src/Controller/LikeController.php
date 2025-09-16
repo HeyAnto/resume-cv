@@ -47,7 +47,6 @@ class LikeController extends AbstractController
 
     $entityManager->flush();
 
-    // Rediriger vers la page précédente
     return $this->redirect($request->headers->get('referer') ?: '/');
   }
 }

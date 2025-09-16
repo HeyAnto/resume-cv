@@ -32,7 +32,7 @@
   <div class="flex justify-end">
     <form method="get" action="{{ path('app_post_like', {'id': post.id}) }}" style="display: inline;">
       <button type="submit"
-        class="post-interactions{{ app.user and app.user.profile and post.isLikedBy(app.user.profile) ? ' active' : '' }}">
+        class="post-interactions btn-reset{{ app.user and app.user.profile and post.isLikedBy(app.user.profile) ? ' active' : '' }}">
         <span
           class="like-text text-14{{ app.user and app.user.profile and post.isLikedBy(app.user.profile) ? ' active' : '' }}">{{
           post.likesCount }}</span>

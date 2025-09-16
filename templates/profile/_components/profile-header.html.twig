@@ -22,7 +22,19 @@
       </div>
 
       <div class="flex items-center gap-sm">
-        {# <a href="" class="tag-follow text-14 ">Follow</a> #}
+        {% if app.user and app.user.profile and app.user.profile != profile %}
+        <form method="get" action="{{ path('app_profile_follow', {'username': username}) }}" style="display: inline;">
+          <button type="submit"
+            class="tag-follow btn-reset text-14{{ app.user.profile.isFollowing(profile) ? ' unfollow' : '' }}">
+            {% if app.user.profile.isFollowing(profile) %}
+            <span class="follow-text-default">Following</span>
+            <span class="follow-text-hover">Unfollow</span>
+            {% else %}
+            Follow
+            {% endif %}
+          </button>
+        </form>
+        {% endif %}
 
         {% if profile.websiteName and profile.websiteLink %}
         <a class="tag-website text-14 text-color-secondary" href="{{ profile.websiteLink }}" target="_blank">

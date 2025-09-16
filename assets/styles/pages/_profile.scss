@@ -121,14 +121,32 @@
                     background-color: var(--color-text-primary);
                     border-radius: var(--radius-full);
                     text-decoration: none;
+                    position: relative;
 
                     &:hover {
                         opacity: 0.94;
                     }
 
-                    &.unfollow:hover {
-                        color: var(--color-text-primary);
-                        background-color: var(--color-red-2);
+                    // Style pour le bouton "Following" qui devient "Unfollow" au hover
+                    &.unfollow {
+                        .follow-text-default {
+                            display: inline;
+                        }
+                        .follow-text-hover {
+                            display: none;
+                        }
+
+                        &:hover {
+                            color: var(--color-text-primary);
+                            background-color: var(--color-red-2);
+
+                            .follow-text-default {
+                                display: none;
+                            }
+                            .follow-text-hover {
+                                display: inline;
+                            }
+                        }
                     }
                 }
 

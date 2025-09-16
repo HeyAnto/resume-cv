@@ -1,3 +1,13 @@
+.btn-reset {
+    font-family: var(--font-primary);
+    font-size: 0.875rem; // 14px
+    font-weight: 500;
+    border: none;
+    background-color: transparent;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 .btn {
     padding: var(--spacing-sm) var(--spacing-lg);
     font-family: var(--font-primary);
