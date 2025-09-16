@@ -19,6 +19,16 @@
         border-radius: var(--radius-xs);
         transition: opacity 0.2s ease;
 
+        &.danger {
+            background-color: var(--color-red-2);
+            color: #f4f4f4;
+        }
+
+        &.blue {
+            background-color: var(--color-blue);
+            color: #f4f4f4;
+        }
+
         &:hover {
             opacity: 0.94;
         }
@@ -32,6 +42,11 @@
 
         &.danger {
             background-color: var(--color-red-2);
+            color: #f4f4f4;
+        }
+
+        &.blue {
+            background-color: var(--color-blue);
             color: #f4f4f4;
         }
 

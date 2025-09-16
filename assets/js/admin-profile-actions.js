@@ -39,6 +39,54 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Handle admin role buttons
+    const adminRoleBtns = document.querySelectorAll(".admin-role-btn");
+    adminRoleBtns.forEach(function (roleBtn) {
+        roleBtn.addEventListener("click", function () {
+            const userId = this.getAttribute("data-user-id");
+            const isAdmin = this.getAttribute("data-is-admin") === "1";
+
+            const action = isAdmin ? "remove" : "add";
+            const confirmMessage = isAdmin
+                ? "Are you sure you want to remove admin role from this user?"
+                : "Are you sure you want to make this user an admin?";
+
+            if (confirm(confirmMessage)) {
+                fetch(`/admin/users/${userId}/toggle-admin-role`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            // Update button & data
+                            this.textContent = data.isAdmin
+                                ? "Remove Admin"
+                                : "Make Admin";
+                            this.setAttribute(
+                                "data-is-admin",
+                                data.isAdmin ? 1 : 0
+                            );
+
+                            // Show success message
+                            alert(data.message);
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert(
+                            "An error occurred while updating user admin role."
+                        );
+                    });
+            }
+        });
+    });
+
     // Handle delete buttons
     const deleteBtns = document.querySelectorAll(".admin-delete-btn");
     deleteBtns.forEach(function (deleteBtn) {

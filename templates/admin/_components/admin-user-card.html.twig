@@ -54,6 +54,10 @@
       data-verified="{{ user.isVerified ? 1 : 0 }}">
       {{ user.isVerified ? 'Unverify' : 'Verify' }}
     </button>
+    <button class="btn btn-primary-xs blue admin-role-btn" data-user-id="{{ user.id }}"
+      data-is-admin="{{ 'ROLE_ADMIN' in user.roles ? 1 : 0 }}">
+      {{ 'ROLE_ADMIN' in user.roles ? 'Remove Admin' : 'Make Admin' }}
+    </button>
     <button class="btn btn-danger-xs admin-delete-btn"
       data-username="{{ profile ? profile.username : 'no-username' }}">Delete Account</button>
   </div>

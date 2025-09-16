@@ -109,6 +109,48 @@ final class AdminController extends AbstractController
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    #[Route('/users/{id}/toggle-admin-role', name: 'admin_user_toggle_admin_role', methods: ['POST'])]
+    public function toggleUserAdminRole(int $id, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            return new JsonResponse(['success' => false, 'message' => 'User not found'], 404);
+        }
+
+        // Ne pas permettre de se retirer le rôle admin à soi-même
+        if ($user === $this->getUser()) {
+            return new JsonResponse(['success' => false, 'message' => 'You cannot modify your own admin role'], 403);
+        }
+
+        $roles = $user->getRoles();
+        $isAdmin = in_array('ROLE_ADMIN', $roles);
+
+        if ($isAdmin) {
+            // Remove ADMIN ROLE
+            $roles = array_diff($roles, ['ROLE_ADMIN']);
+            $user->setRoles(array_values($roles));
+            $status = 'removed';
+        } else {
+            // Add ADMIN ROLE
+            if (!in_array('ROLE_ADMIN', $roles)) {
+                $roles[] = 'ROLE_ADMIN';
+                $user->setRoles($roles);
+            }
+            $status = 'added';
+        }
+
+        $entityManager->flush();
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => "Admin role {$status} successfully",
+            'isAdmin' => in_array('ROLE_ADMIN', $user->getRoles())
+        ]);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/posts', name: 'admin_posts_list')]
     public function postList(Request $request, PostRepository $postRepository): Response
     {
