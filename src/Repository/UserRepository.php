@@ -33,28 +33,47 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * Search users with filters
+     */
+    public function findWithFilters(?string $search = null, ?\DateTimeInterface $createdAfter = null, ?\DateTimeInterface $updatedAfter = null): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->leftJoin('u.profile', 'p')
+            ->addSelect('p');
 
-//    public function findOneBySomeField($value): ?User
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($search) {
+            $qb->andWhere('
+                u.email LIKE :search OR 
+                p.username LIKE :search OR 
+                p.displayName LIKE :search OR 
+                p.job LIKE :search
+            ')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($createdAfter) {
+            $qb->andWhere('p.createdAt >= :createdAfter')
+                ->setParameter('createdAfter', $createdAfter);
+        }
+
+        if ($updatedAfter) {
+            $qb->andWhere('p.updatedAt >= :updatedAfter')
+                ->setParameter('updatedAfter', $updatedAfter);
+        }
+
+        return $qb->orderBy('u.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    //    public function findOneBySomeField($value): ?User
+    //    {
+    //        return $this->createQueryBuilder('u')
+    //            ->andWhere('u.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

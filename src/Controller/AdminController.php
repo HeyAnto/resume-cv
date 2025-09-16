@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -22,12 +23,28 @@ final class AdminController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/users', name: 'admin_users_list')]
-    public function userList(UserRepository $userRepository): Response
+    public function userList(Request $request, UserRepository $userRepository): Response
     {
-        $users = $userRepository->findAll();
+        $search = $request->query->get('search');
+        $createdAt = $request->query->get('created_at');
+        $updatedAt = $request->query->get('updated_at');
+
+        // Convert string dates to DateTime objects
+        $createdAfter = $createdAt ? new \DateTime($createdAt) : null;
+        $updatedAfter = $updatedAt ? new \DateTime($updatedAt) : null;
+
+        // Use the search method or fallback to findAll
+        if ($search || $createdAfter || $updatedAfter) {
+            $users = $userRepository->findWithFilters($search, $createdAfter, $updatedAfter);
+        } else {
+            $users = $userRepository->findAll();
+        }
 
         return $this->render('admin/users/users-list.html.twig', [
             'users' => $users,
+            'search' => $search,
+            'created_at' => $createdAt,
+            'updated_at' => $updatedAt,
         ]);
     }
 

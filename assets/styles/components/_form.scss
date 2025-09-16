@@ -22,9 +22,8 @@ form {
         flex-direction: column;
         gap: var(--spacing-xs);
 
-        .flex input {
-            flex: 1;
-            width: auto;
+        &.full-width {
+            width: 100%;
         }
 
         &.disabled {
