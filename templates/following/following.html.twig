@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/image-modal.js') }}"></script>
+{% endblock %}
+
+{% block title %}Following — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-following">
+    {% if followedProfiles is empty %}
+    <div class="empty-state margin-b-xl">
+      <h3 class="text-16 text-color-primary">Profile suggestions</h3>
+      <p class="text-16 text-color-secondary">Start following other users to see their content</p>
+    </div>
+
+    <div class="following-users">
+      {% if suggestedProfiles is not empty %}
+        {% for profile in suggestedProfiles %}
+        {% include "/following/_components/following-card.html.twig" with {'profile': profile} %}
+        {% endfor %}
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="following-users">
+      {% for profile in followedProfiles %}
+      {% include "/following/_components/following-card.html.twig" with {'profile': profile} %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="following-grid">
+      {% if posts is empty %}
+      <div class="flex flex-column empty-posts">
+        {% if followedProfiles is empty %}
+        <p class="text-16 text-color-secondary">
+          You're not following anyone yet. Follow users to see their posts here.
+        </p>
+        {% else %}
+        <p class="text-16 text-color-secondary">
+          The people you follow haven't published any content yet.
+        </p>
+        {% endif %}
+      </div>
+      {% else %}
+      {% for post in posts %}
+      {% include "/explore/_components/post-card.html.twig" with {'post': post} %}
+      {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+{% endblock %}

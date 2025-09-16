@@ -17,6 +17,7 @@
 @use "components/job-card";
 @use "components/resume-card";
 @use "components/resume-edit-card";
+@use "components/following-card";
 @use "components/post-edit-card";
 @use "components/admin-user-card";
 @use "components/admin-post-card";
@@ -27,5 +28,6 @@
 @use "pages/explore";
 @use "pages/profile";
 @use "pages/profile-edit";
+@use "pages/following";
 @use "pages/notfound";
 @use "pages/admin-list";

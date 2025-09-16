@@ -49,8 +49,8 @@
       </a>
     </li> #}
 
-    {# <li>
-      <a class="nav-button" href="{{ path('app_login') }}">
+    <li>
+      <a class="nav-button" href="{{ path('app_following') }}">
         {% if app.request.pathInfo starts with '/following' %}
         {% include "_icons/following-fill.html.twig" with {
         'class': 'nav-icon active'
@@ -62,7 +62,7 @@
         {% endif %}
         <span class="nav-tooltip text-12">Following</span>
       </a>
-    </li> #}
+    </li>
 
     {# <li>
       <a class="nav-button" href="{{ path('app_login') }}">
