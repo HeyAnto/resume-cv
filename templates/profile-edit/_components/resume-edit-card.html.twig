@@ -16,6 +16,15 @@
   <p class="text-16 text-color-primary">{{ certification.title }}</p>
   <p class="text-16 text-color-secondary">{{ certification.authority }}</p>
 </a>
+{% elseif item.organizationName is defined %}
+{# Volunteering item #}
+{% set volunteering = item %}
+<a href="{{ path('app_volunteering_edit', {'username': username, 'id': volunteering.id}) }}" class="resume-edit-card">
+  <p class="text-16 text-color-secondary">{{ volunteering.startDate|date('Y') }} — {{ volunteering.endDate ?
+    volunteering.endDate|date('Y') : 'Now' }}</p>
+  <p class="text-16 text-color-primary">{{ volunteering.role }} at {{ volunteering.organizationName }}</p>
+  <p class="text-16 text-color-secondary">{{ volunteering.location }}</p>
+</a>
 {% else %}
 {# Experience item #}
 {% set experience = item %}

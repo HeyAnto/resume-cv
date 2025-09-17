@@ -22,6 +22,9 @@
     'credentialUrl': certification.credentialUrl
     } %}
     {% endfor %}
+    {% for volunteering in section.volunteerings %}
+    {% include "/profile/_components/resume-card.html.twig" with {'volunteering': volunteering} %}
+    {% endfor %}
   </div>
 </div>
 {% endif %}
