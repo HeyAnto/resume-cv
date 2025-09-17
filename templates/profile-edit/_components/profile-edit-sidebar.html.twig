@@ -45,33 +45,33 @@
 
     {# Display sections in order based on orderIndex #}
     {% set sections = [
-      {
-        'name': 'Work Experience',
-        'order': workExperienceOrder,
-        'path': 'app_experience_list',
-        'routes': ['app_experience_list', 'app_experience_edit', 'app_experience_new']
-      },
-      {
-        'name': 'Education',
-        'order': educationOrder,
-        'path': 'app_education_list',
-        'routes': ['app_education_list', 'app_education_edit', 'app_education_new']
-      },
-      {
-        'name': 'Certifications',
-        'order': certificationOrder,
-        'path': 'app_certification_list',
-        'routes': ['app_certification_list', 'app_certification_edit', 'app_certification_new']
-      }
+    {
+    'name': 'Work Experience',
+    'order': workExperienceOrder,
+    'path': 'app_experience_list',
+    'routes': ['app_experience_list', 'app_experience_edit', 'app_experience_new']
+    },
+    {
+    'name': 'Education',
+    'order': educationOrder,
+    'path': 'app_education_list',
+    'routes': ['app_education_list', 'app_education_edit', 'app_education_new']
+    },
+    {
+    'name': 'Certifications',
+    'order': certificationOrder,
+    'path': 'app_certification_list',
+    'routes': ['app_certification_list', 'app_certification_edit', 'app_certification_new']
+    }
     ]|sort((a, b) => a.order <=> b.order) %}
 
-    {% for section in sections %}
+      {% for section in sections %}
       <a href="{{ path(section.path, {'username': username}) }}"
         class="btn-menu {{ app.request.get('_route') in section.routes ? 'active' : '' }}">
         {{ section.name }}
         <span class="text-12 text-color-tertiary">{{ section.order }}</span>
       </a>
-    {% endfor %}
+      {% endfor %}
 
   </div>
 

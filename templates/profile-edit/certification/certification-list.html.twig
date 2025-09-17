@@ -9,76 +9,76 @@
 {% include "/profile-edit/_components/profile-edit-sidebar.html.twig" %}
 
 <div class="main-content">
-    {% include "_components/headers/header-logout.html.twig" %}
+  {% include "_components/headers/header-logout.html.twig" %}
 
-    <section class="section-profile-edit">
-        <div class="container">
+  <section class="section-profile-edit">
+    <div class="container">
 
-            <div>
-                <h1 class="text-h1">Certifications</h1>
-                <p class="text-16 text-color-tertiary">Add or modify your professional certifications</p>
-            </div>
+      <div>
+        <h1 class="text-h1">Certifications</h1>
+        <p class="text-16 text-color-tertiary">Add or modify your professional certifications</p>
+      </div>
 
-            <div class="flex flex-column gap-sm">
-                <a href="{{ path('app_certification_new', {'username': username}) }}" class="btn btn-primary-xs full">
-                    Add a certification
-                </a>
+      <div class="flex flex-column gap-sm">
+        <a href="{{ path('app_certification_new', {'username': username}) }}" class="btn btn-primary-xs full">
+          Add a certification
+        </a>
 
-                {% if certifications is not empty %}
-                <form action="{{ path('app_certification_toggle_visibility', {'username': username}) }}" method="post"
-                    style="display: inline;">
-                    <button type="submit" class="btn btn-secondary-xs full">
-                        {% if certificationSection and certificationSection.isVisible %}
-                        Hide Section
-                        {% else %}
-                        Show Section
-                        {% endif %}
-                    </button>
-                </form>
-
-                {% if certificationSection %}
-                <div class="flex gap-sm">
-                    <form action="{{ path('app_certification_change_order', {'username': username}) }}" method="post"
-                        style="display: inline; width: 100%;">
-                        <input type="hidden" name="direction" value="up">
-                        <button type="submit" class="btn full btn-secondary-xs">↑ Move Up (Order: {{
-                            certificationSection.orderIndex }})</button>
-                    </form>
-                    <form action="{{ path('app_certification_change_order', {'username': username}) }}" method="post"
-                        style="display: inline; width: 100%;">
-                        <input type="hidden" name="direction" value="down">
-                        <button type="submit" class="btn full btn-secondary-xs">↓ Move Down</button>
-                    </form>
-                </div>
-                {% endif %}
-                {% endif %}
-            </div>
-
-            {% if certifications is not empty %}
-            <div class="flex flex-column gap-sm">
-                <p class="text-16 text-color-tertiary">Click to edit or remove a certification</p>
-
-                {% for certification in certifications %}
-                {% include "/profile-edit/_components/resume-edit-card.html.twig" with {'item': certification, 'username':
-                username} %}
-                {% endfor %}
-            </div>
+        {% if certifications is not empty %}
+        <form action="{{ path('app_certification_toggle_visibility', {'username': username}) }}" method="post"
+          style="display: inline;">
+          <button type="submit" class="btn btn-secondary-xs full">
+            {% if certificationSection and certificationSection.isVisible %}
+            Hide Section
+            {% else %}
+            Show Section
             {% endif %}
+          </button>
+        </form>
 
-            {% for message in app.flashes('success') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-            {% endfor %}
-
-            {% for message in app.flashes('error') %}
-            <div class="alert alert-danger">
-                {{ message }}
-            </div>
-            {% endfor %}
-
+        {% if certificationSection %}
+        <div class="flex gap-sm">
+          <form action="{{ path('app_certification_change_order', {'username': username}) }}" method="post"
+            style="display: inline; width: 100%;">
+            <input type="hidden" name="direction" value="up">
+            <button type="submit" class="btn full btn-secondary-xs">↑ Move Up (Order: {{
+              certificationSection.orderIndex }})</button>
+          </form>
+          <form action="{{ path('app_certification_change_order', {'username': username}) }}" method="post"
+            style="display: inline; width: 100%;">
+            <input type="hidden" name="direction" value="down">
+            <button type="submit" class="btn full btn-secondary-xs">↓ Move Down</button>
+          </form>
         </div>
-    </section>
+        {% endif %}
+        {% endif %}
+      </div>
+
+      {% if certifications is not empty %}
+      <div class="flex flex-column gap-sm">
+        <p class="text-16 text-color-tertiary">Click to edit or remove a certification</p>
+
+        {% for certification in certifications %}
+        {% include "/profile-edit/_components/resume-edit-card.html.twig" with {'item': certification, 'username':
+        username} %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% for message in app.flashes('success') %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {% for message in app.flashes('error') %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+    </div>
+  </section>
 </div>
 
 {% endblock %}

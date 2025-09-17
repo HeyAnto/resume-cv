@@ -13,13 +13,13 @@
     {% endfor %}
     {% for certification in section.certifications %}
     {% include "/profile/_components/certification-card.html.twig" with {
-      'title': certification.title,
-      'authority': certification.authority,
-      'authorityLink': certification.authorityLink,
-      'issuedDate': certification.issuedDate,
-      'expirationDate': certification.expirationDate,
-      'credentialId': certification.credentialId,
-      'credentialUrl': certification.credentialUrl
+    'title': certification.title,
+    'authority': certification.authority,
+    'authorityLink': certification.authorityLink,
+    'issuedDate': certification.issuedDate,
+    'expirationDate': certification.expirationDate,
+    'credentialId': certification.credentialId,
+    'credentialUrl': certification.credentialUrl
     } %}
     {% endfor %}
   </div>
