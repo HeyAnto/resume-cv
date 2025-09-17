@@ -25,7 +25,7 @@
                 <p class="text-16 text-color-tertiary">View and manage all published posts</p>
             </div>
 
-            <form method="GET" action="{{ path('admin_posts_list') }}" class="flex-row flex-wrap items-end">
+            <form method="GET" action="{{ path('admin_posts_list') }}" class="search-form flex-row items-end">
                 <div class="form-group full-width">
                     <label class="text-16 text-color-tertiary">
                         Search
@@ -48,7 +48,7 @@
                     <input type="date" name="updated_at" value="{{ updated_at }}">
                 </div>
 
-                <div class="flex gap-xs">
+                <div class="flex gap-xl">
                     <button type="submit" class="btn btn-primary-xs">Search</button>
                     <a href="{{ path('admin_posts_list') }}" class="btn btn-secondary-xs">Clear</a>
                 </div>

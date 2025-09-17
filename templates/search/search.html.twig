@@ -29,7 +29,7 @@
 
   <section class="section-explore">
 
-    <form method="GET" action="{{ path('app_search') }}" class="flex-row items-end margin-b-xl">
+    <form method="GET" action="{{ path('app_search') }}" class="search-form flex-row items-end margin-b-xl">
       <div class="form-group full-width">
         <label class="text-16 text-color-tertiary">
           Search
@@ -49,8 +49,10 @@
         </select>
       </div>
 
-      <button type="submit" class="btn btn-primary-xs">Search</button>
-      <a href="{{ path('app_search') }}" class="btn btn-secondary-xs">Clear</a>
+      <div class="flex gap-xl">
+        <button type="submit" class="btn btn-primary-xs">Search</button>
+        <a href="{{ path('app_search') }}" class="btn btn-secondary-xs">Clear</a>
+      </div>
     </form>
 
     {% if search %}
