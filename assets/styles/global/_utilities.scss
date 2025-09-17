@@ -60,23 +60,23 @@
 
 // Gap
 .gap-xxs {
-    gap: var(--spacing-xxs);
+    gap: var(--spacing-xxs); // 6px
 }
 .gap-xs {
-    gap: var(--spacing-xs);
+    gap: var(--spacing-xs); // 8px
 }
 .gap-sm {
-    gap: var(--spacing-sm);
+    gap: var(--spacing-sm); // 12px
 }
 .gap-md {
-    gap: var(--spacing-md);
+    gap: var(--spacing-md); // 16px
 }
 .gap-lg {
-    gap: var(--spacing-lg);
+    gap: var(--spacing-lg); // 20px
 }
 
 .gap-xl {
-    gap: var(--spacing-xl);
+    gap: var(--spacing-xl); // 30px
 }
 
 // Margin

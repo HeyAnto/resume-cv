@@ -151,6 +151,42 @@ final class AdminController extends AbstractController
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    #[Route('/users/{id}/delete', name: 'admin_user_delete', methods: ['POST'])]
+    public function deleteUser(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            $this->addFlash('error', 'User not found');
+            return $this->redirectToRoute('admin_users_list');
+        }
+
+        // User cannot delete themselves
+        if ($user === $this->getUser()) {
+            $this->addFlash('error', 'You cannot delete your own account');
+            return $this->redirectToRoute('admin_users_list');
+        }
+
+        // Delete profile picture
+        if (
+            $user->getProfile() && $user->getProfile()->getProfilePictureUrl() &&
+            $user->getProfile()->getProfilePictureUrl() !== 'images/img_default_user.webp'
+        ) {
+            $imagePath = $this->getParameter('kernel.project_dir') . '/public/' . $user->getProfile()->getProfilePictureUrl();
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'User deleted successfully');
+        return $this->redirectToRoute('admin_users_list');
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #[Route('/posts', name: 'admin_posts_list')]
     public function postList(Request $request, PostRepository $postRepository): Response
     {

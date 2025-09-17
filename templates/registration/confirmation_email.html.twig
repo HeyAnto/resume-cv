@@ -1,4 +1,59 @@
-<h1>Hi! Please confirm your email!</h1>
+<div style="
+width: 100%; 
+max-width: 600px;
+gap: 16px;">
+
+    <div style="
+    padding: 16px 24px;">
+        <h1 style="
+            font-size: 1.25rem;
+            margin: 0;
+            color: #222222;">
+            <bold>Resume.cv</bold>
+        </h1>
+    </div>
+
+    <div style="
+        padding: 16px 24px;">
+        <h2 style="
+            font-size: 1.25rem;
+            margin: 0;
+            color: #222222;">
+            <bold>Verify your account</bold>
+        </h2>
+        <p style="
+            font-size: 1rem;
+            font-weight: 500;
+            color: #898989;">
+            welcome to Resume.cv with love from the teams.
+        </p>
+    </div>
+
+    <div style="
+        padding: 16px 24px;">
+        <img src="https://i.ibb.co/LzZqsjqr/img-hannah-lee.jpg" alt="Creative Illustration"
+            style="max-width: 100%; height: auto;">
+    </div>
+
+    <div style="
+        padding: 16px 24px;">
+        <p style="
+            font-size: 1rem;
+            margin: 0;
+            color: #222222;">
+            Please confirm your email address by clicking the following link:
+            <br><br>
+            <a href="{{ signedUrl|raw }}">
+                <bold>Confirm my Email</bold>
+            </a>.
+            <br><br>
+            This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+        </p>
+    </div>
+
+</div>
+
+{# <h1>Hi! Please confirm your email!</h1>
 
 <p>
     Please confirm your email address by clicking the following link: <br><br>
@@ -8,4 +63,4 @@
 
 <p>
     Cheers!
-</p>
+</p> #}

@@ -58,8 +58,7 @@
       data-is-admin="{{ 'ROLE_ADMIN' in user.roles ? 1 : 0 }}">
       {{ 'ROLE_ADMIN' in user.roles ? 'Remove Admin' : 'Make Admin' }}
     </button>
-    <button class="btn btn-danger-xs admin-delete-btn"
-      data-username="{{ profile ? profile.username : 'no-username' }}">Delete Account</button>
+    <button class="btn btn-danger-xs admin-delete-btn" data-user-id="{{ user.id }}">Delete Account</button>
   </div>
   {% endif %}
 

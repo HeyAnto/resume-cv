@@ -91,17 +91,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const deleteBtns = document.querySelectorAll(".admin-delete-btn");
     deleteBtns.forEach(function (deleteBtn) {
         deleteBtn.addEventListener("click", function () {
-            const username = this.getAttribute("data-username");
+            const userId = this.getAttribute("data-user-id");
 
             if (
                 confirm(
-                    `Are you sure you want to delete the account "${username}"? This action cannot be undone.`
+                    `Are you sure you want to delete this user account? This action cannot be undone.`
                 )
             ) {
                 // Create a form -> submit
                 const form = document.createElement("form");
                 form.method = "POST";
-                form.action = `/profile/${username}/admin-delete`;
+                form.action = `/admin/users/${userId}/delete`;
 
                 // Add CSRF token
                 const csrfToken = document.querySelector(
