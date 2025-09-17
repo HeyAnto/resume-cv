@@ -440,8 +440,6 @@ final class ProjectEditController extends AbstractController
             if (method_exists($project, $setter)) {
                 $project->$setter($newFilename);
             }
-
-            $this->addFlash('success', 'Image uploaded successfully');
         } catch (FileException $e) {
             $this->addFlash('error', 'Error uploading image: ' . $e->getMessage());
         }
