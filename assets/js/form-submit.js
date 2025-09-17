@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", function () {
     const forms = document.querySelectorAll("form");
 
     forms.forEach(function (form) {

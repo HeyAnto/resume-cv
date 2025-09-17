@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", function () {
     // Handle verify/unverify buttons
     const verifyBtns = document.querySelectorAll(".admin-verify-btn");
     verifyBtns.forEach(function (verifyBtn) {

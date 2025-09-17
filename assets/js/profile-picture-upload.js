@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", function () {
     const uploadBtn = document.getElementById("upload-btn");
     const removeBtn = document.getElementById("remove-btn");
     const profileInput = document.querySelector(

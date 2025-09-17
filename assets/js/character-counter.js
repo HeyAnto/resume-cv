@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", function () {
     function updateCounter(input) {
         const counterId = input.getAttribute("data-counter");
         const maxLength = parseInt(input.getAttribute("data-max"));

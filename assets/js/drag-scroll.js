@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", function () {
     const scrollContainers = document.querySelectorAll(".project-img");
 
     scrollContainers.forEach((container) => {

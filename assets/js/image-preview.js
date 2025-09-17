@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", function () {
     const fileInputs = document.querySelectorAll(
         'input[type="file"][accept*="image"]'
     );
