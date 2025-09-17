@@ -1,18 +1,34 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const fileInput = document.querySelector(
+    const fileInputs = document.querySelectorAll(
         'input[type="file"][accept*="image"]'
     );
 
-    if (fileInput) {
+    fileInputs.forEach(function (fileInput, index) {
         fileInput.addEventListener("change", function (event) {
             const file = event.target.files[0];
-            const previewContainer = document.getElementById(
-                "image-preview-container"
-            );
-            const existingImage = document.querySelector(".img-edit-postform");
+
+            // Preview by ID
+            let previewContainerId = "image-preview-container";
+            if (fileInput.id.includes("imagePath2")) {
+                previewContainerId = "image-preview-container-2";
+            } else if (fileInput.id.includes("imagePath3")) {
+                previewContainerId = "image-preview-container-3";
+            } else if (fileInput.id.includes("imagePath")) {
+                previewContainerId = "image-preview-container-1";
+            }
+
+            const previewContainer =
+                document.getElementById(previewContainerId);
+            if (!previewContainer) {
+                return;
+            }
+
+            const existingImage =
+                previewContainer.querySelector(".img-edit-postform");
 
             // Remove existing preview if any
-            const existingPreview = document.querySelector(".image-preview");
+            const existingPreview =
+                previewContainer.querySelector(".image-preview");
             if (existingPreview) {
                 existingPreview.remove();
             }
@@ -62,5 +78,5 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
-    }
+    });
 });
