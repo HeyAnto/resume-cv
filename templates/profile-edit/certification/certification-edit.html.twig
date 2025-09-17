@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile Cooking — Resume.cv{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/character-counter.js') }}"></script>
+<script src="{{ asset('js/form-submit.js') }}"></script>
+{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+{% include "/profile-edit/_components/profile-edit-sidebar.html.twig" %}
+
+<div class="main-content">
+    {% include "_components/headers/header-logout.html.twig" %}
+
+    <section class="section-profile-edit">
+        <div class="container">
+
+            <div>
+                <h1 class="text-h1">{{ certification ? 'Edit Certification' : 'Create Certification' }}</h1>
+                <p class="text-16 text-color-tertiary">{{ certification ? 'Update your professional certification' : 'Add your
+                    professional certification' }}</p>
+            </div>
+
+            {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.title.vars.id }}">{{
+                        form.title.vars.label }}*</label>
+                    <p class="text-14 text-color-tertiary" id="title-counter"></p>
+                </div>
+                {{ form_widget(form.title) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.title) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.authority.vars.id }}">{{
+                        form.authority.vars.label }}*</label>
+                    <p class="text-14 text-color-tertiary" id="authority-counter"></p>
+                </div>
+                {{ form_widget(form.authority) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.authority) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.authorityLink.vars.id }}">{{
+                        form.authorityLink.vars.label }}</label>
+                    <p class="text-14 text-color-tertiary" id="authorityLink-counter"></p>
+                </div>
+                {{ form_widget(form.authorityLink) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.authorityLink) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.issuedDate.vars.id }}">{{
+                        form.issuedDate.vars.label }}*</label>
+                </div>
+                {{ form_widget(form.issuedDate) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.issuedDate) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.expirationDate.vars.id }}">{{
+                        form.expirationDate.vars.label }}</label>
+                </div>
+                {{ form_widget(form.expirationDate) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.expirationDate) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.credentialId.vars.id }}">{{
+                        form.credentialId.vars.label }}*</label>
+                    <p class="text-14 text-color-tertiary" id="credentialId-counter"></p>
+                </div>
+                {{ form_widget(form.credentialId) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.credentialId) }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex justify-between items-center">
+                    <label class="text-16 text-color-tertiary" for="{{ form.credentialUrl.vars.id }}">{{
+                        form.credentialUrl.vars.label }}*</label>
+                    <p class="text-14 text-color-tertiary" id="credentialUrl-counter"></p>
+                </div>
+                {{ form_widget(form.credentialUrl) }}
+                <div class="text-14 text-color-red">{{ form_errors(form.credentialUrl) }}</div>
+            </div>
+
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary-xs full'}}) }}
+
+            {{ form_end(form) }}
+
+            {% if certification %}
+            <form action="{{ path('app_certification_delete', {'username': username, 'id': certification.id}) }}"
+                method="post" style="display: inline;"
+                onsubmit="return confirm('Are you sure you want to delete this certification?')">
+                <div class="flex justify-end">
+                    <button type="submit" class="btn btn-secondary-xs danger full">Delete</button>
+                </div>
+            </form>
+            {% endif %}
+
+        </div>
+    </section>
+</div>
+
+{% endblock %}

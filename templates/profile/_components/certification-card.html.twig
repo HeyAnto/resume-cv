@@ -1,0 +1,43 @@
+<div class="resume-card">
+  <div>
+    <p class="text-16 text-color-tertiary">
+      {{ issuedDate|date('Y') }} — {{ expirationDate ? expirationDate|date('Y') : 'Never expires' }}
+    </p>
+  </div>
+  <div class="info">
+    <div class="flex flex-column">
+      <h3 class="text-16 text-color-primary">
+        {{ title }}
+      </h3>
+      <a class="title text-color-primary {{ authorityLink ? 'link-active' : '' }}" href="{{ authorityLink ?: '#' }}"
+        target="{{ authorityLink ? '_blank' : '_self' }}">
+        <h4 class="text-16">
+          {{ authority }}
+        </h4>
+        {% if authorityLink %}
+        {% include "_icons/link.html.twig" with {
+        'class': 'icon-link'
+        } %}
+        {% endif %}
+      </a>
+      {% if credentialId %}
+      <p class="text-16 text-color-tertiary">
+        Credential ID: {{ credentialId }}
+      </p>
+      {% endif %}
+    </div>
+
+    {% if credentialUrl %}
+    <a class="title text-color-primary link-active" href="{{ credentialUrl }}" target="_blank">
+      <h4 class="text-16">
+        View Credential
+      </h4>
+      {% if authorityLink %}
+      {% include "_icons/link.html.twig" with {
+      'class': 'icon-link'
+      } %}
+      {% endif %}
+    </a>
+    {% endif %}
+  </div>
+</div>

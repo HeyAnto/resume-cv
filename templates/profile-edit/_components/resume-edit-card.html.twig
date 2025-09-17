@@ -1,4 +1,5 @@
-{% if type is defined and type == 'education' %}
+{% if item.degree is defined %}
+{# Education item #}
 {% set education = item %}
 <a href="{{ path('app_education_edit', {'username': username, 'id': education.id}) }}" class="resume-edit-card">
   <p class="text-16 text-color-secondary">{{ education.startDate|date('Y') }} — {{ education.endDate ?
@@ -6,7 +7,17 @@
   <p class="text-16 text-color-primary">{{ education.degree }} at {{ education.schoolName }}</p>
   <p class="text-16 text-color-secondary">{{ education.location }}</p>
 </a>
+{% elseif item.authority is defined %}
+{# Certification item #}
+{% set certification = item %}
+<a href="{{ path('app_certification_edit', {'username': username, 'id': certification.id}) }}" class="resume-edit-card">
+  <p class="text-16 text-color-secondary">{{ certification.issuedDate|date('Y') }} — {{ certification.expirationDate ?
+    certification.expirationDate|date('Y') : 'Never expires' }}</p>
+  <p class="text-16 text-color-primary">{{ certification.title }}</p>
+  <p class="text-16 text-color-secondary">{{ certification.authority }}</p>
+</a>
 {% else %}
+{# Experience item #}
 {% set experience = item %}
 <a href="{{ path('app_experience_edit', {'username': username, 'id': experience.id}) }}" class="resume-edit-card">
   <p class="text-16 text-color-secondary">{{ experience.startDate|date('Y') }} — {{ experience.endDate ?
