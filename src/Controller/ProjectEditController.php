@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class ProjectEditController extends AbstractController
 {
     use UserRedirectionTrait;
-    
+
     private function checkUsernameAccess(string $username): ?Response
     {
         // Check user access first
@@ -207,7 +207,7 @@ final class ProjectEditController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Handle image uploads
             $this->handleImageUploads($form, $project, $slugger);
-            
+
             $project->setUpdatedAt(new \DateTimeImmutable());
             $profile->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
@@ -386,7 +386,7 @@ final class ProjectEditController extends AbstractController
 
     private function handleImageUploads($form, Project $project, SluggerInterface $slugger): void
     {
-        
+
         // Handle imagePath (Image 1)
         /** @var UploadedFile|null $imageFile1 */
         $imageFile1 = $form->get('imagePath')->getData();
