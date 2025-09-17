@@ -64,8 +64,8 @@
       </a>
     </li>
 
-    {# <li>
-      <a class="nav-button" href="{{ path('app_login') }}">
+    <li>
+      <a class="nav-button" href="{{ path('app_search') }}">
         {% if app.request.pathInfo starts with '/search' %}
         {% include "_icons/search-fill.html.twig" with {
         'class': 'nav-icon active'
@@ -77,7 +77,7 @@
         {% endif %}
         <span class="nav-tooltip text-12">Search</span>
       </a>
-    </li> #}
+    </li>
 
     {% if app.user and is_granted('ROLE_ADMIN') %}
     <li>

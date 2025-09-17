@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/image-modal.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const typeSelect = document.getElementById('type');
+    if (typeSelect) {
+      typeSelect.addEventListener('change', function () {
+        const form = this.closest('form');
+        if (form) {
+          form.submit();
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}
+
+{% block title %}Search — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-explore">
+
+    <form method="GET" action="{{ path('app_search') }}" class="flex-row items-end margin-b-xl">
+      <div class="form-group full-width">
+        <label class="text-16 text-color-tertiary">
+          Search
+        </label>
+        <input type="text" name="search" value="{{ search }}"
+          placeholder="John Doe, johndoe, john@gmail.com, designer..." autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label class="text-16 text-color-tertiary">
+          Type
+        </label>
+        <select name="type" id="type">
+          <option value="all" {{ type=='all' ? ' selected' : '' }}>Tout</option>
+          <option value="post" {{ type=='post' ? ' selected' : '' }}>Posts</option>
+          <option value="user" {{ type=='user' ? ' selected' : '' }}>Users</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary-xs">Search</button>
+      <a href="{{ path('app_search') }}" class="btn btn-secondary-xs">Clear</a>
+    </form>
+
+    {% if search %}
+    <div class="search-results">
+      <p class="text-14 text-color-secondary margin-bottom-m">
+        {% set totalResults = posts|length + profiles|length %}
+        {{ totalResults }} résultat{{ totalResults > 1 ? 's' : '' }} pour "{{ search }}"
+      </p>
+    </div>
+    {% endif %}
+
+    <div class="front-grid">
+      {% if posts is defined and profiles is defined %}
+      {% set allResults = [] %}
+      {% for post in posts %}
+      {% set allResults = allResults|merge([{'type': 'post', 'data': post}]) %}
+      {% endfor %}
+      {% for profile in profiles %}
+      {% set allResults = allResults|merge([{'type': 'profile', 'data': profile}]) %}
+      {% endfor %}
+
+      {% for result in allResults %}
+      {% if result.type == 'post' %}
+      {% set post = result.data %}
+      {% include "explore/_components/post-card.html.twig" with {'post': post} %}
+      {% else %}
+      {% set profile = result.data %}
+      {% include "search/_components/user-card.html.twig" with {'profile': profile} %}
+      {% endif %}
+      {% endfor %}
+
+      {% if allResults is empty and search %}
+      <div class="no-results text-center">
+        <p class="text-16 text-color-secondary">Aucun résultat trouvé pour "{{ search }}"</p>
+      </div>
+      {% endif %}
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+{% endblock %}
