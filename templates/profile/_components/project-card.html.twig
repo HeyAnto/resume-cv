@@ -1,28 +1,45 @@
 <div class="resume-card project">
   <div>
     <p class="text-16 text-color-tertiary">
-      2023 — Now
+      {% if date %}
+        {{ date|date('Y') }}
+      {% endif %}
     </p>
   </div>
   <div class="info">
-    <a class="title text-color-primary" href="" target="_blank">
+    {% if link %}
+    <a class="title text-color-primary" href="{{ link }}" target="_blank">
       <h3 class="text-16">
-        Project 404 - Portfolio Website
+        {{ title }}
       </h3>
       {% include "_icons/link.html.twig" with {
       'class': 'icon-link'
       } %}
     </a>
+    {% else %}
+    <div class="title">
+      <h3 class="text-16 text-color-primary">
+        {{ title }}
+      </h3>
+    </div>
+    {% endif %}
 
     <p class="text-body-16 text-color-tertiary">
-      A personal portfolio website showcasing my design projects and case studies, built with a focus on
-      responsive design and user experience.
+      {{ description }}
     </p>
 
+    {% if image1 or image2 or image3 %}
     <div class="project-img">
-      <img src="{{ asset('images/img-project-exemple.webp') }}" alt="Project Image">
-      <img src="{{ asset('images/img-project-exemple.webp') }}" alt="Project Image">
-      <img src="{{ asset('images/img-project-exemple.webp') }}" alt="Project Image">
+      {% if image1 %}
+      <img src="{{ asset('uploads/projects/' ~ image1) }}" alt="{{ title }} - Image 1">
+      {% endif %}
+      {% if image2 %}
+      <img src="{{ asset('uploads/projects/' ~ image2) }}" alt="{{ title }} - Image 2">
+      {% endif %}
+      {% if image3 %}
+      <img src="{{ asset('uploads/projects/' ~ image3) }}" alt="{{ title }} - Image 3">
+      {% endif %}
     </div>
+    {% endif %}
   </div>
 </div>

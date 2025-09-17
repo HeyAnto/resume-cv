@@ -25,6 +25,17 @@
     {% for volunteering in section.volunteerings %}
     {% include "/profile/_components/resume-card.html.twig" with {'volunteering': volunteering} %}
     {% endfor %}
+    {% for project in section.projects %}
+    {% include "/profile/_components/project-card.html.twig" with {
+    'title': project.projectName,
+    'description': project.description,
+    'date': project.date,
+    'link': project.projectLink,
+    'image1': project.imagePath,
+    'image2': project.imagePath2,
+    'image3': project.imagePath3
+    } %}
+    {% endfor %}
   </div>
 </div>
 {% endif %}

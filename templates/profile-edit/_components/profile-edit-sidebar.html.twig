@@ -26,6 +26,7 @@
     {% set educationOrder = null %}
     {% set certificationOrder = null %}
     {% set volunteeringOrder = null %}
+    {% set projectOrder = null %}
     {% set targetProfile = profile is defined ? profile : app.user.profile %}
     {% if targetProfile and targetProfile.resumeSections %}
     {% for section in targetProfile.resumeSections %}
@@ -37,6 +38,8 @@
     {% set certificationOrder = section.orderIndex %}
     {% elseif section.label == 'Volunteering' %}
     {% set volunteeringOrder = section.orderIndex %}
+    {% elseif section.label == 'Projects' %}
+    {% set projectOrder = section.orderIndex %}
     {% endif %}
     {% endfor %}
     {% endif %}
@@ -46,6 +49,7 @@
     {% set educationOrder = educationOrder ?? 2 %}
     {% set certificationOrder = certificationOrder ?? 3 %}
     {% set volunteeringOrder = volunteeringOrder ?? 4 %}
+    {% set projectOrder = projectOrder ?? 5 %}
 
     {# Display sections in order based on orderIndex #}
     {% set sections = [
@@ -72,6 +76,12 @@
     'order': volunteeringOrder,
     'path': 'app_volunteering_list',
     'routes': ['app_volunteering_list', 'app_volunteering_edit', 'app_volunteering_new']
+    },
+    {
+    'name': 'Projects',
+    'order': projectOrder,
+    'path': 'app_project_list',
+    'routes': ['app_project_list', 'app_project_edit', 'app_project_new']
     }
     ]|sort((a, b) => a.order <=> b.order) %} {% for section in sections %}
       <a href="{{ path(section.path, {'username': username}) }}"

@@ -1,0 +1,14 @@
+{# Project edit card #}
+<a href="{{ path('app_project_edit', {'username': username, 'id': post.id}) }}" class="post-edit-card">
+  <div class="flex flex-column">
+    <p class="text-16 text-color-primary">
+      {{ post.projectName }}
+    </p>
+    <p class="text-14 text-color-secondary">
+      {{ post.description }}
+    </p>
+  </div>
+  {% if post.imagePath %}
+  <img class="img-post-edit" src="{{ asset('uploads/projects/' ~ post.imagePath) }}" alt="Project image">
+  {% endif %}
+</a>
