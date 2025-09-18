@@ -1,33 +1,34 @@
 <div class="admin-post-card">
-
   <div class="card-info">
     <a href="{{ path('admin_users_list', {'search': post.user.profile.username}) }}" class="flex flex-column gap-lg">
       <div class="header-card">
         <img class="profile-img"
           src="{{ asset(post.user.profile.profilePicturePath ? post.user.profile.profilePicturePath : 'images/img_default_user.webp') }}"
           alt="Profile picture of {{ post.user.profile.displayName }}">
-        <p class="text-14 text-color-secondary">{{ 'ROLE_ADMIN' in post.user.roles ? 'Admin' : 'User' }}</p>
+
+        <p class="text-14 text-color-secondary">
+          {{ 'ROLE_ADMIN' in post.user.roles ? 'Admin' : 'User' }}
+        </p>
       </div>
 
       <div class="flex flex-column">
         <p class="text-14 text-color-primary">
           {{ post.user.profile.displayName }}
         </p>
+
         <p class="text-14 text-color-secondary">
-          {{ post.user.profile.username }}
-        </p>
-        <p class="text-14 text-color-secondary">
-          {{ post.user.email }}
+          {{ post.description }}
         </p>
       </div>
 
-      <p class="text-14 text-color-secondary">
-        {{ post.description|length > 100 ? post.description|slice(0, 100) ~ '...' : post.description }}
-      </p>
-
       <div class="flex flex-column">
-        <p class="text-14 text-color-secondary">Created At {{ post.createdAt|date('d/m/Y H:i') }}</p>
-        <p class="text-14 text-color-secondary">Updated At {{ post.updatedAt|date('d/m/Y H:i') }}</p>
+        <p class="text-14 text-color-secondary">
+          Created At {{ post.createdAt|date('d/m/Y H:i') }}
+        </p>
+
+        <p class="text-14 text-color-secondary">
+          Updated At {{ post.updatedAt|date('d/m/Y H:i') }}
+        </p>
       </div>
     </a>
 
@@ -46,5 +47,4 @@
       Delete
     </button>
   </div>
-
 </div>
