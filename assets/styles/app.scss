@@ -6,23 +6,27 @@
 // Layout
 @use "layout/base";
 @use "layout/sidebar";
-@use "layout/profile-edit-sidebar";
+@use "layout/edit-sidebar";
 @use "layout/header-navigation";
 
 // Components
 @use "components/buttons";
-@use "components/flash-messages";
+
+@use "components/card/user-card";
+@use "components/card/job-card";
+
+@use "components/card/resume/resume-card";
+@use "components/card/resume/resume-edit-card";
+@use "components/card/post/post-card";
+@use "components/card/post/post-edit-card";
+
+@use "components/modal/image-modal";
+
 @use "components/form";
-@use "components/post-card";
-@use "components/job-card";
-@use "components/resume-card";
-@use "components/resume-edit-card";
-@use "components/following-card";
-@use "components/user-card";
-@use "components/post-edit-card";
-@use "components/admin-user-card";
-@use "components/admin-post-card";
-@use "components/image-modal";
+@use "components/flash-messages";
+
+@use "components/admin/admin-user-card";
+@use "components/admin/admin-post-card";
 
 // Page
 @use "pages/connection";

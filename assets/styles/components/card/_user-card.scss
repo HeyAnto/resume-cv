@@ -1,10 +1,9 @@
-.following-card {
+.user-card {
     width: 100%;
-    max-width: 372px;
-    min-width: 372px;
     display: flex;
     flex-direction: column;
     padding: var(--spacing-lg);
+    margin-bottom: var(--grid-gap);
     gap: var(--spacing-lg);
     border: solid 1px var(--color-muted);
     border-radius: var(--radius-sm);
@@ -13,6 +12,12 @@
     break-inside: avoid;
     overflow-wrap: anywhere;
     overflow: hidden;
+
+    &.following {
+        max-width: 372px;
+        min-width: 372px;
+        margin-bottom: 0;
+    }
 
     .profile-container {
         display: flex;
