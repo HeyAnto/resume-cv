@@ -35,11 +35,23 @@ final class AdminController extends AbstractController
         $createdAfter = $createdAt ? new \DateTime($createdAt) : null;
         $updatedAfter = $updatedAt ? new \DateTime($updatedAt) : null;
 
-        // Use the search method or fallback to findAll
+        // Get current admin user to exclude from results
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        // Use the search method or fallback to findAll but exclude current admin
         if ($search || $createdAfter || $updatedAfter) {
-            $users = $userRepository->findWithFilters($search, $createdAfter, $updatedAfter);
+            $users = $userRepository->findWithFilters($search, $createdAfter, $updatedAfter, $currentUser);
         } else {
-            $users = $userRepository->findAll();
+            // For findAll case, we need to create a custom query to exclude current user
+            $users = $userRepository->createQueryBuilder('u')
+                ->leftJoin('u.profile', 'p')
+                ->addSelect('p')
+                ->where('u.id != :currentUserId')
+                ->setParameter('currentUserId', $currentUser->getId())
+                ->orderBy('u.id', 'DESC')
+                ->getQuery()
+                ->getResult();
         }
 
         return $this->render('admin/users/users-list.html.twig', [
@@ -198,10 +210,16 @@ final class AdminController extends AbstractController
         $createdAfter = $createdAt ? new \DateTime($createdAt) : null;
         $updatedAfter = $updatedAt ? new \DateTime($updatedAt) : null;
 
+        // Get current admin user to exclude their posts from results
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
         // Simple search for posts
         $queryBuilder = $postRepository->createQueryBuilder('p')
             ->join('p.user', 'u')
             ->join('u.profile', 'pr')
+            ->where('u.id != :currentUserId')
+            ->setParameter('currentUserId', $currentUser->getId())
             ->orderBy('p.createdAt', 'DESC');
 
         if ($search) {

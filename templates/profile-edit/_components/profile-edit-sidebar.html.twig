@@ -2,10 +2,6 @@
 
   <div class="flex flex-column">
 
-    <a href="{{ path('app_profile', {'username': username}) }}" class="btn-menu">
-      Back to Profile
-    </a>
-
     <a href="{{ path('app_profile_edit', {'username': username}) }}"
       class="btn-menu {{ app.request.get('_route') == 'app_profile_edit' ? 'active' : '' }}">
       General

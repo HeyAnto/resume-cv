@@ -36,7 +36,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * Search users with filters
      */
-    public function findWithFilters(?string $search = null, ?\DateTimeInterface $createdAfter = null, ?\DateTimeInterface $updatedAfter = null): array
+    public function findWithFilters(?string $search = null, ?\DateTimeInterface $createdAfter = null, ?\DateTimeInterface $updatedAfter = null, ?User $excludeUser = null): array
     {
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.profile', 'p')
@@ -60,6 +60,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         if ($updatedAfter) {
             $qb->andWhere('p.updatedAt >= :updatedAfter')
                 ->setParameter('updatedAfter', $updatedAfter);
+        }
+
+        if ($excludeUser) {
+            $qb->andWhere('u.id != :excludeUserId')
+                ->setParameter('excludeUserId', $excludeUser->getId());
         }
 
         return $qb->orderBy('u.id', 'DESC')
