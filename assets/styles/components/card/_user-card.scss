@@ -2,6 +2,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: var(--spacing-lg);
     margin-bottom: var(--grid-gap);
     gap: var(--spacing-lg);
@@ -17,6 +18,10 @@
         max-width: 372px;
         min-width: 372px;
         margin-bottom: 0;
+
+        @media (max-width: 768px) {
+            min-width: 250px;
+        }
     }
 
     .profile-container {

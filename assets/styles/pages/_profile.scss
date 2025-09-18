@@ -52,6 +52,16 @@
                 align-items: center;
                 gap: var(--spacing-xl);
 
+                @media (max-width: 768px) {
+                    width: 100%;
+                    flex-direction: column;
+
+                    .tag-list {
+                        justify-content: center;
+                        flex-wrap: wrap;
+                    }
+                }
+
                 .profile-img {
                     width: 100%;
                     max-width: 6.875rem; // 110px
@@ -187,7 +197,7 @@
     .resume-section {
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-lg);
+        gap: var(--spacing-xxl);
 
         .section-list {
             display: flex;

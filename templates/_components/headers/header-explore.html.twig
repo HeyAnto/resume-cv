@@ -1,7 +1,7 @@
 {% include "_components/flash-messages.html.twig" with {'error': error|default(null)} %}
 
 <div class="header-navigation">
-  <ul>
+  <ul class="nav-links">
     <li>
       <a class="{{ app.request.pathinfo starts with '/explore/front' ? 'active' : '' }}"
         href="{{ path('app_explore_front') }}">Front
@@ -12,13 +12,24 @@
         href="{{ path('app_explore_job') }}">Job board</a>
     </li>
   </ul>
+
+  <select class="nav-select" onchange="window.location.href=this.value">
+    <option value="{{ path('app_explore_front') }}" {{ app.request.pathinfo starts with '/explore/front' ? 'selected'
+      : '' }}>
+      Front page
+    </option>
+    <option value="{{ path('app_explore_job') }}" {{ app.request.pathinfo starts with '/explore/job' ? 'selected' : ''
+      }}>
+      Job board
+    </option>
+  </select>
   {% if app.user and 'ROLE_USER_COMPLETE' not in app.user.roles %}
   <a class="btn btn-primary-xs" href="{{ path('app_complete') }}">Complete Profile</a>
   {% endif %}
 
   {% if app.user and 'ROLE_USER_COMPLETE' in app.user.roles %}
   <div class="flex gap-md">
-    <a class="btn btn-primary-xs" href="{{ path('app_post_new', {'username': username}) }}">Post</a>
+    <a class="btn btn-primary-xs hide" href="{{ path('app_post_new', {'username': username}) }}">Post</a>
     <a class="btn btn-secondary-xs" href="{{ path('app_logout') }}">Logout</a>
   </div>
   {% endif %}

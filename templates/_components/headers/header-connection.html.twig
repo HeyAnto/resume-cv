@@ -1,7 +1,7 @@
 {% include "_components/flash-messages.html.twig" with {'error': error|default(null)} %}
 
 <div class="header-navigation">
-  <ul>
+  <ul class="nav-links">
     <li>
       <a class="{{ app.request.pathinfo == '/connection/login' ? 'active' : '' }}"
         href="{{ path('app_login') }}">Login</a>
@@ -11,6 +11,16 @@
         href="{{ path('app_register') }}">Register</a>
     </li>
   </ul>
+
+  <select class="nav-select" onchange="window.location.href=this.value">
+    <option value="{{ path('app_login') }}" {{ app.request.pathinfo=='/connection/login' ? 'selected' : '' }}>
+      Login
+    </option>
+    <option value="{{ path('app_register') }}" {{ app.request.pathinfo starts with '/connection/register' ? 'selected'
+      : '' }}>
+      Register
+    </option>
+  </select>
   {% if app.user %}
   <a class="btn btn-secondary-xs" href="{{ path('app_logout') }}">Logout</a>
   {% endif %}

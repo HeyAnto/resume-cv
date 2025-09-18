@@ -41,13 +41,16 @@
           <form action="{{ path('app_project_change_order', {'username': username}) }}" method="post"
             style="display: inline; width: 100%;">
             <input type="hidden" name="direction" value="up">
-            <button type="submit" class="btn full btn-secondary-xs">↑ Move Up (Order: {{
-              projectSection.orderIndex }})</button>
+            <button type="submit" class="btn full btn-secondary-xs">
+              Move Up
+            </button>
           </form>
           <form action="{{ path('app_project_change_order', {'username': username}) }}" method="post"
             style="display: inline; width: 100%;">
             <input type="hidden" name="direction" value="down">
-            <button type="submit" class="btn full btn-secondary-xs">↓ Move Down</button>
+            <button type="submit" class="btn full btn-secondary-xs">
+              Move Down
+            </button>
           </form>
         </div>
         {% endif %}

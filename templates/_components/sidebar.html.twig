@@ -1,4 +1,15 @@
-<div class="sidebar">
+<!-- Burger button for mobile -->
+<button class="burger-btn" id="burger-btn">
+  <div class="burger-lines">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</button>
+
+<div class="mobile-overlay" id="mobile-overlay"></div>
+
+<div class="sidebar" id="sidebar">
   <ul>
     <li>
       <a class="nav-button" href="{{ path('app_index') }}">
@@ -12,6 +23,7 @@
         } %}
         {% endif %}
         <span class="nav-tooltip text-12">Explore</span>
+        <span class="nav-text">Explore</span>
       </a>
     </li>
 
@@ -31,6 +43,7 @@
         } %}
         {% endif %}
         <span class="nav-tooltip text-12">Profile</span>
+        <span class="nav-text">Profile</span>
       </a>
     </li>
 
@@ -61,6 +74,7 @@
         } %}
         {% endif %}
         <span class="nav-tooltip text-12">Following</span>
+        <span class="nav-text">Following</span>
       </a>
     </li>
 
@@ -76,6 +90,7 @@
         } %}
         {% endif %}
         <span class="nav-tooltip text-12">Search</span>
+        <span class="nav-text">Search</span>
       </a>
     </li>
 
@@ -92,6 +107,7 @@
         } %}
         {% endif %}
         <span class="nav-tooltip text-12">Admin</span>
+        <span class="nav-text">Admin</span>
       </a>
     </li>
     {% endif %}

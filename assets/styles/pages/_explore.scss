@@ -30,9 +30,42 @@
 
     .job-grid {
         display: grid;
-        grid-template-columns: 400px 1fr repeat(2, 100px);
+        grid-template-columns: 350px 1fr repeat(2, 80px);
         grid-template-rows: 1fr;
         grid-column-gap: 30px;
         grid-row-gap: px;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: 350px 1fr 80px;
+
+            .posted {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr 1fr 80px;
+        }
+
+        @media (max-width: 660px) {
+            grid-template-columns: 40px 1fr 80px;
+
+            .team {
+                text-align: center;
+                justify-content: center;
+            }
+
+            .company-name {
+                display: none;
+            }
+        }
+
+        @media (max-width: 425px) {
+            grid-template-columns: 40px 1fr;
+
+            .manager {
+                display: none;
+            }
+        }
     }
 }

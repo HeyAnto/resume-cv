@@ -65,5 +65,109 @@
                 transform: translateY(-50%) translateX(0);
             }
         }
+
+        .nav-text {
+            display: none;
+        }
+    }
+}
+
+.burger-btn {
+    display: none;
+    position: fixed;
+    bottom: 18px;
+    left: 18px;
+    z-index: 1001;
+    width: 50px;
+    height: 50px;
+    background-color: var(--color-text-primary);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    .burger-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        span {
+            width: 20px;
+            height: 2px;
+            background-color: var(--color-bg-primary);
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .burger-btn {
+        display: flex;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -180px;
+        width: 180px;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        background-color: var(--color-bg-primary);
+
+        &.active {
+            left: 0;
+        }
+
+        .nav-button {
+            .nav-tooltip {
+                display: none;
+            }
+
+            .nav-text {
+                display: block;
+                font-size: 14px;
+                color: var(--color-text-primary);
+            }
+        }
+    }
+
+    .edit-sidebar {
+        position: fixed;
+        top: 0;
+        left: -300px;
+        width: 250px;
+        z-index: 999;
+        transition: left 0.3s ease;
+        background-color: var(--color-bg-primary);
+        height: 100vh;
+        overflow-y: auto;
+
+        &.active {
+            left: 180px;
+        }
+    }
+}
+
+@media (max-width: 425px) {
+    .sidebar {
+        left: -150px;
+        width: 65px;
+
+        &.active {
+            left: 0;
+        }
+
+        .nav-button {
+            .nav-text {
+                display: none;
+            }
+        }
+    }
+
+    .edit-sidebar {
+        &.active {
+            left: 64px;
+        }
     }
 }

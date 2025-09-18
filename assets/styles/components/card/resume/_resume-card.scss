@@ -6,6 +6,12 @@
     grid-column-gap: 20px;
     grid-row-gap: 0px;
 
+    @media (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
     .info {
         display: flex;
         flex-direction: column;
@@ -50,6 +56,10 @@
 
                 &:hover {
                     border-bottom: solid 1px var(--color-text-primary);
+
+                    @media (max-width: 768px) {
+                        border-bottom: none;
+                    }
                 }
             }
         }

@@ -50,3 +50,9 @@
     --color-muted-2: #d7d7d7;
     --color-border: #d5d5d5;
 }
+
+@media (max-width: 768px) {
+    :root {
+        --spacing-xl: 1.25rem; // 20px
+    }
+}

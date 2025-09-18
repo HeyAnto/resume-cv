@@ -21,7 +21,7 @@
         </p>
       </div>
 
-      <div class="flex items-center gap-sm">
+      <div class="tag-list flex items-center gap-sm">
         {% if app.user and app.user.profile and app.user.profile != profile %}
         <form method="get" action="{{ path('app_profile_follow', {'username': username}) }}" style="display: inline;">
           <button type="submit"
@@ -83,11 +83,11 @@
   <a href="{{ path('app_profile_edit', {'username': username}) }}" class="btn btn-secondary-xs">Edit Profile</a>
 
   {% if is_granted('ROLE_ADMIN') and app.user.profile.username != username %}
-  <button class="btn btn-warning-xs admin-verify-btn" data-user-id="{{ profile.user.id }}"
+  <button class="btn btn-warning-xs admin-verify-btn hide" data-user-id="{{ profile.user.id }}"
     data-verified="{{ profile.user.isVerified ? 1 : 0 }}">
     {{ profile.user.isVerified ? 'Unverify' : 'Verify' }}
   </button>
-  <button class="btn btn-danger-xs admin-delete-btn" data-username="{{ username }}">Delete Account</button>
+  <button class="btn btn-danger-xs admin-delete-btn hide" data-username="{{ username }}">Delete Account</button>
   {% endif %}
 </div>
 {% endif %}
