@@ -1,23 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/image-modal.js') }}"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const typeSelect = document.getElementById('type');
-    if (typeSelect) {
-      typeSelect.addEventListener('change', function () {
-        const form = this.closest('form');
-        if (form) {
-          form.submit();
-        }
-      });
-    }
-  });
-</script>
-{% endblock %}
-
 {% block title %}Search — Resume.cv{% endblock %}
 
 {% block main %}
@@ -93,5 +75,23 @@
     </div>
   </section>
 </div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/image-modal.js') }}" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const typeSelect = document.getElementById('type');
+    if (typeSelect) {
+      typeSelect.addEventListener('change', function () {
+        const form = this.closest('form');
+        if (form) {
+          form.submit();
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}
 
 {% endblock %}

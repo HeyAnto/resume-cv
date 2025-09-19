@@ -1,10 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/form-submit.js') }}" defer></script>
-{% endblock %}
-
 {% block title %}Profile Cooking — Resume.cv{% endblock %}
 
 {% block main %}
@@ -74,5 +69,10 @@
         </div>
     </section>
 </div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/form-submit.js') }}" defer></script>
+{% endblock %}
 
 {% endblock %}

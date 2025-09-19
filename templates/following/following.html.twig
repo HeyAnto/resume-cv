@@ -1,10 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/image-modal.js') }}"></script>
-{% endblock %}
-
 {% block title %}Following — Resume.cv{% endblock %}
 
 {% block main %}
@@ -57,5 +52,10 @@
     </div>
   </section>
 </div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/image-modal.js') }}" defer></script>
+{% endblock %}
 
 {% endblock %}

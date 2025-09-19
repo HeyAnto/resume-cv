@@ -1,11 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/admin-profile-actions.js') }}"></script>
-<script src="{{ asset('js/image-modal.js') }}"></script>
-{% endblock %}
-
 {% block title %}{{ profile.displayName }} — Resume.cv{% endblock %}
 
 {% block main %}
@@ -37,5 +31,11 @@
         </div>
     </section>
 </div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/admin-profile-actions.js') }}" defer></script>
+<script src="{{ asset('js/image-modal.js') }}" defer></script>
+{% endblock %}
 
 {% endblock %}

@@ -2,12 +2,6 @@
 
 {% block title %}Profile Cooking — Resume.cv{% endblock %}
 
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/character-counter.js') }}"></script>
-<script src="{{ asset('js/form-submit.js') }}"></script>
-{% endblock %}
-
 {% block main %}
 
 {% include "_components/sidebar.html.twig" %}
@@ -126,5 +120,11 @@
         </div>
     </section>
 </div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/character-counter.js') }}" defer></script>
+<script src="{{ asset('js/form-submit.js') }}" defer></script>
+{% endblock %}
 
 {% endblock %}

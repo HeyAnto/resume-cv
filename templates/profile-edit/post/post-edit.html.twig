@@ -1,13 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/character-counter.js') }}"></script>
-<script src="{{ asset('js/form-submit.js') }}"></script>
-<script src="{{ asset('js/image-preview.js') }}"></script>
-<script src="{{ asset('js/image-modal.js') }}"></script>
-{% endblock %}
-
 {% block title %}Profile Cooking — Resume.cv{% endblock %}
 
 {% block main %}
@@ -91,5 +83,13 @@
         </div>
     </section>
 </div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/character-counter.js') }}" defer></script>
+<script src="{{ asset('js/form-submit.js') }}" defer></script>
+<script src="{{ asset('js/image-preview.js') }}" defer></script>
+<script src="{{ asset('js/image-modal.js') }}" defer></script>
+{% endblock %}
 
 {% endblock %}
