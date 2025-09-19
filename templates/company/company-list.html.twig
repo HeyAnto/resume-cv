@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profile Cooking — Resume.cv{% endblock %}
+{% block title %}Companies — Resume.cv{% endblock %}
 
 {% block main %}
 
@@ -13,16 +13,44 @@
     <div class="container">
 
       <div>
-        <h1 class="text-h1">Company</h1>
+        <h1 class="text-h1">Companies</h1>
         <p class="text-16 text-color-tertiary">Create, edit and manage your businesses</p>
       </div>
 
       <div class="flex flex-column gap-sm">
-        <a href="{{ path('app_experience_new', {'username': username}) }}" class="btn btn-primary-xs full">
+        <a href="{{ path('app_company_new', {'username': username}) }}" class="btn btn-primary-xs full">
           Create a company profile
         </a>
-
       </div>
+
+      {% if companies is not empty %}
+      <div class="flex flex-column gap-sm">
+        <p class="text-16 text-color-tertiary">Click to view a company</p>
+
+        {% for company in companies %}
+        {% include "company/_components/company-card.html.twig" with {'company': company} %}
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <p class="text-16 text-color-tertiary">You haven't created any companies yet.</p>
+        <p class="text-14 text-color-tertiary">Start by creating your first company profile!</p>
+      </div>
+      {% endif %}
+
+      {% for message in app.flashes('success') %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {% for message in app.flashes('error') %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+    </div>
   </section>
 </div>
 

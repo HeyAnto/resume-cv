@@ -1,26 +1,33 @@
 <a class="company-card" href="">
 
-  <div class="flex items-center">
+  <div class="flex items-center gap-lg">
 
+    {% if company.profilePicturePath %}
+    <img class="company-profile-img" src="{{ asset(company.profilePicturePath) }}"
+      alt="{{ company.companyName }} Profile Image">
+    {% else %}
     <img class="company-profile-img" src="{{ asset('images/img_default_company.webp') }}"
-      alt="Companyname Profile Image">
+      alt="{{ company.companyName }} Profile Image">
+    {% endif %}
 
     <div class="flex flex-column">
 
       <p class="text-16 text-color-primary">
-        Company Name
+        {{ company.companyName }}
       </p>
 
       <p class="text-16 text-color-secondary">
-        Location
+        {{ company.location }}
       </p>
 
     </div>
 
   </div>
 
+  {% if company.description %}
   <p class="text-body-16 text-color-secondary">
-    Description
+    {{ company.description|length > 100 ? company.description|slice(0, 100) ~ '...' : company.description }}
   </p>
+  {% endif %}
 
 </a>

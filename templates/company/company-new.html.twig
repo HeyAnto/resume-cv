@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profile Cooking — Resume.cv{% endblock %}
+{% block title %}Create Company — Resume.cv{% endblock %}
 
 {% block main %}
 
-{% include "/_components/sidebar.html.twig" %}
+{% include "_components/sidebar.html.twig" %}
 
 <div class="main-content">
   {% include "_components/headers/header-logout.html.twig" %}
@@ -13,12 +13,86 @@
     <div class="container">
 
       <div>
-        <h1 class="text-h1">
-          Create Company
-        </h1>
-        <p class="text-16 text-color-tertiary">
-          Add information about your business
-        </p>
+        <h1 class="text-h1">Create Company</h1>
+        <p class="text-16 text-color-tertiary">Add information about your business</p>
+      </div>
+
+      {% for message in app.flashes('success') %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {% for message in app.flashes('error') %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      <!-- Company General Information Form -->
+      <div class="form-section">
+        <h2 class="text-h2">General Information</h2>
+        <p class="text-14 text-color-tertiary">Basic details about your company</p>
+
+        {{ form_start(companyForm) }}
+
+        <div class="form-group">
+          <div class="flex justify-between items-center">
+            <label class="text-16 text-color-tertiary" for="{{ companyForm.companyName.vars.id }}">{{
+              companyForm.companyName.vars.label }}*</label>
+            <p class="text-14 text-color-tertiary" id="companyName-counter"></p>
+          </div>
+          {{ form_widget(companyForm.companyName) }}
+          <div class="text-14 text-color-red">{{ form_errors(companyForm.companyName) }}</div>
+        </div>
+
+        <div class="form-group">
+          <div class="flex justify-between items-center">
+            <label class="text-16 text-color-tertiary" for="{{ companyForm.description.vars.id }}">{{
+              companyForm.description.vars.label }}</label>
+            <p class="text-14 text-color-tertiary" id="description-counter"></p>
+          </div>
+          {{ form_widget(companyForm.description) }}
+          <div class="text-14 text-color-red">{{ form_errors(companyForm.description) }}</div>
+        </div>
+
+        <div class="form-group">
+          <div class="flex justify-between items-center">
+            <label class="text-16 text-color-tertiary" for="{{ companyForm.location.vars.id }}">{{
+              companyForm.location.vars.label }}*</label>
+            <p class="text-14 text-color-tertiary" id="location-counter"></p>
+          </div>
+          {{ form_widget(companyForm.location) }}
+          <div class="text-14 text-color-red">{{ form_errors(companyForm.location) }}</div>
+        </div>
+
+        <div class="form-group">
+          <div class="flex justify-between items-center">
+            <label class="text-16 text-color-tertiary" for="{{ companyForm.websiteName.vars.id }}">{{
+              companyForm.websiteName.vars.label }}</label>
+            <p class="text-14 text-color-tertiary" id="websiteName-counter"></p>
+          </div>
+          {{ form_widget(companyForm.websiteName) }}
+          <div class="text-14 text-color-red">{{ form_errors(companyForm.websiteName) }}</div>
+        </div>
+
+        <div class="form-group">
+          <div class="flex justify-between items-center">
+            <label class="text-16 text-color-tertiary" for="{{ companyForm.websiteLink.vars.id }}">{{
+              companyForm.websiteLink.vars.label }}</label>
+            <p class="text-14 text-color-tertiary" id="websiteLink-counter"></p>
+          </div>
+          {{ form_widget(companyForm.websiteLink) }}
+          <div class="text-14 text-color-red">{{ form_errors(companyForm.websiteLink) }}</div>
+        </div>
+
+        {{ form_widget(companyForm.submit) }}
+        {{ form_end(companyForm) }}
+      </div>
+
+      <div class="flex justify-end">
+        <a href="{{ path('app_company_list', {'username': username}) }}" class="btn btn-secondary-xs">Back to
+          Companies</a>
       </div>
 
     </div>

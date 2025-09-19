@@ -12,8 +12,9 @@
 // Components
 @use "components/buttons";
 
-@use "components/card/user-card";
 @use "components/card/job-card";
+@use "components/card/user-card";
+@use "components/card/company-card";
 
 @use "components/card/resume/resume-card";
 @use "components/card/resume/resume-edit-card";
