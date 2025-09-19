@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile Cooking — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-profile-edit">
+    <div class="container">
+
+      <div>
+        <h1 class="text-h1">Company</h1>
+        <p class="text-16 text-color-tertiary">Create, edit and manage your businesses</p>
+      </div>
+
+      <div class="flex flex-column gap-sm">
+        <a href="{{ path('app_experience_new', {'username': username}) }}" class="btn btn-primary-xs full">
+          Create a company profile
+        </a>
+
+      </div>
+  </section>
+</div>
+
+{% endblock %}

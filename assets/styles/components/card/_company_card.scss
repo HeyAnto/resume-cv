@@ -1,0 +1,22 @@
+.company-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border: solid 1px var(--color-muted);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-secondary);
+    text-decoration: none;
+    overflow: hidden;
+
+    .company-profile-img {
+        width: 100%;
+        max-width: 2.5rem; // 40px
+        height: 100%;
+        max-height: 2.5rem; // 40px
+        border-radius: var(--radius-xs);
+        border: solid 1px var(--color-muted);
+        object-fit: cover;
+        overflow: hidden;
+    }
+}

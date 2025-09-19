@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile Cooking — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "/_components/sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-profile-edit">
+    <div class="container">
+
+      <div>
+        <h1 class="text-h1">
+          Create Company
+        </h1>
+        <p class="text-16 text-color-tertiary">
+          Add information about your business
+        </p>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/character-counter.js') }}" defer></script>
+<script src="{{ asset('js/form-submit.js') }}" defer></script>
+{% endblock %}
+
+{% endblock %}
