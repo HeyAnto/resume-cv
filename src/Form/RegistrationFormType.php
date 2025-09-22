@@ -52,18 +52,20 @@ class RegistrationFormType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Password is required',
                     ]),
                     new Length([
-                        'min' => 8,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'min' => 12,
+                        'minMessage' => 'Password too short',
                         'max' => 4096,
                     ]),
                     new Regex([
                         'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/',
-                        'message' => 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character (@$!%*?&)'
+                        'message' => 'Password does not meet requirements'
                     ]),
-                    new NotCompromisedPassword(),
+                    new NotCompromisedPassword([
+                        'message' => 'This password is too common'
+                    ]),
                 ],
             ])
         ;

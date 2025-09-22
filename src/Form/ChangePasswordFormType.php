@@ -10,6 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class ChangePasswordFormType extends AbstractType
 {
@@ -29,12 +30,18 @@ class ChangePasswordFormType extends AbstractType
                             'message' => 'Password is required',
                         ]),
                         new Length([
-                            'min' => 8,
+                            'min' => 12,
                             'max' => 255,
-                            'minMessage' => 'Password must be at least {{ limit }} characters long',
-                            'maxMessage' => 'Password cannot be longer than {{ limit }} characters'
+                            'minMessage' => 'Password too short',
+                            'maxMessage' => 'Password too long'
                         ]),
-                        new NotCompromisedPassword(),
+                        new Regex([
+                            'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/',
+                            'message' => 'Password does not meet requirements'
+                        ]),
+                        new NotCompromisedPassword([
+                            'message' => 'This password is too common'
+                        ]),
                     ],
                     'label' => 'New password',
                 ],
