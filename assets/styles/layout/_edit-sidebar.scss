@@ -1,10 +1,11 @@
 .edit-sidebar {
     width: 100%;
     max-width: 250px;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     border-right: 1px solid var(--color-border);
+    overflow-y: auto;
 
     .btn-menu {
         width: 100%;
