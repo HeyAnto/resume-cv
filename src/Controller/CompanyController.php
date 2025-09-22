@@ -5,10 +5,9 @@ namespace App\Controller;
 use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\Company;
 use App\Entity\User;
-use App\Form\CompanyType;
+use App\Form\CompanyFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -99,11 +98,13 @@ final class CompanyController extends AbstractController
     $company = new Company();
 
     // Create form
-    $companyForm = $this->createForm(CompanyType::class, $company);
+    $companyForm = $this->createForm(CompanyFormType::class, $company);
 
     // Handle company form submission
     $companyForm->handleRequest($request);
     if ($companyForm->isSubmitted() && $companyForm->isValid()) {
+      // Set default company image
+      $company->setProfilePicturePath('images/img_default_company.webp');
       $company->setUser($targetUser);
       $company->setCreatedAt(new \DateTimeImmutable());
       $company->setUpdatedAt(new \DateTimeImmutable());

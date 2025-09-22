@@ -5,14 +5,12 @@ namespace App\Form;
 use App\Entity\Company;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CompanyType extends AbstractType
+class CompanyFormType extends AbstractType
 {
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
@@ -21,7 +19,7 @@ class CompanyType extends AbstractType
         'label' => 'Company Name',
         'attr' => [
           'placeholder' => 'Enter your company name',
-          'class' => 'form-control',
+          'required' => true,
           'data-counter' => 'companyName-counter',
           'data-max' => '98',
           'autocomplete' => 'off'
@@ -29,25 +27,10 @@ class CompanyType extends AbstractType
         'constraints' => [
           new Assert\NotBlank(['message' => 'Company name is required']),
           new Assert\Length([
+            'min' => 2,
             'max' => 98,
+            'minMessage' => 'Company name must be at least {{ limit }} characters long',
             'maxMessage' => 'Company name cannot be longer than {{ limit }} characters'
-          ])
-        ]
-      ])
-      ->add('description', TextareaType::class, [
-        'label' => 'Description',
-        'required' => false,
-        'attr' => [
-          'placeholder' => 'Describe your company...',
-          'class' => 'form-control',
-          'data-counter' => 'description-counter',
-          'data-max' => '500',
-          'rows' => 4
-        ],
-        'constraints' => [
-          new Assert\Length([
-            'max' => 500,
-            'maxMessage' => 'Description cannot be longer than {{ limit }} characters'
           ])
         ]
       ])
@@ -55,7 +38,7 @@ class CompanyType extends AbstractType
         'label' => 'Location',
         'attr' => [
           'placeholder' => 'Paris, France',
-          'class' => 'form-control',
+          'required' => true,
           'data-counter' => 'location-counter',
           'data-max' => '32',
           'autocomplete' => 'off'
@@ -63,7 +46,9 @@ class CompanyType extends AbstractType
         'constraints' => [
           new Assert\NotBlank(['message' => 'Location is required']),
           new Assert\Length([
+            'min' => 2,
             'max' => 32,
+            'minMessage' => 'Location must be at least {{ limit }} characters long',
             'maxMessage' => 'Location cannot be longer than {{ limit }} characters'
           ])
         ]
@@ -73,7 +58,6 @@ class CompanyType extends AbstractType
         'required' => false,
         'attr' => [
           'placeholder' => 'My Company Website',
-          'class' => 'form-control',
           'data-counter' => 'websiteName-counter',
           'data-max' => '98',
           'autocomplete' => 'off'
@@ -85,21 +69,26 @@ class CompanyType extends AbstractType
           ])
         ]
       ])
-      ->add('websiteLink', UrlType::class, [
+      ->add('websiteLink', TextType::class, [
         'label' => 'Website URL',
         'required' => false,
         'attr' => [
           'placeholder' => 'https://example.com',
-          'class' => 'form-control',
           'data-counter' => 'websiteLink-counter',
           'data-max' => '98',
           'autocomplete' => 'off'
         ],
         'constraints' => [
-          new Assert\Url(['message' => 'Please enter a valid URL']),
           new Assert\Length([
             'max' => 98,
             'maxMessage' => 'Website URL cannot be longer than {{ limit }} characters'
+          ]),
+          new Assert\Url([
+            'message' => 'Please enter a valid URL (e.g., https://example.com)'
+          ]),
+          new Assert\Regex([
+            'pattern' => '/^https?:\/\//',
+            'message' => 'Website URL must start with http:// or https://'
           ])
         ]
       ])

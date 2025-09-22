@@ -18,7 +18,6 @@
 
       <div>
         <h1 class="text-h1">Create Company</h1>
-        <p class="text-16 text-color-tertiary">Add information about your business</p>
       </div>
 
       {% for message in app.flashes('success') %}
@@ -33,11 +32,7 @@
       </div>
       {% endfor %}
 
-      <!-- Company General Information Form -->
       <div class="form-section">
-        <h2 class="text-h2">General Information</h2>
-        <p class="text-14 text-color-tertiary">Basic details about your company</p>
-
         {{ form_start(companyForm) }}
 
         <div class="form-group">
@@ -48,16 +43,6 @@
           </div>
           {{ form_widget(companyForm.companyName) }}
           <div class="text-14 text-color-red">{{ form_errors(companyForm.companyName) }}</div>
-        </div>
-
-        <div class="form-group">
-          <div class="flex justify-between items-center">
-            <label class="text-16 text-color-tertiary" for="{{ companyForm.description.vars.id }}">{{
-              companyForm.description.vars.label }}</label>
-            <p class="text-14 text-color-tertiary" id="description-counter"></p>
-          </div>
-          {{ form_widget(companyForm.description) }}
-          <div class="text-14 text-color-red">{{ form_errors(companyForm.description) }}</div>
         </div>
 
         <div class="form-group">
@@ -91,12 +76,8 @@
         </div>
 
         {{ form_widget(companyForm.submit) }}
-        {{ form_end(companyForm) }}
-      </div>
 
-      <div class="flex justify-end">
-        <a href="{{ path('app_company_list', {'username': username}) }}" class="btn btn-secondary-xs">Back to
-          Companies</a>
+        {{ form_end(companyForm) }}
       </div>
 
     </div>
