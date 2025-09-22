@@ -265,4 +265,9 @@ class Company
 
         return $this;
     }
+
+    public function getSlug(): string
+    {
+        return strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $this->companyName));
+    }
 }

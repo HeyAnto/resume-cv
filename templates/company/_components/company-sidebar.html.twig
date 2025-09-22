@@ -2,7 +2,8 @@
 
   <div class="flex flex-column">
 
-    <a href="" class="btn-menu {{ app.request.get('_route') == '#' ? 'active' : '' }}">
+    <a href="{{ path('app_company_profile', {'id': company.id, 'companyName': company.slug}) }}"
+      class="btn-menu {{ app.request.get('_route') == 'app_company_profile' ? 'active' : '' }}">
       Company Profile
     </a>
 

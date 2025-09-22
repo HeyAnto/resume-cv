@@ -1,4 +1,4 @@
-<a class="company-card" href="">
+<a class="company-card" href="{{ path('app_company_profile', {'id': company.id, 'companyName': company.slug}) }}">
   <div class="flex items-center gap-lg">
 
     {% if company.profilePicturePath %}

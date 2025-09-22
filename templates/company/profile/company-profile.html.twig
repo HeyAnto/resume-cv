@@ -4,11 +4,11 @@
 {{ importmap(['app', 'character-counter']) }}
 {% endblock %}
 
-{% block title %}Profile Cooking — Resume.cv{% endblock %}
+{% block title %}{{ company.companyName }} — Resume.cv{% endblock %}
 
 {% block main %}
 
-{% include "/_components/sidebar.html.twig" %}
+{% include "_components/sidebar.html.twig" %}
 
 {% include "/company/_components/company-sidebar.html.twig" %}
 
@@ -19,13 +19,97 @@
     <div class="container">
 
       <div>
-        <h1 class="text-h1">
-          Company
-        </h1>
-        <p class="text-16 text-color-tertiary">
-          Modify information about your business
-        </p>
+        <h1 class="text-h1">Company Profile</h1>
+        <p class="text-16 text-color-tertiary">Update your company information</p>
       </div>
+
+      {% for message in app.flashes('success') %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {% for message in app.flashes('error') %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      <form method="POST" action="{{ path('app_company_profile', {'id': company.id, 'companyName': company.slug}) }}"
+        enctype="multipart/form-data" class="form-upload-picture">
+        <img class="company-edit-profile-img" src="{{ asset(company.profilePicturePath) }}"
+          alt="Logo of {{ company.companyName }}">
+
+        <div class="form-group">
+          <input type="file" name="profilePicture" accept="image/jpeg,image/png,image/webp"
+            onchange="this.form.submit()" style="display: none;" id="profile-picture-input">
+
+          <div class="flex gap-lg">
+            <label for="profile-picture-input" class="btn btn-secondary-xs" style="cursor: pointer;">Upload
+              logo</label>
+            {% if company.profilePicturePath != 'images/img_default_company.webp' %}
+            <a href="{{ path('app_company_remove_picture', {'id': company.id, 'companyName': company.slug}) }}"
+              class="btn btn-secondary-xs danger"
+              onclick="return confirm('Are you sure you want to remove your company logo?')">Remove
+              logo</a>
+            {% endif %}
+          </div>
+        </div>
+      </form>
+
+      {{ form_start(companyForm) }}
+
+      <div class="form-group">
+        <div class="flex justify-between items-center">
+          <label class="text-16 text-color-tertiary" for="{{ companyForm.companyName.vars.id }}">Company Name*</label>
+          <p class="text-14 text-color-tertiary" id="companyName-counter"></p>
+        </div>
+        {{ form_widget(companyForm.companyName) }}
+        <div class="text-14 text-color-red">{{ form_errors(companyForm.companyName) }}</div>
+      </div>
+
+      <div class="form-group">
+        <div class="flex justify-between items-center">
+          <label class="text-16 text-color-tertiary" for="{{ companyForm.location.vars.id }}">Location*</label>
+          <p class="text-14 text-color-tertiary" id="location-counter"></p>
+        </div>
+        {{ form_widget(companyForm.location) }}
+        <div class="text-14 text-color-red">{{ form_errors(companyForm.location) }}</div>
+      </div>
+
+      <div class="form-group">
+        <div class="flex justify-between items-center">
+          <label class="text-16 text-color-tertiary" for="{{ companyForm.websiteName.vars.id }}">Website Display
+            Name</label>
+          <p class="text-14 text-color-tertiary" id="websiteName-counter"></p>
+        </div>
+        {{ form_widget(companyForm.websiteName) }}
+        <div class="text-14 text-color-red">{{ form_errors(companyForm.websiteName) }}</div>
+      </div>
+
+      <div class="form-group">
+        <div class="flex justify-between items-center">
+          <label class="text-16 text-color-tertiary" for="{{ companyForm.websiteLink.vars.id }}">Website URL</label>
+          <p class="text-14 text-color-tertiary" id="websiteLink-counter"></p>
+        </div>
+        {{ form_widget(companyForm.websiteLink) }}
+        <div class="text-14 text-color-red">{{ form_errors(companyForm.websiteLink) }}</div>
+      </div>
+
+      <div class="form-group">
+        <div class="flex justify-between items-center">
+          <label class="text-16 text-color-tertiary" for="{{ companyForm.description.vars.id }}">Description</label>
+          <p class="text-14 text-color-tertiary" id="description-counter"></p>
+        </div>
+        {{ form_widget(companyForm.description) }}
+        <div class="text-14 text-color-red">{{ form_errors(companyForm.description) }}</div>
+      </div>
+
+      <div class="flex justify-end">
+        {{ form_widget(companyForm.submit) }}
+      </div>
+
+      {{ form_end(companyForm) }}
 
     </div>
   </section>

@@ -7,15 +7,16 @@ use App\Entity\User;
 use App\Form\CompanyFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 
 #[Route('/company')]
 final class CompanyController extends AbstractController
 {
-
   private function checkUserAccess(): ?Response
   {
     // Check if user is logged in
@@ -73,7 +74,7 @@ final class CompanyController extends AbstractController
     $company = new Company();
 
     // Create form
-    $companyForm = $this->createForm(CompanyFormType::class, $company);
+    $companyForm = $this->createForm(CompanyFormType::class, $company, ['submit_label' => 'Create Company']);
 
     // Handle company form submission
     $companyForm->handleRequest($request);
@@ -94,5 +95,132 @@ final class CompanyController extends AbstractController
     return $this->render('company/company-new.html.twig', [
       'companyForm' => $companyForm,
     ]);
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  #[Route('/{id}-{companyName}', name: 'app_company_profile')]
+  public function companyProfile(int $id, string $companyName, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+  {
+    $userCheck = $this->checkUserAccess();
+    if ($userCheck) {
+      return $userCheck;
+    }
+
+    /** @var User $currentUser */
+    $currentUser = $this->getUser();
+
+    // Find the company
+    $company = $entityManager->getRepository(Company::class)->find($id);
+
+    if (!$company) {
+      throw $this->createNotFoundException('Company not found');
+    }
+
+    // Check if current user owns this company
+    if ($company->getUser() !== $currentUser) {
+      throw $this->createAccessDeniedException('You are not authorized to edit this company');
+    }
+
+    // Create form
+    $companyForm = $this->createForm(CompanyFormType::class, $company, ['submit_label' => 'Done']);
+
+    // Handle profile picture upload (separate form)
+    if ($request->isMethod('POST') && $request->files->has('profilePicture')) {
+      $profilePictureFile = $request->files->get('profilePicture');
+
+      if ($profilePictureFile) {
+        $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename = $slugger->slug($originalFilename);
+        $newFilename = $safeFilename . '-' . uniqid() . '.' . $profilePictureFile->guessExtension();
+
+        try {
+          $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/company-logos';
+          if (!is_dir($uploadsDir)) {
+            mkdir($uploadsDir, 0755, true);
+          }
+
+          // Delete old image if not default
+          $oldPath = $company->getProfilePicturePath();
+          if ($oldPath && $oldPath !== 'images/img_default_company.webp') {
+            $oldFile = $this->getParameter('kernel.project_dir') . '/public/' . $oldPath;
+            if (file_exists($oldFile)) {
+              unlink($oldFile);
+            }
+          }
+
+          $profilePictureFile->move($uploadsDir, $newFilename);
+          $company->setProfilePicturePath('uploads/company-logos/' . $newFilename);
+          $company->setUpdatedAt(new \DateTimeImmutable());
+
+          $entityManager->flush();
+          $this->addFlash('success', 'Company logo updated successfully!');
+        } catch (FileException $e) {
+          $this->addFlash('error', 'Error uploading logo');
+        }
+      }
+
+      return $this->redirectToRoute('app_company_profile', ['id' => $id, 'companyName' => $company->getSlug()]);
+    }
+
+    // Handle company form submission
+    $companyForm->handleRequest($request);
+    if ($companyForm->isSubmitted() && $companyForm->isValid()) {
+      $company->setUpdatedAt(new \DateTimeImmutable());
+
+      $entityManager->flush();
+      $this->addFlash('success', 'Company profile updated successfully!');
+
+      return $this->redirectToRoute('app_company_profile', ['id' => $id, 'companyName' => $company->getSlug()]);
+    }
+
+    return $this->render('company/profile/company-profile.html.twig', [
+      'company' => $company,
+      'companyForm' => $companyForm,
+    ]);
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  #[Route('/{id}-{companyName}/remove-picture', name: 'app_company_remove_picture')]
+  public function removeCompanyPicture(int $id, string $companyName, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+  {
+    $userCheck = $this->checkUserAccess();
+    if ($userCheck) {
+      return $userCheck;
+    }
+
+    /** @var User $currentUser */
+    $currentUser = $this->getUser();
+
+    // Find the company
+    $company = $entityManager->getRepository(Company::class)->find($id);
+
+    if (!$company) {
+      throw $this->createNotFoundException('Company not found');
+    }
+
+    // Check if current user owns this company
+    if ($company->getUser() !== $currentUser) {
+      throw $this->createAccessDeniedException('You are not authorized to edit this company');
+    }
+
+    // Delete current picture if not default
+    $currentPicturePath = $company->getProfilePicturePath();
+    if ($currentPicturePath && $currentPicturePath !== 'images/img_default_company.webp') {
+      $pictureFile = $this->getParameter('kernel.project_dir') . '/public/' . $currentPicturePath;
+      if (file_exists($pictureFile)) {
+        unlink($pictureFile);
+      }
+    }
+
+    // Set to default
+    $company->setProfilePicturePath('images/img_default_company.webp');
+    $company->setUpdatedAt(new \DateTimeImmutable());
+
+    $entityManager->flush();
+
+    $this->addFlash('success', 'Company logo removed successfully!');
+    return $this->redirectToRoute('app_company_profile', ['id' => $id, 'companyName' => $company->getSlug()]);
   }
 }

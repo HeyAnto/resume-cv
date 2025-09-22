@@ -48,8 +48,7 @@
     </li>
 
     <li>
-      <a class="nav-button"
-        href="{{ app.user ? path('app_company_list', {'username': app.user.profile.username}) : path('app_login') }}">
+      <a class="nav-button" href="{{ app.user ? path('app_company_list') : path('app_login') }}">
         {% if app.request.pathInfo starts with '/company' %}
         {% include "_icons/suitcase-fill.html.twig" with {
         'class': 'nav-icon active'

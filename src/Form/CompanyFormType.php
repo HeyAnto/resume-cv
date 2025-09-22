@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Company;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -12,8 +13,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CompanyFormType extends AbstractType
 {
+
+  public function configureOptions(OptionsResolver $resolver): void
+  {
+    $resolver->setDefaults([
+      'data_class' => Company::class,
+      'submit_label' => 'Save',
+    ]);
+  }
+
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
+    $submitLabel = $options['submit_label'] ?? 'Save';
+
     $builder
       ->add('companyName', TextType::class, [
         'label' => 'Company Name',
@@ -92,16 +104,25 @@ class CompanyFormType extends AbstractType
           ])
         ]
       ])
+      ->add('description', TextareaType::class, [
+        'label' => 'Description',
+        'required' => false,
+        'attr' => [
+          'placeholder' => 'Describe your company...',
+          'data-counter' => 'description-counter',
+          'data-max' => '500',
+          'rows' => 4
+        ],
+        'constraints' => [
+          new Assert\Length([
+            'max' => 500,
+            'maxMessage' => 'Description cannot be longer than {{ limit }} characters'
+          ])
+        ]
+      ])
       ->add('submit', SubmitType::class, [
-        'label' => 'Create Company',
-        'attr' => ['class' => 'btn btn-primary-xs full']
+        'label' => $submitLabel,
+        'attr' => ['class' => 'btn btn-primary-xs']
       ]);
-  }
-
-  public function configureOptions(OptionsResolver $resolver): void
-  {
-    $resolver->setDefaults([
-      'data_class' => Company::class,
-    ]);
   }
 }
