@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\Company;
 use App\Entity\User;
 use App\Form\CompanyFormType;
@@ -16,84 +15,60 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/company')]
 final class CompanyController extends AbstractController
 {
-  use UserRedirectionTrait;
 
-  private function checkUsernameAccess(string $username): ?Response
+  private function checkUserAccess(): ?Response
   {
-    // Check user access first
-    $userCheck = $this->checkUserAccess();
-    if ($userCheck) {
-      return $userCheck;
+    // Check if user is logged in
+    if (!$this->getUser()) {
+      return $this->redirectToRoute('app_login');
     }
 
     /** @var User $user */
     $user = $this->getUser();
     $profile = $user->getProfile();
 
-    // Allow access
-    if ($this->isGranted('ROLE_ADMIN') || $profile->getUsername() === $username) {
-      return null;
+    // Check if profile is complete
+    if (!$profile || !$profile->getUsername()) {
+      return $this->redirectToRoute('app_profile_edit');
     }
 
-    // Redirect to public profile
-    return $this->redirectToRoute('app_profile', ['username' => $username]);
+    return null;
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  #[Route('/{username}', name: 'app_company_list')]
-  public function companyList(string $username, EntityManagerInterface $entityManager): Response
+  #[Route('', name: 'app_company_list')]
+  public function companyList(EntityManagerInterface $entityManager): Response
   {
-    $usernameCheck = $this->checkUsernameAccess($username);
-    if ($usernameCheck) {
-      return $usernameCheck;
+    $userCheck = $this->checkUserAccess();
+    if ($userCheck) {
+      return $userCheck;
     }
 
-    // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
-
-    if (!$targetUser) {
-      throw $this->createNotFoundException('User not found');
-    }
+    /** @var User $currentUser */
+    $currentUser = $this->getUser();
 
     // Get user's companies
     $companies = $entityManager->getRepository(Company::class)
-      ->findBy(['user' => $targetUser], ['createdAt' => 'DESC']);
+      ->findBy(['user' => $currentUser], ['createdAt' => 'DESC']);
 
     return $this->render('company/company-list.html.twig', [
-      'username' => $username,
       'companies' => $companies,
     ]);
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  #[Route('/{username}/new', name: 'app_company_new')]
-  public function companyNew(Request $request, EntityManagerInterface $entityManager, string $username): Response
+  #[Route('/new', name: 'app_company_new')]
+  public function companyNew(Request $request, EntityManagerInterface $entityManager): Response
   {
-    $usernameCheck = $this->checkUsernameAccess($username);
-    if ($usernameCheck) {
-      return $usernameCheck;
+    $userCheck = $this->checkUserAccess();
+    if ($userCheck) {
+      return $userCheck;
     }
 
-    // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
-
-    if (!$targetUser) {
-      throw $this->createNotFoundException('User not found');
-    }
+    /** @var User $currentUser */
+    $currentUser = $this->getUser();
 
     $company = new Company();
 
@@ -105,7 +80,7 @@ final class CompanyController extends AbstractController
     if ($companyForm->isSubmitted() && $companyForm->isValid()) {
       // Set default company image
       $company->setProfilePicturePath('images/img_default_company.webp');
-      $company->setUser($targetUser);
+      $company->setUser($currentUser);
       $company->setCreatedAt(new \DateTimeImmutable());
       $company->setUpdatedAt(new \DateTimeImmutable());
 
@@ -113,12 +88,11 @@ final class CompanyController extends AbstractController
       $entityManager->flush();
 
       $this->addFlash('success', 'Company created successfully!');
-      return $this->redirectToRoute('app_company_list', ['username' => $username]);
+      return $this->redirectToRoute('app_company_list');
     }
 
     return $this->render('company/company-new.html.twig', [
       'companyForm' => $companyForm,
-      'username' => $username,
     ]);
   }
 }

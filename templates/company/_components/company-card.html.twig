@@ -1,5 +1,4 @@
 <a class="company-card" href="">
-
   <div class="flex items-center gap-lg">
 
     {% if company.profilePicturePath %}
@@ -23,11 +22,4 @@
     </div>
 
   </div>
-
-  {% if company.description %}
-  <p class="text-body-16 text-color-secondary">
-    {{ company.description|length > 100 ? company.description|slice(0, 100) ~ '...' : company.description }}
-  </p>
-  {% endif %}
-
 </a>
