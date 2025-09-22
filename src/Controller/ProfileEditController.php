@@ -65,60 +65,61 @@ final class ProfileEditController extends AbstractController
     }
     $profile = $targetUser->getProfile();
 
+    // Upload profile picture
+    /** @var UploadedFile|null $profilePictureFile */
+    $profilePictureFile = $request->files->get('profilePicture');
+
+    if ($profilePictureFile) {
+      $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!in_array($profilePictureFile->getMimeType(), $allowedMimeTypes)) {
+        $this->addFlash('error', 'Please upload a valid image file (JPEG, PNG, WebP)');
+        return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
+      }
+
+      // Validate file size (2MB max)
+      $maxSize = 2 * 1024 * 1024; // 2MB in bytes
+      if ($profilePictureFile->getSize() > $maxSize) {
+        $this->addFlash('error', 'Profile picture file is too large. Max size is 2MB.');
+        return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
+      }
+
+      $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+      $safeFilename = $slugger->slug($originalFilename);
+      $newFilename = $safeFilename . '-' . uniqid() . '.' . $profilePictureFile->guessExtension();
+
+      try {
+        $profilePictureFile->move(
+          $this->getParameter('kernel.project_dir') . '/public/uploads/profile-pictures',
+          $newFilename
+        );
+
+        // Delete old image
+        $oldPath = $profile->getProfilePicturePath();
+        if ($oldPath && $oldPath !== 'images/img_default_user.webp') {
+          $oldFile = $this->getParameter('kernel.project_dir') . '/public/' . $oldPath;
+          if (file_exists($oldFile)) {
+            unlink($oldFile);
+          }
+        }
+
+        $profile->setProfilePicturePath('uploads/profile-pictures/' . $newFilename);
+        $profile->setUpdatedAt(new \DateTimeImmutable());
+        $entityManager->flush();
+        $this->addFlash('success', 'Profile picture successfully updated');
+      } catch (FileException $e) {
+        $this->addFlash('error', 'Error uploading image');
+      }
+
+      return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
+    }
+
+    // Profile information
     $form = $this->createForm(ProfileFormType::class, $profile);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-      /** @var UploadedFile|null $profilePictureFile */
-      $profilePictureFile = $form->get('profilePicture')->getData();
-
       $profile->setUpdatedAt(new \DateTimeImmutable());
       $entityManager->flush();
-
-      if ($profilePictureFile) {
-        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
-        if (!in_array($profilePictureFile->getMimeType(), $allowedMimeTypes)) {
-          $this->addFlash('error', 'Please upload a valid image file (JPEG, PNG, WebP)');
-          return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
-        }
-
-        // Validate file size (2MB max)
-        $maxSize = 2 * 1024 * 1024; // 2MB in bytes
-        if ($profilePictureFile->getSize() > $maxSize) {
-          $this->addFlash('error', 'Profile picture file is too large. Max size is 2MB.');
-          return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
-        }
-
-        $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = $slugger->slug($originalFilename);
-        $newFilename = $safeFilename . '-' . uniqid() . '.' . $profilePictureFile->guessExtension();
-
-        try {
-          $profilePictureFile->move(
-            $this->getParameter('kernel.project_dir') . '/public/uploads/profile-pictures',
-            $newFilename
-          );
-
-          // Delete old image
-          $oldPath = $profile->getProfilePicturePath();
-          if ($oldPath && $oldPath !== 'images/img_default_user.webp') {
-            $oldFile = $this->getParameter('kernel.project_dir') . '/public/' . $oldPath;
-            if (file_exists($oldFile)) {
-              unlink($oldFile);
-            }
-          }
-
-          $profile->setProfilePicturePath('uploads/profile-pictures/' . $newFilename);
-          $profile->setUpdatedAt(new \DateTimeImmutable());
-          $entityManager->flush();
-          $this->addFlash('success', 'Profile picture successfully updated');
-        } catch (FileException $e) {
-          $this->addFlash('error', 'Error uploading image');
-        }
-
-        return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
-      }
-
       $this->addFlash('success', 'Profile successfully updated');
       return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
     }
@@ -132,8 +133,8 @@ final class ProfileEditController extends AbstractController
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  #[Route('/{username}/general/remove-picture', name: 'app_profile_remove_picture', methods: ['GET', 'POST'])]
-  public function removePicture(string $username, EntityManagerInterface $entityManager, Request $request): Response
+  #[Route('/{username}/general/remove-picture', name: 'app_profile_remove_picture', methods: ['GET'])]
+  public function removePicture(string $username, EntityManagerInterface $entityManager): Response
   {
     $redirectResponse = $this->checkUserAccess();
     if ($redirectResponse) {
@@ -143,11 +144,6 @@ final class ProfileEditController extends AbstractController
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
       return $usernameCheck;
-    }
-
-    // If GET -> redirect to profile edit
-    if ($request->getMethod() === 'GET') {
-      return $this->redirectToRoute('app_profile_edit', ['username' => $username]);
     }
 
     // Get user and profile by username

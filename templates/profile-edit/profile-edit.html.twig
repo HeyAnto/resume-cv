@@ -3,7 +3,7 @@
 {% block title %}Profile Cooking — Resume.cv{% endblock %}
 
 {% block importmap %}
-{{ importmap(['app', 'character-counter', 'profile-picture-upload']) }}
+{{ importmap(['app', 'character-counter']) }}
 {% endblock %}
 
 {% block main %}
@@ -23,28 +23,29 @@
                 <p class="text-16 text-color-tertiary">Update your profile information</p>
             </div>
 
+            <form method="POST" action="{{ path('app_profile_edit', {'username': username}) }}"
+                enctype="multipart/form-data" class="form-upload-picture">
+                <img class="profile-img" src="{{ asset(profile.profilePictureUrl) }}"
+                    alt="Profile picture of {{ profile.displayName }}">
+
+                <div class="form-group">
+                    <input type="file" name="profilePicture" accept="image/jpeg,image/png,image/webp"
+                        onchange="this.form.submit()" style="display: none;" id="profile-picture-input">
+
+                    <div class="flex gap-lg">
+                        <label for="profile-picture-input" class="btn btn-secondary-xs" style="cursor: pointer;">Upload
+                            image</label>
+                        {% if not profile.hasDefaultProfilePicture %}
+                        <a href="{{ path('app_profile_remove_picture', {'username': username}) }}"
+                            class="btn btn-secondary-xs danger"
+                            onclick="return confirm('Are you sure you want to remove your profile picture?')">Remove
+                            image</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+
             {{ form_start(form) }}
-
-            <img id="profile-preview" class="profile-img" src="{{ asset(profile.profilePictureUrl) }}"
-                alt="Profile picture of {{ profile.displayName }}">
-
-            <div class="form-group">
-                <!-- Hidden file input -->
-                <div style="display: none;">
-                    {{ form_widget(form.profilePicture) }}
-                </div>
-
-                <div class="flex gap-lg">
-                    <button type="button" id="upload-btn" class="btn btn-secondary-xs">Upload image</button>
-                    {% if not profile.hasDefaultProfilePicture %}
-                    <button type="button" id="remove-btn" class="btn btn-secondary-xs danger"
-                        data-remove-url="{{ path('app_profile_remove_picture', {'username': username}) }}">Remove
-                        image</button>
-                    {% endif %}
-                </div>
-
-                <div class="text-14 text-color-red">{{ form_errors(form.profilePicture) }}</div>
-            </div>
 
             <div class="form-group">
                 <div class="flex justify-between items-center">
