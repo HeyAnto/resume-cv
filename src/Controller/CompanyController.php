@@ -100,7 +100,29 @@ final class CompanyController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{id}-{companyName}', name: 'app_company_profile')]
-  public function companyProfile(int $id, string $companyName, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+  public function companyProfile(int $id, string $companyName, EntityManagerInterface $entityManager): Response
+  {
+    $userCheck = $this->checkUserAccess();
+    if ($userCheck) {
+      return $userCheck;
+    }
+
+    // Find the company
+    $company = $entityManager->getRepository(Company::class)->find($id);
+
+    if (!$company) {
+      throw $this->createNotFoundException('Company not found');
+    }
+
+    return $this->render('company/profile/company-profile.html.twig', [
+      'company' => $company,
+    ]);
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  #[Route('/{id}-{companyName}/edit', name: 'app_company_edit')]
+  public function companyEdit(int $id, string $companyName, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
   {
     $userCheck = $this->checkUserAccess();
     if ($userCheck) {
@@ -117,15 +139,16 @@ final class CompanyController extends AbstractController
       throw $this->createNotFoundException('Company not found');
     }
 
-    // Check if current user owns this company
-    if ($company->getUser() !== $currentUser) {
+    // Check edit access
+    $canEdit = ($company->getUser() === $currentUser) || $this->isGranted('ROLE_ADMIN');
+    if (!$canEdit) {
       throw $this->createAccessDeniedException('You are not authorized to edit this company');
     }
 
     // Create form
     $companyForm = $this->createForm(CompanyFormType::class, $company, ['submit_label' => 'Done']);
 
-    // Handle profile picture upload (separate form)
+    // Picture upload
     if ($request->isMethod('POST') && $request->files->has('profilePicture')) {
       $profilePictureFile = $request->files->get('profilePicture');
 
@@ -160,7 +183,7 @@ final class CompanyController extends AbstractController
         }
       }
 
-      return $this->redirectToRoute('app_company_profile', ['id' => $id, 'companyName' => $company->getSlug()]);
+      return $this->redirectToRoute('app_company_edit', ['id' => $id, 'companyName' => $company->getSlug()]);
     }
 
     // Handle company form submission
@@ -174,7 +197,7 @@ final class CompanyController extends AbstractController
       return $this->redirectToRoute('app_company_profile', ['id' => $id, 'companyName' => $company->getSlug()]);
     }
 
-    return $this->render('company/profile/company-profile.html.twig', [
+    return $this->render('company/profile/company-edit-profile.html.twig', [
       'company' => $company,
       'companyForm' => $companyForm,
     ]);
@@ -200,8 +223,9 @@ final class CompanyController extends AbstractController
       throw $this->createNotFoundException('Company not found');
     }
 
-    // Check if current user owns this company
-    if ($company->getUser() !== $currentUser) {
+    // Check edit access: owner can edit, admin can edit all
+    $canEdit = ($company->getUser() === $currentUser) || $this->isGranted('ROLE_ADMIN');
+    if (!$canEdit) {
       throw $this->createAccessDeniedException('You are not authorized to edit this company');
     }
 
@@ -221,6 +245,47 @@ final class CompanyController extends AbstractController
     $entityManager->flush();
 
     $this->addFlash('success', 'Company logo removed successfully!');
-    return $this->redirectToRoute('app_company_profile', ['id' => $id, 'companyName' => $company->getSlug()]);
+    return $this->redirectToRoute('app_company_edit', ['id' => $id, 'companyName' => $company->getSlug()]);
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  #[Route('/{id}-{companyName}/delete', name: 'app_company_delete', methods: ['POST'])]
+  public function deleteCompany(int $id, string $companyName, EntityManagerInterface $entityManager): Response
+  {
+    $userCheck = $this->checkUserAccess();
+    if ($userCheck) {
+      return $userCheck;
+    }
+
+    /** @var User $currentUser */
+    $currentUser = $this->getUser();
+
+    // Find the company
+    $company = $entityManager->getRepository(Company::class)->find($id);
+
+    if (!$company) {
+      throw $this->createNotFoundException('Company not found');
+    }
+
+    $canDelete = ($company->getUser() === $currentUser) || $this->isGranted('ROLE_ADMIN');
+    if (!$canDelete) {
+      throw $this->createAccessDeniedException('You are not authorized to delete this company');
+    }
+
+    // Delete company logo if not default
+    $currentPicturePath = $company->getProfilePicturePath();
+    if ($currentPicturePath && $currentPicturePath !== 'images/img_default_company.webp') {
+      $pictureFile = $this->getParameter('kernel.project_dir') . '/public/' . $currentPicturePath;
+      if (file_exists($pictureFile)) {
+        unlink($pictureFile);
+      }
+    }
+
+    $entityManager->remove($company);
+    $entityManager->flush();
+
+    $this->addFlash('success', 'Company deleted successfully!');
+    return $this->redirectToRoute('app_company_list');
   }
 }

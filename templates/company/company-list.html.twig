@@ -32,10 +32,7 @@
         {% endfor %}
       </div>
       {% else %}
-      <div class="empty-state">
-        <p class="text-16 text-color-tertiary">You haven't created any companies yet.</p>
-        <p class="text-14 text-color-tertiary">Start by creating your first company profile!</p>
-      </div>
+      <p class="text-16 text-color-tertiary">You haven't created any companies yet.</p>
       {% endif %}
 
       {% for message in app.flashes('success') %}

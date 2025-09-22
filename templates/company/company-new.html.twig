@@ -77,6 +77,8 @@
 
         {{ form_widget(companyForm.submit) }}
 
+        {{ form_widget(companyForm.description, {'attr': {'style': 'display: none;'}}) }}
+
         {{ form_end(companyForm) }}
       </div>
 
