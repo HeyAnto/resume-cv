@@ -25,4 +25,34 @@ return [
     '@hotwired/turbo' => [
         'version' => '7.3.0',
     ],
+
+    // JS
+    'admin-profile-actions' => [
+        'path' => './assets/js/admin-profile-actions.js',
+        'entrypoint' => true,
+    ],
+    'character-counter' => [
+        'path' => './assets/js/character-counter.js',
+        'entrypoint' => true,
+    ],
+    'drag-scroll' => [
+        'path' => './assets/js/drag-scroll.js',
+        'entrypoint' => true,
+    ],
+    'form-submit' => [
+        'path' => './assets/js/form-submit.js',
+        'entrypoint' => true,
+    ],
+    'image-modal' => [
+        'path' => './assets/js/image-modal.js',
+        'entrypoint' => true,
+    ],
+    'image-preview' => [
+        'path' => './assets/js/image-preview.js',
+        'entrypoint' => true,
+    ],
+    'profile-picture-upload' => [
+        'path' => './assets/js/profile-picture-upload.js',
+        'entrypoint' => true,
+    ],
 ];

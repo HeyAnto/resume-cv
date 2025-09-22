@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block importmap %}
+{{ importmap(['app', 'character-counter']) }}
+{% endblock %}
+
 {% block title %}Profile Cooking — Resume.cv{% endblock %}
 
 {% block main %}
@@ -122,11 +126,5 @@
       </div>
   </section>
 </div>
-
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/character-counter.js') }}" defer></script>
-<script src="{{ asset('js/form-submit.js') }}" defer></script>
-{% endblock %}
 
 {% endblock %}

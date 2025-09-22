@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block importmap %}
+{{ importmap(['app', 'image-modal', 'drag-scroll', 'admin-profile-actions']) }}
+{% endblock %}
+
 {% block title %}{{ profile.displayName }} — Resume.cv{% endblock %}
 
 {% block main %}
@@ -19,12 +23,5 @@
         </div>
     </section>
 </div>
-
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/admin-profile-actions.js') }}" defer></script>
-<script src="{{ asset('js/drag-scroll.js') }}" defer></script>
-<script src="{{ asset('js/image-modal.js') }}" defer></script>
-{% endblock %}
 
 {% endblock %}

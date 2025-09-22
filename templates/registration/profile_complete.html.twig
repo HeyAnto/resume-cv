@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block importmap %}
+{{ importmap(['app', 'character-counter']) }}
+{% endblock %}
+
 {% block title %}Register — Resume.cv{% endblock %}
 
 {% block main %}
@@ -61,18 +65,5 @@
     </div>
   </section>
 </div>
-
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/character-counter.js') }}" defer></script>
-<script src="{{ asset('js/form-submit.js') }}" defer></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('{{ profileForm.username.vars.id }}').addEventListener('input', function () {
-      this.value = this.value.toLowerCase();
-    });
-  });
-</script>
-{% endblock %}
 
 {% endblock %}

@@ -9,4 +9,23 @@ document.addEventListener("turbo:load", function () {
             }
         });
     });
+
+    // Username to lowercase
+    const usernameInputs = document.querySelectorAll('input[id*="username"]');
+    usernameInputs.forEach(function (input) {
+        input.addEventListener("input", function () {
+            this.value = this.value.toLowerCase();
+        });
+    });
+
+    // Auto-submit search type
+    const typeSelect = document.getElementById("type");
+    if (typeSelect) {
+        typeSelect.addEventListener("change", function () {
+            const form = this.closest("form");
+            if (form) {
+                form.submit();
+            }
+        });
+    }
 });

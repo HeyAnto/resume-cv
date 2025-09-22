@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block importmap %}
+{{ importmap(['app', 'image-modal']) }}
+{% endblock %}
+
 {% block title %}Following — Resume.cv{% endblock %}
 
 {% block main %}
@@ -52,10 +56,5 @@
     </div>
   </section>
 </div>
-
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('js/image-modal.js') }}" defer></script>
-{% endblock %}
 
 {% endblock %}
