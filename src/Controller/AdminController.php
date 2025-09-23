@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Repository\CompanyRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -298,6 +300,78 @@ final class AdminController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'message' => 'Post deleted successfully'
+        ]);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #[Route('/companies', name: 'admin_companies_list')]
+    public function companyList(Request $request, CompanyRepository $companyRepository): Response
+    {
+        $search = $request->query->get('search');
+        $createdAt = $request->query->get('created_at');
+        $updatedAt = $request->query->get('updated_at');
+
+        // Convert string dates to DateTime objects
+        $createdAfter = $createdAt ? new \DateTime($createdAt) : null;
+        $updatedAfter = $updatedAt ? new \DateTime($updatedAt) : null;
+
+        // Search for companies
+        $queryBuilder = $companyRepository->createQueryBuilder('c')
+            ->leftJoin('c.user', 'u')
+            ->orderBy('c.createdAt', 'DESC');
+
+        if ($search) {
+            $queryBuilder->andWhere('c.companyName LIKE :search OR c.location LIKE :search OR u.email LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($createdAfter) {
+            $queryBuilder->andWhere('c.createdAt >= :createdAfter')
+                ->setParameter('createdAfter', $createdAfter);
+        }
+
+        if ($updatedAfter) {
+            $queryBuilder->andWhere('c.updatedAt >= :updatedAfter')
+                ->setParameter('updatedAfter', $updatedAfter);
+        }
+
+        $companies = $queryBuilder->getQuery()->getResult();
+
+        return $this->render('admin/companies/companies-list.html.twig', [
+            'companies' => $companies,
+            'search' => $search,
+            'created_at' => $createdAt,
+            'updated_at' => $updatedAt,
+        ]);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #[Route('/companies/{id}/delete', name: 'admin_company_delete', methods: ['POST'])]
+    public function deleteCompany(int $id, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $company = $entityManager->getRepository(Company::class)->find($id);
+
+        if (!$company) {
+            return new JsonResponse(['success' => false, 'message' => 'Company not found'], 404);
+        }
+
+        // Delete company logo if not default
+        $currentPicturePath = $company->getProfilePicturePath();
+        if ($currentPicturePath && $currentPicturePath !== 'images/img_default_company.webp') {
+            $pictureFile = $this->getParameter('kernel.project_dir') . '/public/' . $currentPicturePath;
+            if (file_exists($pictureFile)) {
+                unlink($pictureFile);
+            }
+        }
+
+        $entityManager->remove($company);
+        $entityManager->flush();
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Company deleted successfully'
         ]);
     }
 }

@@ -12,6 +12,11 @@
       Manage Posts
     </a>
 
+    <a href="{{ path('admin_companies_list') }}"
+      class="btn-menu {{ app.request.get('_route') == 'admin_companies_list' ? 'active' : '' }}">
+      Manage Companies
+    </a>
+
   </div>
 
 </div>

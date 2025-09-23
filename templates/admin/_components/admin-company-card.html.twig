@@ -1,0 +1,42 @@
+{% set companyUrl = path('app_company_profile', {'id': company.id, 'companyName': company.slug}) %}
+
+<div class="admin-company-card">
+
+  <a href="{{ companyUrl }}" target="_blank" class="card-info">
+    <div class="header-card">
+      <img class="company-profile-img"
+        src="{{ asset(company.profilePicturePath ?: 'images/img_default_company.webp') }}"
+        alt="Logo of {{ company.companyName }}">
+      <p class="text-14 text-color-primary">Company</p>
+    </div>
+
+    <div class="flex flex-column">
+      <p class="text-14 text-color-primary">{{ company.companyName }}</p>
+      <p class="text-14 text-color-secondary">{{ company.location }}</p>
+    </div>
+
+    <div class="flex flex-column">
+      <p class="text-14 text-color-primary">{{ company.user.email }}</p>
+      <p class="text-14 text-color-secondary">
+        {% if company.companyTags|length > 0 %}
+        {{ company.companyTags|length }} tag{{ company.companyTags|length > 1 ? 's' : '' }}
+        {% else %}
+        No tags
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="flex flex-column">
+      <p class="text-14 text-color-secondary">Created At {{ company.createdAt ?
+        company.createdAt|date('d/m/Y H:i') : 'Unknown' }}</p>
+      <p class="text-14 text-color-secondary">Updated At {{ company.updatedAt ?
+        company.updatedAt|date('d/m/Y H:i') : 'Never' }}</p>
+    </div>
+  </a>
+
+  <div class="admin-actions" onclick="event.preventDefault();">
+    <button class="btn btn-danger-xs admin-delete-company-btn" data-company-id="{{ company.id }}">Delete
+      Company</button>
+  </div>
+
+</div>

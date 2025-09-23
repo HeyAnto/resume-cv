@@ -190,4 +190,42 @@ document.addEventListener("turbo:load", function () {
             }
         });
     });
+
+    // Handle company delete buttons
+    const companyDeleteBtns = document.querySelectorAll(
+        ".admin-delete-company-btn"
+    );
+    companyDeleteBtns.forEach(function (deleteBtn) {
+        deleteBtn.addEventListener("click", function () {
+            const companyId = this.getAttribute("data-company-id");
+
+            if (
+                confirm(
+                    "Are you sure you want to delete this company? This action cannot be undone."
+                )
+            ) {
+                fetch(`/admin/companies/${companyId}/delete`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            // Remove the company card from the DOM
+                            this.closest(".admin-company-card").remove();
+                            alert(data.message);
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("An error occurred while deleting the company.");
+                    });
+            }
+        });
+    });
 });
