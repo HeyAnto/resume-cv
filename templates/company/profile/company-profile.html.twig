@@ -37,12 +37,16 @@
               {% endif %}
             </div>
 
-            <div class="tag-list flex items-center gap-sm">
+            <div class="tag-list flex gap-sm">
               {% if company.websiteName and company.websiteLink %}
               <a class="tag-website light text-14" href="{{ company.websiteLink }}" target="_blank">
                 {{ company.websiteName }}
               </a>
               {% endif %}
+
+              {% for tag in company.companyTags %}
+              <span class="tag-website company text-14">{{ tag.label }}</span>
+              {% endfor %}
             </div>
           </div>
         </div>

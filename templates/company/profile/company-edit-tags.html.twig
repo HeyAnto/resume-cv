@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ company.companyName }} - Tags — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+{% include "/company/_components/company-sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-profile-edit">
+    <div class="container">
+
+      <div>
+        <h1 class="text-h1">Company Tags</h1>
+        <p class="text-16 text-color-tertiary">Manage your company tags ({{ company.companyTags|length }}/4)</p>
+      </div>
+
+      {% for message in app.flashes('success') %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {% for message in app.flashes('error') %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {% if company.companyTags is not empty %}
+      <div class="form-group">
+        <label class="text-16 text-color-tertiary">Current Tags</label>
+        <div class="tag-list flex items-center gap-sm">
+          {% for tag in company.companyTags %}
+          <span class="tag-website company text-14" data-tag-id="{{ tag.id }}">
+            {{ tag.label }}
+            <form method="post" class="delete-form">
+              <input type="hidden" name="delete_tag" value="{{ tag.id }}">
+              <button type="submit" class="btn-reset text-color-red"
+                onclick="return confirm('Are you sure you want to delete this tag?')">
+                ×
+              </button>
+            </form>
+          </span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if company.companyTags|length < 4 %} {{ form_start(tagForm, {'action': path('app_company_edit_tags', {'id':
+        company.id, 'companyName' : company.slug})}) }} <div class="form-group">
+        <label class="text-16 text-color-tertiary" for="{{ tagForm.label.vars.id }}">Add New Tag</label>
+        {{ form_widget(tagForm.label) }}
+        <div class="text-14 text-color-red">{{ form_errors(tagForm.label) }}</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary-xs">Add Tag</button>
+
+    {{ form_end(tagForm) }}
+    {% else %}
+    <p class="text-16 text-color-tertiary">Maximum number of tags reached (4/4).</p>
+    {% endif %}
+
+</div>
+</section>
+</div>
+
+
+
+{% endblock %}

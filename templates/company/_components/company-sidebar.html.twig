@@ -10,6 +10,11 @@
       General
     </a>
 
+    <a href="{{ path('app_company_edit_tags', {'id': company.id, 'companyName': company.slug}) }}"
+      class="btn-menu {{ app.request.get('_route') == 'app_company_edit_tags' ? 'active' : '' }}">
+      Tags
+    </a>
+
     <a href="" class="btn-menu {{ app.request.get('_route') == '#' ? 'active' : '' }}">
       Job Offers
     </a>

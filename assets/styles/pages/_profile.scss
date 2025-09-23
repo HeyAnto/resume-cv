@@ -52,14 +52,14 @@
                 align-items: center;
                 gap: var(--spacing-xl);
 
+                .tag-list {
+                    flex-wrap: wrap;
+                }
+
                 @media (max-width: 768px) {
                     width: 100%;
                     flex-direction: column;
-
-                    .tag-list {
-                        justify-content: center;
-                        flex-wrap: wrap;
-                    }
+                    align-items: start;
                 }
 
                 .profile-img {
@@ -169,33 +169,6 @@
                         }
                     }
                 }
-
-                .tag-website {
-                    width: fit-content;
-                    padding: var(--spacing-xxs) var(--spacing-md);
-                    background-color: var(--color-bg-secondary);
-                    border-radius: var(--radius-full);
-                    text-decoration: none;
-
-                    &.light {
-                        color: var(--color-bg-secondary);
-                        background-color: var(--color-text-primary);
-                    }
-
-                    &.company {
-                        color: var(--color-text-secondary);
-                        background-color: var(--color-bg-secondary);
-                    }
-
-                    &.default {
-                        color: #f4f4f4;
-                        background-color: var(--color-overlay);
-                    }
-
-                    &:hover {
-                        opacity: 0.94;
-                    }
-                }
             }
 
             .resume-actions {
@@ -230,6 +203,36 @@
             flex-direction: column;
             gap: var(--spacing-xxl);
         }
+    }
+}
+
+.tag-website {
+    width: fit-content;
+    display: flex;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xxs) var(--spacing-md);
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+
+    &.light {
+        color: var(--color-bg-secondary);
+        background-color: var(--color-text-primary);
+    }
+
+    &.company {
+        color: var(--color-text-primary);
+        background-color: var(--color-bg-secondary);
+        border: 1px solid var(--color-muted);
+    }
+
+    &.default {
+        color: #f4f4f4;
+        background-color: var(--color-overlay);
+    }
+
+    &:hover {
+        opacity: 0.94;
     }
 }
 
