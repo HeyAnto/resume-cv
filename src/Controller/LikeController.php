@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\Post;
 use App\Entity\Profile;
 use App\Entity\User;
@@ -14,28 +15,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LikeController extends AbstractController
 {
+  use UserRedirectionTrait;
   #[Route('/post/{id}/like', name: 'app_post_like', methods: ['GET', 'POST'])]
   public function toggleLike(Post $post, EntityManagerInterface $entityManager, Request $request): RedirectResponse
   {
+    $redirectResponse = $this->checkUserAccess();
+    if ($redirectResponse) {
+      return $redirectResponse;
+    }
+
     /** @var User $user */
     $user = $this->getUser();
-
-    if (!$user) {
-      $this->addFlash('error', 'Vous devez être connecté pour liker un post');
-      return $this->redirectToRoute('app_login');
-    }
-
-    if (!$user->isVerified()) {
-      $this->addFlash('error', 'Votre compte doit être vérifié pour liker un post');
-      return $this->redirectToRoute('app_login');
-    }
-
     $profile = $user->getProfile();
-
-    if (!$profile) {
-      $this->addFlash('error', 'Vous devez compléter votre profil pour liker un post');
-      return $this->redirectToRoute('app_profile_edit');
-    }
 
     $isLiked = $post->isLikedBy($profile);
 

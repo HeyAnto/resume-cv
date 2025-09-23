@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\Profile;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,28 +13,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FollowController extends AbstractController
 {
+  use UserRedirectionTrait;
   #[Route('/profile/{username}/follow', name: 'app_profile_follow', methods: ['GET', 'POST'])]
   public function toggleFollow(string $username, EntityManagerInterface $entityManager, Request $request): RedirectResponse
   {
+    $redirectResponse = $this->checkUserAccess();
+    if ($redirectResponse) {
+      return $redirectResponse;
+    }
+
     /** @var User $user */
     $user = $this->getUser();
-
-    if (!$user) {
-      $this->addFlash('error', 'Vous devez être connecté pour suivre un profil');
-      return $this->redirectToRoute('app_login');
-    }
-
-    if (!$user->isVerified()) {
-      $this->addFlash('error', 'Votre compte doit être vérifié pour suivre un profil');
-      return $this->redirectToRoute('app_login');
-    }
-
     $currentProfile = $user->getProfile();
-
-    if (!$currentProfile) {
-      $this->addFlash('error', 'Vous devez compléter votre profil pour suivre d\'autres utilisateurs');
-      return $this->redirectToRoute('app_profile_edit');
-    }
 
     // Profile to follow
     $profileToFollow = $entityManager->getRepository(Profile::class)->findOneBy(['username' => $username]);

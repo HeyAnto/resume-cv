@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\Post;
 use App\Entity\Profile;
 use App\Entity\User;
@@ -13,28 +14,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SearchController extends AbstractController
 {
+  use UserRedirectionTrait;
   #[Route('/search', name: 'app_search', methods: ['GET'])]
   public function search(Request $request, EntityManagerInterface $entityManager): Response
   {
+    $redirectResponse = $this->checkUserAccess();
+    if ($redirectResponse) {
+      return $redirectResponse;
+    }
+
     /** @var User $user */
     $user = $this->getUser();
-
-    if (!$user) {
-      $this->addFlash('error', 'Vous devez être connecté pour accéder à la recherche');
-      return $this->redirectToRoute('app_login');
-    }
-
-    if (!$user->isVerified()) {
-      $this->addFlash('error', 'Votre compte doit être vérifié pour accéder à la recherche');
-      return $this->redirectToRoute('app_login');
-    }
-
     $currentProfile = $user->getProfile();
-
-    if (!$currentProfile) {
-      $this->addFlash('error', 'Vous devez compléter votre profil pour accéder à la recherche');
-      return $this->redirectToRoute('app_profile_edit');
-    }
 
     $search = $request->query->get('search', '');
     $type = $request->query->get('type', 'all');

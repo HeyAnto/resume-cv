@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\Company;
 use App\Entity\User;
 use App\Form\CompanyFormType;
@@ -17,23 +18,25 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/company')]
 final class CompanyController extends AbstractController
 {
-  private function checkUserAccess(): ?Response
-  {
-    // Check if user is logged in
-    if (!$this->getUser()) {
-      return $this->redirectToRoute('app_login');
-    }
+  use UserRedirectionTrait;
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  private function checkCompanyAccess(Company $company): ?Response
+  {
     /** @var User $user */
     $user = $this->getUser();
-    $profile = $user->getProfile();
 
-    // Check if profile is complete
-    if (!$profile || !$profile->getUsername()) {
-      return $this->redirectToRoute('app_profile_edit');
+    // Allow access if admin or owner
+    if ($this->isGranted('ROLE_ADMIN') || $company->getUser() === $user) {
+      return null;
     }
 
-    return null;
+    // Redirect to public company profile
+    return $this->redirectToRoute('app_company_profile', [
+      'id' => $company->getId(),
+      'companyName' => $company->getSlug()
+    ]);
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,9 +143,9 @@ final class CompanyController extends AbstractController
     }
 
     // Check edit access
-    $canEdit = ($company->getUser() === $currentUser) || $this->isGranted('ROLE_ADMIN');
-    if (!$canEdit) {
-      throw $this->createAccessDeniedException('You are not authorized to edit this company');
+    $companyAccessCheck = $this->checkCompanyAccess($company);
+    if ($companyAccessCheck) {
+      return $companyAccessCheck;
     }
 
     // Create form
@@ -223,10 +226,10 @@ final class CompanyController extends AbstractController
       throw $this->createNotFoundException('Company not found');
     }
 
-    // Check edit access: owner can edit, admin can edit all
-    $canEdit = ($company->getUser() === $currentUser) || $this->isGranted('ROLE_ADMIN');
-    if (!$canEdit) {
-      throw $this->createAccessDeniedException('You are not authorized to edit this company');
+    // Check edit access
+    $companyAccessCheck = $this->checkCompanyAccess($company);
+    if ($companyAccessCheck) {
+      return $companyAccessCheck;
     }
 
     // Delete current picture if not default
@@ -268,9 +271,10 @@ final class CompanyController extends AbstractController
       throw $this->createNotFoundException('Company not found');
     }
 
-    $canDelete = ($company->getUser() === $currentUser) || $this->isGranted('ROLE_ADMIN');
-    if (!$canDelete) {
-      throw $this->createAccessDeniedException('You are not authorized to delete this company');
+    // Check delete access
+    $companyAccessCheck = $this->checkCompanyAccess($company);
+    if ($companyAccessCheck) {
+      return $companyAccessCheck;
     }
 
     // Delete company logo if not default
