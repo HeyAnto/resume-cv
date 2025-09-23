@@ -1,26 +1,38 @@
 <div class="job-grid card">
   <div class="team">
-    <a href="" class="company-profile-img">
-      <img src="{{ asset('images/img_default_company.webp') }}" alt="Company Profile Image">
+    <a href="{{ path('app_company_profile', {'id': jobOffer.company.id, 'companyName': jobOffer.company.slug}) }}"
+      class="company-profile-img">
+      <img src="{{ asset(jobOffer.company.profilePicturePath ?: 'images/img_default_company.webp') }}"
+        alt="{{ jobOffer.company.companyName }} Logo">
     </a>
     <div class="company-name">
-      <a href="" class="text-link text-14 text-color-primary">Company Name</a>
+      <a href="{{ path('app_company_profile', {'id': jobOffer.company.id, 'companyName': jobOffer.company.slug}) }}"
+        class="text-link text-14 text-color-primary">{{ jobOffer.company.companyName }}</a>
     </div>
   </div>
 
   <div class="position">
-    <a href="" class="text-link text-14 text-color-primary">Software Engineer</a>
-    <p href="" class="text-14 text-color-secondary">New York City</p>
+    <a href="{{ path('app_job_offer_view', {'id': jobOffer.company.id, 'companySlug': jobOffer.company.slug, 'jobId': jobOffer.id}) }}"
+      class="text-link text-14 text-color-primary">{{ jobOffer.title }}</a>
+    <p class="text-14 text-color-secondary">{{ jobOffer.company.location ?: 'Remote' }}</p>
   </div>
 
   <div class="manager">
-    <a href="" class="manager-profile">
-      <img src="{{ asset('images/img_default_user.webp') }}" alt="Profile Image" class="profile-img">
-      <span class="manager-tooltip text-12">Anonymous</span>
+    {% if jobOffer.company.user.profile %}
+    <a href="{{ path('app_profile', {'username': jobOffer.company.user.profile.username}) }}" class="manager-profile">
+      <img src="{{ asset(jobOffer.company.user.profile.profilePictureUrl) }}"
+        alt="{{ jobOffer.company.user.profile.displayName }}" class="profile-img">
+      <span class="manager-tooltip text-12">{{ jobOffer.company.user.profile.displayName }}</span>
     </a>
+    {% else %}
+    <div class="manager-profile">
+      <img src="{{ asset('images/img_default_user.webp') }}" alt="Manager" class="profile-img">
+      <span class="manager-tooltip text-12">{{ jobOffer.emailLink }}</span>
+    </div>
+    {% endif %}
   </div>
 
   <div class="posted">
-    <p class="text-14 text-color-secondary text-center">a day ago</p>
+    <p class="text-14 text-color-secondary text-center">{{ jobOffer.createdAt|date('M d') }}</p>
   </div>
 </div>

@@ -69,53 +69,76 @@ final class CompanyEditController extends AbstractController
     // Create form
     $companyForm = $this->createForm(CompanyFormType::class, $company, ['submit_label' => 'Done']);
 
-    // Picture upload
-    if ($request->isMethod('POST') && $request->files->has('profilePicture')) {
-      $profilePictureFile = $request->files->get('profilePicture');
+    // Handle form submission
+    if ($request->isMethod('POST')) {
+      // First handle the main form data if present
+      $companyForm->handleRequest($request);
+      if ($companyForm->isSubmitted() && $companyForm->isValid()) {
+        $company->setUpdatedAt(new \DateTimeImmutable());
+      }
 
-      if ($profilePictureFile) {
-        $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = $slugger->slug($originalFilename);
-        $newFilename = $safeFilename . '-' . uniqid() . '.' . $profilePictureFile->guessExtension();
+      // Handle picture upload if present and preserve form data
+      if ($request->files->has('profilePicture')) {
+        // Preserve form data during image upload
+        if ($request->request->has('preserve_companyName') && $request->request->get('preserve_companyName')) {
+          $company->setCompanyName($request->request->get('preserve_companyName'));
+        }
+        if ($request->request->has('preserve_location') && $request->request->get('preserve_location')) {
+          $company->setLocation($request->request->get('preserve_location'));
+        }
+        if ($request->request->has('preserve_websiteName')) {
+          $company->setWebsiteName($request->request->get('preserve_websiteName'));
+        }
+        if ($request->request->has('preserve_websiteLink')) {
+          $company->setWebsiteLink($request->request->get('preserve_websiteLink'));
+        }
+        if ($request->request->has('preserve_description')) {
+          $company->setDescription($request->request->get('preserve_description'));
+        }
+        $profilePictureFile = $request->files->get('profilePicture');
 
-        try {
-          $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/company-logos';
-          if (!is_dir($uploadsDir)) {
-            mkdir($uploadsDir, 0755, true);
-          }
+        if ($profilePictureFile) {
+          $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+          $safeFilename = $slugger->slug($originalFilename);
+          $newFilename = $safeFilename . '-' . uniqid() . '.' . $profilePictureFile->guessExtension();
 
-          // Delete old image if not default
-          $oldPath = $company->getProfilePicturePath();
-          if ($oldPath && $oldPath !== 'images/img_default_company.webp') {
-            $oldFile = $this->getParameter('kernel.project_dir') . '/public/' . $oldPath;
-            if (file_exists($oldFile)) {
-              unlink($oldFile);
+          try {
+            $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/company-logos';
+            if (!is_dir($uploadsDir)) {
+              mkdir($uploadsDir, 0755, true);
             }
+
+            // Delete old image if not default
+            $oldPath = $company->getProfilePicturePath();
+            if ($oldPath && $oldPath !== 'images/img_default_company.webp') {
+              $oldFile = $this->getParameter('kernel.project_dir') . '/public/' . $oldPath;
+              if (file_exists($oldFile)) {
+                unlink($oldFile);
+              }
+            }
+
+            $profilePictureFile->move($uploadsDir, $newFilename);
+            $company->setProfilePicturePath('uploads/company-logos/' . $newFilename);
+            $company->setUpdatedAt(new \DateTimeImmutable());
+
+            $this->addFlash('success', 'Company logo updated successfully!');
+          } catch (FileException $e) {
+            $this->addFlash('error', 'Error uploading logo');
           }
-
-          $profilePictureFile->move($uploadsDir, $newFilename);
-          $company->setProfilePicturePath('uploads/company-logos/' . $newFilename);
-          $company->setUpdatedAt(new \DateTimeImmutable());
-
-          $entityManager->flush();
-          $this->addFlash('success', 'Company logo updated successfully!');
-        } catch (FileException $e) {
-          $this->addFlash('error', 'Error uploading logo');
         }
       }
 
-      return $this->redirectToRoute('app_company_edit', ['id' => $id, 'companyName' => $company->getSlug()]);
-    }
-
-    // Handle company form submission
-    $companyForm->handleRequest($request);
-    if ($companyForm->isSubmitted() && $companyForm->isValid()) {
-      $company->setUpdatedAt(new \DateTimeImmutable());
-
-      $entityManager->flush();
-      $this->addFlash('success', 'Company profile updated successfully!');
-
-      return $this->redirectToRoute('app_company_profile', ['id' => $id, 'companyName' => $company->getSlug()]);
+      // Save all changes and provide appropriate feedback
+      if ($companyForm->isSubmitted() && $companyForm->isValid()) {
+        $entityManager->flush();
+        if (!$request->files->has('profilePicture')) {
+          $this->addFlash('success', 'Company profile updated successfully!');
+        }
+        return $this->redirectToRoute('app_company_profile', ['id' => $id, 'companyName' => $company->getSlug()]);
+      } elseif ($request->files->has('profilePicture')) {
+        $entityManager->flush();
+        return $this->redirectToRoute('app_company_edit', ['id' => $id, 'companyName' => $company->getSlug()]);
+      }
     }
 
     return $this->render('company/profile/company-edit-profile.html.twig', [
@@ -203,8 +226,8 @@ final class CompanyEditController extends AbstractController
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  #[Route('/{id}-{companyName}/edit/remove-picture', name: 'app_company_remove_picture')]
-  public function removeCompanyPicture(int $id, string $companyName, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+  #[Route('/{id}-{companyName}/edit/remove-picture', name: 'app_company_remove_picture', methods: ['POST'])]
+  public function removeCompanyPicture(int $id, string $companyName, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
   {
     $userCheck = $this->checkUserAccess();
     if ($userCheck) {
@@ -225,6 +248,23 @@ final class CompanyEditController extends AbstractController
     $companyAccessCheck = $this->checkCompanyAccess($company);
     if ($companyAccessCheck) {
       return $companyAccessCheck;
+    }
+
+    // Preserve form data during image removal
+    if ($request->request->has('preserve_companyName') && $request->request->get('preserve_companyName')) {
+      $company->setCompanyName($request->request->get('preserve_companyName'));
+    }
+    if ($request->request->has('preserve_location') && $request->request->get('preserve_location')) {
+      $company->setLocation($request->request->get('preserve_location'));
+    }
+    if ($request->request->has('preserve_websiteName')) {
+      $company->setWebsiteName($request->request->get('preserve_websiteName'));
+    }
+    if ($request->request->has('preserve_websiteLink')) {
+      $company->setWebsiteLink($request->request->get('preserve_websiteLink'));
+    }
+    if ($request->request->has('preserve_description')) {
+      $company->setDescription($request->request->get('preserve_description'));
     }
 
     // Delete current picture if not default

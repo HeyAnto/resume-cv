@@ -14,9 +14,11 @@
 
       <div class="job-header">
         <div class="flex items-center justify-between gap-xs">
-          <img class="company-max-profile-img"
-            src="{{ asset(company.profilePicturePath ?: 'images/img_default_company.webp') }}"
-            alt="Logo of {{ company.companyName }}">
+          <a href="{{ path('app_company_profile', {'id': company.id, 'companyName': company.slug}) }}">
+            <img class="company-max-profile-img"
+              src="{{ asset(company.profilePicturePath ?: 'images/img_default_company.webp') }}"
+              alt="Logo of {{ company.companyName }}">
+          </a>
           <a class="btn btn-primary-xs"
             href="mailto:{{ jobOffer.emailLink }}?subject=Application for {{ jobOffer.title }}">Apply for this
             position</a>

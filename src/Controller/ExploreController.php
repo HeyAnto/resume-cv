@@ -50,7 +50,7 @@ final class ExploreController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/explore/job', name: 'app_explore_job')]
-    public function exploreJob(): Response
+    public function exploreJob(EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         $username = null;
@@ -58,8 +58,17 @@ final class ExploreController extends AbstractController
             $username = $user->getProfile()->getUsername();
         }
 
+        // Get all job offers with their companies
+        $jobOffers = $entityManager->getRepository(\App\Entity\JobOffer::class)
+            ->createQueryBuilder('j')
+            ->join('j.company', 'c')
+            ->orderBy('j.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
         return $this->render('explore/job.html.twig', [
-            'username' => $username
+            'username' => $username,
+            'jobOffers' => $jobOffers
         ]);
     }
 }

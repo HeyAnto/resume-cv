@@ -28,9 +28,15 @@
       </div>
     </div>
 
-    {% include "/explore/_components/job-card.html.twig" %}
-
-    {% include "/explore/_components/job-card.html.twig" %}
+    {% if jobOffers is not empty %}
+    {% for jobOffer in jobOffers %}
+    {% include "/explore/_components/job-card.html.twig" with {'jobOffer': jobOffer} %}
+    {% endfor %}
+    {% else %}
+    <div class="flex flex-column items-center gap-sm">
+      <p class="text-16 text-color-tertiary">No job offers available at the moment.</p>
+    </div>
+    {% endif %}
 
   </section>
 </div>

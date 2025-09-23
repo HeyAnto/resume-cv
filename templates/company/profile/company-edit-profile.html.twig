@@ -36,27 +36,79 @@
       {% endfor %}
 
       <form method="POST" action="{{ path('app_company_edit', {'id': company.id, 'companyName': company.slug}) }}"
-        enctype="multipart/form-data" class="form-upload-picture">
+        enctype="multipart/form-data" class="form-upload-picture" id="upload-form">
         <img class="company-max-profile-img"
           src="{{ asset(company.profilePicturePath ?: 'images/img_default_company.webp') }}"
           alt="Logo of {{ company.companyName }}">
 
+        <!-- Hidden fields to preserve form data -->
+        <input type="hidden" name="preserve_companyName" id="preserve-companyName" value="">
+        <input type="hidden" name="preserve_location" id="preserve-location" value="">
+        <input type="hidden" name="preserve_websiteName" id="preserve-websiteName" value="">
+        <input type="hidden" name="preserve_websiteLink" id="preserve-websiteLink" value="">
+        <input type="hidden" name="preserve_description" id="preserve-description" value="">
+
         <div class="form-group">
           <input type="file" name="profilePicture" accept="image/jpeg,image/png,image/webp"
-            onchange="this.form.submit()" style="display: none;" id="profile-picture-input">
+            onchange="copyFormData(); this.form.submit()" style="display: none;" id="profile-picture-input">
 
           <div class="flex gap-lg">
             <label for="profile-picture-input" class="btn btn-secondary-xs" style="cursor: pointer;">Upload
               logo</label>
             {% if company.profilePicturePath != 'images/img_default_company.webp' %}
-            <a href="{{ path('app_company_remove_picture', {'id': company.id, 'companyName': company.slug}) }}"
-              class="btn btn-secondary-xs danger"
-              onclick="return confirm('Are you sure you want to remove your company logo?')">Remove
-              logo</a>
+            <button type="button" class="btn btn-secondary-xs danger"
+              onclick="if(confirm('Are you sure you want to remove your company logo?')) { copyFormDataAndRemove(); }">
+              Remove logo
+            </button>
             {% endif %}
           </div>
         </div>
       </form>
+
+      <!-- Hidden form for removing picture -->
+      <form method="POST"
+        action="{{ path('app_company_remove_picture', {'id': company.id, 'companyName': company.slug}) }}"
+        id="remove-picture-form" style="display: none;">
+        <input type="hidden" name="preserve_companyName" id="remove-preserve-companyName" value="">
+        <input type="hidden" name="preserve_location" id="remove-preserve-location" value="">
+        <input type="hidden" name="preserve_websiteName" id="remove-preserve-websiteName" value="">
+        <input type="hidden" name="preserve_websiteLink" id="remove-preserve-websiteLink" value="">
+        <input type="hidden" name="preserve_description" id="remove-preserve-description" value="">
+      </form>
+
+      <script>
+        function copyFormData() {
+          // Copy form data to hidden fields before upload
+          const companyNameField = document.querySelector('[name="company_form[companyName]"]');
+          const locationField = document.querySelector('[name="company_form[location]"]');
+          const websiteNameField = document.querySelector('[name="company_form[websiteName]"]');
+          const websiteLinkField = document.querySelector('[name="company_form[websiteLink]"]');
+          const descriptionField = document.querySelector('[name="company_form[description]"]');
+
+          if (companyNameField) document.getElementById('preserve-companyName').value = companyNameField.value;
+          if (locationField) document.getElementById('preserve-location').value = locationField.value;
+          if (websiteNameField) document.getElementById('preserve-websiteName').value = websiteNameField.value;
+          if (websiteLinkField) document.getElementById('preserve-websiteLink').value = websiteLinkField.value;
+          if (descriptionField) document.getElementById('preserve-description').value = descriptionField.value;
+        }
+
+        function copyFormDataAndRemove() {
+          // Copy form data to hidden fields before removing picture
+          const companyNameField = document.querySelector('[name="company_form[companyName]"]');
+          const locationField = document.querySelector('[name="company_form[location]"]');
+          const websiteNameField = document.querySelector('[name="company_form[websiteName]"]');
+          const websiteLinkField = document.querySelector('[name="company_form[websiteLink]"]');
+          const descriptionField = document.querySelector('[name="company_form[description]"]');
+
+          if (companyNameField) document.getElementById('remove-preserve-companyName').value = companyNameField.value;
+          if (locationField) document.getElementById('remove-preserve-location').value = locationField.value;
+          if (websiteNameField) document.getElementById('remove-preserve-websiteName').value = websiteNameField.value;
+          if (websiteLinkField) document.getElementById('remove-preserve-websiteLink').value = websiteLinkField.value;
+          if (descriptionField) document.getElementById('remove-preserve-description').value = descriptionField.value;
+
+          document.getElementById('remove-picture-form').submit();
+        }
+      </script>
 
       {{ form_start(companyForm) }}
 
