@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block importmap %}
+{{ importmap(['app', 'character-counter']) }}
+{% endblock %}
+
+{% block title %}{{ jobOffer ? 'Edit Job Offer' : 'Create Job Offer' }} — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+{% include "/company/_components/company-sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-profile-edit">
+    <div class="container">
+
+      <div>
+        <h1 class="text-h1">{{ jobOffer ? 'Edit Job Offer' : 'Create Job Offer' }}</h1>
+        <p class="text-16 text-color-tertiary">{{ jobOffer ? 'Update your job offer details' : 'Create a new job offer
+          to attract candidates' }}</p>
+      </div>
+
+      {% for message in app.flashes('success') %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {% for message in app.flashes('error') %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {{ form_start(form) }}
+
+      <div class="form-group">
+        <div class="flex justify-between items-center">
+          <label class="text-16 text-color-tertiary" for="{{ form.title.vars.id }}">
+            {{ form.title.vars.label }}*
+          </label>
+          <p class="text-14 text-color-tertiary" id="title-counter"></p>
+        </div>
+        {{ form_widget(form.title) }}
+        <div class="text-14 text-color-red">{{ form_errors(form.title) }}</div>
+      </div>
+
+      <div class="form-group">
+        <div class="flex justify-between items-center">
+          <label class="text-16 text-color-tertiary" for="{{ form.description.vars.id }}">
+            {{ form.description.vars.label }}*
+          </label>
+          <p class="text-14 text-color-tertiary" id="description-counter"></p>
+        </div>
+        {{ form_widget(form.description) }}
+        <div class="text-14 text-color-red">{{ form_errors(form.description) }}</div>
+      </div>
+
+      <div class="form-group">
+        <label class="text-16 text-color-tertiary" for="{{ form.emailLink.vars.id }}">
+          {{ form.emailLink.vars.label }}*
+        </label>
+        {{ form_widget(form.emailLink) }}
+        <div class="text-14 text-color-red">{{ form_errors(form.emailLink) }}</div>
+      </div>
+
+      {{ form_widget(form.submit) }}
+
+      {{ form_end(form) }}
+
+      {% if jobOffer %}
+      <form
+        action="{{ path('app_company_job_offer_delete', {'id': company.id, 'companyName': company.slug, 'jobId': jobOffer.id}) }}"
+        method="post" style="display: inline;"
+        onsubmit="return confirm('Are you sure you want to delete this job offer?')">
+        <div class="flex justify-end">
+          <button type="submit" class="btn btn-secondary-xs danger full">Delete Job Offer</button>
+        </div>
+      </form>
+      {% endif %}
+
+    </div>
+  </section>
+</div>
+
+{% endblock %}

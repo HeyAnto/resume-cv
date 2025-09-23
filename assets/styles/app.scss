@@ -13,6 +13,7 @@
 @use "components/buttons";
 
 @use "components/card/job-card";
+@use "components/card/job-edit-card";
 @use "components/card/user-card";
 @use "components/card/company-card";
 
@@ -38,3 +39,4 @@
 @use "pages/following";
 @use "pages/notfound";
 @use "pages/admin-list";
+@use "pages/company-job";

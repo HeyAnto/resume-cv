@@ -63,8 +63,31 @@
         {% endif %}
       </div>
 
+      {% if jobOffers is not empty %}
+      <div class="flex flex-column gap-xs">
+        <h2 class="text-16">
+          Open Positions
+        </h2>
+        <div class="flex flex-column gap-sm">
+          {% for jobOffer in jobOffers %}
+          {% include "/company/_components/job-offer-card.html.twig" with {'jobOffer': jobOffer, 'company': company} %}
+          {% endfor %}
+          {% if jobOffers|length >= 5 %}
+          <a href="{{ path('app_company_jobs', {'id': company.id, 'companySlug': company.slug}) }}"
+            class="btn btn-secondary-xs">
+            View All Job Offers
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
       {% if (app.user and company.user == app.user) or is_granted('ROLE_ADMIN') %}
       <div class="profile-edit-btn">
+        {% if company.user == app.user %}
+        <a class="btn btn-primary-xs"
+          href="{{ path('app_company_job_offer_new', {'id': company.id, 'companyName': company.slug}) }}">Post Job</a>
+        {% endif %}
         <a href="{{ path('app_company_edit', {'id': company.id, 'companyName': company.slug}) }}"
           class="btn btn-secondary-xs">Edit Company</a>
 

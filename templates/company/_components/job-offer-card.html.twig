@@ -1,0 +1,14 @@
+<a class="job-edit-card"
+  href="{{ path('app_job_offer_view', {'id': company.id, 'companySlug': company.slug, 'jobId': jobOffer.id}) }}">
+  <div class="flex justify-between items-center">
+    <h3 class="text-16 text-color-primary">
+      {{ jobOffer.title }}
+    </h3>
+    <p class="text-14 text-color-secondary">
+      {{ jobOffer.createdAt|date('M d, Y') }}
+    </p>
+  </div>
+  <p class="text-14 text-color-secondary">
+    {{ jobOffer.description|length > 150 ? jobOffer.description|slice(0, 150) ~ '...' : jobOffer.description }}
+  </p>
+</a>

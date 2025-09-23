@@ -15,7 +15,8 @@
       Tags
     </a>
 
-    <a href="" class="btn-menu {{ app.request.get('_route') == '#' ? 'active' : '' }}">
+    <a href="{{ path('app_company_job_offers', {'id': company.id, 'companyName': company.slug}) }}"
+      class="btn-menu {{ app.request.get('_route') in ['app_company_job_offers', 'app_company_job_offer_new', 'app_company_job_offer_edit'] ? 'active' : '' }}">
       Job Offers
     </a>
   </div>

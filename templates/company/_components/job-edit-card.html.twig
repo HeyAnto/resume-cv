@@ -1,0 +1,22 @@
+<a class="job-edit-card"
+  href="{{ path('app_company_job_offer_edit', {'id': company.id, 'companyName': company.slug, 'jobId': jobOffer.id}) }}">
+
+  <div class="flex justify-between items-center">
+    <p class="text-16 text-color-primary">
+      {{ jobOffer.title }}
+    </p>
+
+    <p class="text-16 text-color-secondary">
+      {{ jobOffer.createdAt|date('M d, Y') }}
+    </p>
+  </div>
+
+  <p class="text-16 text-color-secondary">
+    {{ jobOffer.description|length > 100 ? jobOffer.description|slice(0, 100) ~ '...' : jobOffer.description }}
+  </p>
+
+  <p class="text-14 text-color-tertiary">
+    Contact: {{ jobOffer.emailLink }}
+  </p>
+
+</a>

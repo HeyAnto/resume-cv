@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ jobOffer.title }} at {{ company.companyName }} — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-company-job">
+    <div class="container">
+
+      <div class="job-header">
+        <div class="flex items-center justify-between gap-xs">
+          <img class="company-max-profile-img"
+            src="{{ asset(company.profilePicturePath ?: 'images/img_default_company.webp') }}"
+            alt="Logo of {{ company.companyName }}">
+          <a class="btn btn-primary-xs"
+            href="mailto:{{ jobOffer.emailLink }}?subject=Application for {{ jobOffer.title }}">Apply for this
+            position</a>
+        </div>
+
+        <div class="flex flex-column">
+          <a class="link text-16 text-color-tertiary"
+            href="{{ path('app_company_profile', {'id': company.id, 'companyName': company.slug}) }}">{{
+            company.companyName }}</a>
+          <h1 class="text-h2">{{ jobOffer.title }}</h1>
+        </div>
+      </div>
+
+      <div class="flex flex-column gap-lg">
+        <h3 class="text-16">
+          Company Contact
+        </h3>
+
+        <div class="profile-container">
+          {% if company.user.profile %}
+          <a href="{{ path('app_profile', {'username': company.user.profile.username}) }}" class="profile-img">
+            <img class="profile-img" src="{{ asset(company.user.profile.profilePictureUrl) }}"
+              alt="Profile picture of {{ company.user.profile.displayName }}">
+          </a>
+
+          <div class="flex items-start gap-xxs">
+            <a href="{{ path('app_profile', {'username': company.user.profile.username}) }}"
+              class="profile-link text-14 text-color-primary">
+              {{ company.user.profile.displayName }}
+            </a>
+
+            {% if 'ROLE_ADMIN' in company.user.roles %}
+            <div class="badge-container">
+              {% include "_icons/admin-badge-fill.html.twig" with {'class': 'badge-icon admin'} %}
+              <span class="badge-tooltip text-12">Admin</span>
+            </div>
+            {% endif %}
+          </div>
+          {% else %}
+          <p class="text-14 text-color-tertiary">{{ jobOffer.emailLink }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if company.location %}
+      <div class="flex flex-column gap-lg">
+        <h3 class="text-16">
+          Location
+        </h3>
+
+        <p class="text-body-16 text-color-tertiary">
+          {{ company.location }}
+        </p>
+      </div>
+      {% endif %}
+
+      <div class="flex flex-column gap-lg">
+        <h3 class="text-16">
+          Job Description
+        </h3>
+
+        <p class="text-body-16 text-color-tertiary">
+          {{ jobOffer.description|nl2br }}
+        </p>
+      </div>
+
+      <div class="flex flex-column gap-lg">
+        <h3 class="text-16">
+          Contact Information
+        </h3>
+
+        <p class="text-body-16 text-color-tertiary">
+          To apply for this position, please send your application to:
+          <a href="mailto:{{ jobOffer.emailLink }}?subject=Application for {{ jobOffer.title }}"
+            class="text-color-primary">{{ jobOffer.emailLink }}</a>
+        </p>
+      </div>
+
+  </section>
+</div>
+
+{% endblock %}

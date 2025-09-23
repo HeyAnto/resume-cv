@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block importmap %}
+{{ importmap(['app']) }}
+{% endblock %}
+
+{% block title %}Job Offers — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+{% include "/company/_components/company-sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-profile-edit">
+    <div class="container">
+
+      <div>
+        <h1 class="text-h1">Job Offers</h1>
+        <p class="text-16 text-color-tertiary">Create and manage your job offers</p>
+      </div>
+
+      <div class="flex flex-column gap-sm">
+        <a href="{{ path('app_company_job_offer_new', {'id': company.id, 'companyName': company.slug}) }}"
+          class="btn btn-primary-xs full">
+          Add Job Offer
+        </a>
+      </div>
+
+      {% if jobOffers is not empty %}
+      <div class="flex flex-column gap-sm">
+        <p class="text-16 text-color-tertiary">Click to edit or remove a job offer</p>
+
+        {% for jobOffer in jobOffers %}
+        {% include "/company/_components/job-edit-card.html.twig" with {'jobOffer': jobOffer, 'company': company} %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% for message in app.flashes('success') %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {% for message in app.flashes('error') %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+    </div>
+  </section>
+</div>
+
+{% endblock %}

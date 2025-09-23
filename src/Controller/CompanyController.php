@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\Company;
+use App\Entity\JobOffer;
 use App\Entity\User;
 use App\Form\CompanyFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -96,8 +97,16 @@ final class CompanyController extends AbstractController
       throw $this->createNotFoundException('Company not found');
     }
 
+    // Get recent job offers for this company
+    $jobOffers = $entityManager->getRepository(JobOffer::class)->findBy(
+      ['company' => $company],
+      ['createdAt' => 'DESC'],
+      5 // Limit to 5 recent job offers
+    );
+
     return $this->render('company/profile/company-profile.html.twig', [
       'company' => $company,
+      'jobOffers' => $jobOffers,
     ]);
   }
 }

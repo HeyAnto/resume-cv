@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ company.companyName }} Jobs — Resume.cv{% endblock %}
+
+{% block main %}
+
+{% include "_components/sidebar.html.twig" %}
+
+<div class="main-content">
+  {% include "_components/headers/header-logout.html.twig" %}
+
+  <section class="section-profile">
+    <div class="container">
+
+      <div class="flex items-center gap-sm">
+        <img class="company-profile-img"
+          src="{{ asset(company.profilePicturePath ?: 'images/img_default_company.webp') }}"
+          alt="Logo of {{ company.companyName }}">
+        <div>
+          <h1 class="text-h1">{{ company.companyName }}</h1>
+          <p class="text-16 text-color-tertiary">Open Positions</p>
+        </div>
+      </div>
+
+      {% if jobOffers is not empty %}
+      <div class="flex flex-column gap-sm">
+        {% for jobOffer in jobOffers %}
+        {% include "/company/_components/job-offer-card.html.twig" with {'jobOffer': jobOffer, 'company': company} %}
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="flex flex-column items-center gap-sm">
+        <p class="text-16 text-color-tertiary">No job offers available at the moment.</p>
+        <a href="{{ path('app_company_profile', {'id': company.id, 'companyName': company.slug}) }}"
+          class="btn btn-secondary-xs">
+          Back to Company Profile
+        </a>
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+</div>
+
+{% endblock %}
