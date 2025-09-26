@@ -44,10 +44,10 @@ class FollowController extends AbstractController
 
     if ($isFollowing) {
       $currentProfile->removeFollowing($profileToFollow);
-      $this->addFlash('success', 'Vous ne suivez plus ' . $profileToFollow->getDisplayName());
+      $this->addFlash('success', 'You no longer follow ' . $profileToFollow->getDisplayName());
     } else {
       $currentProfile->addFollowing($profileToFollow);
-      $this->addFlash('success', 'Vous suivez maintenant ' . $profileToFollow->getDisplayName());
+      $this->addFlash('success', 'You are now following ' . $profileToFollow->getDisplayName());
     }
 
     $entityManager->flush();
