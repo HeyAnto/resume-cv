@@ -40,12 +40,12 @@
                     <label class="text-16 text-color-tertiary" for="_remember_me">Remember me</label>
                 </div>
 
-                <div class="footer">
+                <div class="flex flex-column gap-xs">
                     <button class="btn btn-primary-xs" type="submit">
                         Sign-in
                     </button>
                     <p class="text-16 text-color-tertiary text-center">Forgot your password?
-                        <a class="link text-16 text-color-tertiary" href="{{ path('app_forgot_password_request') }}">
+                        <a class="link text-16 text-color-primary" href="{{ path('app_forgot_password_request') }}">
                             Reset it here
                         </a>
                     </p>
@@ -53,6 +53,8 @@
             </form>
         </div>
     </section>
+
+    {% include "_components/footer.html.twig" %}
 </div>
 
 {% endblock %}
