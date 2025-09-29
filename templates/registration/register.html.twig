@@ -50,8 +50,8 @@
 
       <div class="form-group check">
         {{ form_widget(registrationForm.agreeTerms) }}
-        <label class="text-16 text-color-tertiary" for="{{ registrationForm.agreeTerms.vars.id }}">I agree to the terms
-          and conditions</label>
+        <label class="text-16 text-color-tertiary" for="{{ registrationForm.agreeTerms.vars.id }}">I agree to the <a
+            href="{{ path('terms') }}" class="link text-color-primary">terms and conditions</a></label>
         <div class="text-14 text-color-red">{{ form_errors(registrationForm.agreeTerms) }}</div>
       </div>
 
@@ -59,6 +59,8 @@
       {{ form_end(registrationForm) }}
     </div>
   </section>
+
+  {% include "_components/footer.html.twig" %}
 </div>
 
 {% endblock %}

@@ -1,3 +1,12 @@
+.link {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+        text-underline-offset: 5px;
+    }
+}
+
 .btn-reset {
     font-family: var(--font-primary);
     font-size: 0.875rem; // 14px
