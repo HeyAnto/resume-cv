@@ -1,4 +1,5 @@
 .section-connection {
+    min-height: 82vh;
     display: flex;
     justify-content: center;
     padding: 0 var(--spacing-xl);
@@ -29,7 +30,7 @@
             }
         }
 
-        .footer {
+        .connection-footer {
             display: flex;
             flex-direction: column;
             gap: var(--spacing-xs);
