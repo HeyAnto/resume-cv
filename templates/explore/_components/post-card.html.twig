@@ -1,6 +1,6 @@
 <div class="post-card">
   <div class="profile-container">
-    <a href="{{ path('app_profile', {'username': post.user.profile.username}) }}" class="profile-img">
+    <a href="{{ path('app_profile', {'username': post.user.profile.username}) }}">
       <img class="profile-img" src="{{ asset(post.user.profile.profilePictureUrl) }}"
         alt="Profile picture of {{ post.user.profile.displayName }}">
     </a>
