@@ -340,4 +340,3 @@ final class VolunteeringEditController extends AbstractController
     return $this->redirectToRoute('app_volunteering_list', ['username' => $username]);
   }
 }
-
