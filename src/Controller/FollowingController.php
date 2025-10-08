@@ -7,6 +7,7 @@ use App\Entity\Post;
 use App\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -23,7 +24,7 @@ class FollowingController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/following', name: 'app_following')]
-  public function index(): Response
+  public function index(Request $request): Response
   {
     $redirectResponse = $this->checkUserAccess();
     if ($redirectResponse) {
@@ -37,9 +38,31 @@ class FollowingController extends AbstractController
     // Retrieve followed
     $followedProfiles = $currentProfile->getFollowing();
 
+    // Pagination
+    $page = max(1, $request->query->getInt('page', 1));
+    $limit = 20;
+    $offset = ($page - 1) * $limit;
+
     // Retrieve followed posts
     $posts = [];
+    $totalPages = 1;
+
     if (!$followedProfiles->isEmpty()) {
+      // Count total posts
+      $totalPosts = $this->entityManager->getRepository(Post::class)
+        ->createQueryBuilder('p')
+        ->select('COUNT(p.id)')
+        ->join('p.user', 'u')
+        ->join('u.profile', 'profile')
+        ->where('profile IN (:followedProfiles)')
+        ->andWhere('p.isVisible = :isVisible')
+        ->setParameter('followedProfiles', $followedProfiles)
+        ->setParameter('isVisible', true)
+        ->getQuery()
+        ->getSingleScalarResult();
+
+      $totalPages = (int) ceil($totalPosts / $limit);
+
       $posts = $this->entityManager->getRepository(Post::class)
         ->createQueryBuilder('p')
         ->join('p.user', 'u')
@@ -49,6 +72,8 @@ class FollowingController extends AbstractController
         ->setParameter('followedProfiles', $followedProfiles)
         ->setParameter('isVisible', true)
         ->orderBy('p.createdAt', 'DESC')
+        ->setMaxResults($limit)
+        ->setFirstResult($offset)
         ->getQuery()
         ->getResult();
     }
@@ -76,6 +101,10 @@ class FollowingController extends AbstractController
       'followedProfiles' => $followedProfiles,
       'posts' => $posts,
       'suggestedProfiles' => $suggestedProfiles,
+      'currentPage' => $page,
+      'totalPages' => $totalPages,
+      'routeName' => 'app_following',
+      'routeParams' => []
     ]);
   }
 }

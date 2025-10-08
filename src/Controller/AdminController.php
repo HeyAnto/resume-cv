@@ -32,6 +32,9 @@ final class AdminController extends AbstractController
         $search = $request->query->get('search');
         $createdAt = $request->query->get('created_at');
         $updatedAt = $request->query->get('updated_at');
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
 
         // Convert string dates to DateTime objects
         $createdAfter = $createdAt ? new \DateTime($createdAt) : null;
@@ -41,26 +44,61 @@ final class AdminController extends AbstractController
         /** @var User $currentUser */
         $currentUser = $this->getUser();
 
-        // Use the search method or fallback to findAll but exclude current admin
-        if ($search || $createdAfter || $updatedAfter) {
-            $users = $userRepository->findWithFilters($search, $createdAfter, $updatedAfter, $currentUser);
-        } else {
-            // For findAll case, we need to create a custom query to exclude current user
-            $users = $userRepository->createQueryBuilder('u')
-                ->leftJoin('u.profile', 'p')
-                ->addSelect('p')
-                ->where('u.id != :currentUserId')
-                ->setParameter('currentUserId', $currentUser->getId())
-                ->orderBy('u.id', 'DESC')
-                ->getQuery()
-                ->getResult();
+        // Build base query
+        $queryBuilder = $userRepository->createQueryBuilder('u')
+            ->leftJoin('u.profile', 'p')
+            ->addSelect('p')
+            ->where('u.id != :currentUserId')
+            ->setParameter('currentUserId', $currentUser->getId())
+            ->orderBy('u.id', 'DESC');
+
+        // Apply filters
+        if ($search) {
+            $queryBuilder
+                ->andWhere('u.email LIKE :search OR p.displayName LIKE :search OR p.username LIKE :search OR p.job LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
         }
+
+        if ($createdAfter) {
+            $queryBuilder
+                ->andWhere('u.createdAt >= :createdAfter')
+                ->setParameter('createdAfter', $createdAfter);
+        }
+
+        if ($updatedAfter) {
+            $queryBuilder
+                ->andWhere('u.updatedAt >= :updatedAfter')
+                ->setParameter('updatedAfter', $updatedAfter);
+        }
+
+        // Count total results
+        $totalUsers = (clone $queryBuilder)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $totalPages = (int) ceil($totalUsers / $limit);
+
+        // Get paginated results
+        $users = $queryBuilder
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult();
 
         return $this->render('admin/users/users-list.html.twig', [
             'users' => $users,
             'search' => $search,
             'created_at' => $createdAt,
             'updated_at' => $updatedAt,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'routeName' => 'admin_users_list',
+            'routeParams' => array_filter([
+                'search' => $search,
+                'created_at' => $createdAt,
+                'updated_at' => $updatedAt
+            ])
         ]);
     }
 
@@ -207,6 +245,9 @@ final class AdminController extends AbstractController
         $search = $request->query->get('search');
         $createdAt = $request->query->get('created_at');
         $updatedAt = $request->query->get('updated_at');
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
 
         // Convert string dates to DateTime objects
         $createdAfter = $createdAt ? new \DateTime($createdAt) : null;
@@ -242,13 +283,34 @@ final class AdminController extends AbstractController
                 ->setParameter('updatedAfter', $updatedAfter);
         }
 
-        $posts = $queryBuilder->getQuery()->getResult();
+        // Count total results
+        $totalPosts = (clone $queryBuilder)
+            ->select('COUNT(p.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $totalPages = (int) ceil($totalPosts / $limit);
+
+        // Get paginated results
+        $posts = $queryBuilder
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult();
 
         return $this->render('admin/posts/posts-list.html.twig', [
             'posts' => $posts,
             'search' => $search,
             'created_at' => $createdAt,
             'updated_at' => $updatedAt,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'routeName' => 'admin_posts_list',
+            'routeParams' => array_filter([
+                'search' => $search,
+                'created_at' => $createdAt,
+                'updated_at' => $updatedAt
+            ])
         ]);
     }
 
@@ -311,6 +373,9 @@ final class AdminController extends AbstractController
         $search = $request->query->get('search');
         $createdAt = $request->query->get('created_at');
         $updatedAt = $request->query->get('updated_at');
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
 
         // Convert string dates to DateTime objects
         $createdAfter = $createdAt ? new \DateTime($createdAt) : null;
@@ -336,13 +401,34 @@ final class AdminController extends AbstractController
                 ->setParameter('updatedAfter', $updatedAfter);
         }
 
-        $companies = $queryBuilder->getQuery()->getResult();
+        // Count total results
+        $totalCompanies = (clone $queryBuilder)
+            ->select('COUNT(c.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $totalPages = (int) ceil($totalCompanies / $limit);
+
+        // Get paginated results
+        $companies = $queryBuilder
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult();
 
         return $this->render('admin/companies/companies-list.html.twig', [
             'companies' => $companies,
             'search' => $search,
             'created_at' => $createdAt,
             'updated_at' => $updatedAt,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'routeName' => 'admin_companies_list',
+            'routeParams' => array_filter([
+                'search' => $search,
+                'created_at' => $createdAt,
+                'updated_at' => $updatedAt
+            ])
         ]);
     }
 
