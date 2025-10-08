@@ -6,6 +6,7 @@ use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\User;
 use App\Form\EmailFormType;
 use App\Form\UsernameFormType;
+use App\Repository\ProfileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ final class AccountEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/account', name: 'app_account_edit')]
-    public function accountEdit(Request $request, EntityManagerInterface $entityManager, string $username): Response
+    public function accountEdit(Request $request, EntityManagerInterface $entityManager, string $username, ProfileRepository $profileRepository): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -49,13 +50,7 @@ final class AccountEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -104,7 +99,7 @@ final class AccountEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/account/delete-account', name: 'app_account_delete', methods: ['POST'])]
-    public function deleteAccount(string $username, EntityManagerInterface $entityManager, Request $request, TokenStorageInterface $tokenStorage): Response
+    public function deleteAccount(string $username, EntityManagerInterface $entityManager, Request $request, TokenStorageInterface $tokenStorage, ProfileRepository $profileRepository): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -112,13 +107,7 @@ final class AccountEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -152,21 +141,15 @@ final class AccountEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/admin-delete', name: 'app_admin_delete_account', methods: ['POST'])]
-    public function adminDeleteAccount(string $username, EntityManagerInterface $entityManager): Response
+    public function adminDeleteAccount(string $username, EntityManagerInterface $entityManager, ProfileRepository $profileRepository): Response
     {
         // Only admins
         if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('Access denied.');
         }
 
-        // Find user by username using QueryBuilder
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        // Find user by username using ProfileRepository
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found.');

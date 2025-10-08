@@ -7,6 +7,7 @@ use App\Entity\Certification;
 use App\Entity\ResumeSection;
 use App\Entity\User;
 use App\Form\CertificationFormType;
+use App\Repository\ProfileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,7 @@ final class CertificationEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/certification', name: 'app_certification_list')]
-  public function certificationList(string $username, EntityManagerInterface $entityManager): Response
+  public function certificationList(string $username, ProfileRepository $profileRepository): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -50,13 +51,7 @@ final class CertificationEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -89,7 +84,7 @@ final class CertificationEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/certification/new', name: 'app_certification_new')]
-  public function certificationNew(Request $request, EntityManagerInterface $entityManager, string $username): Response
+  public function certificationNew(Request $request, EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -97,13 +92,7 @@ final class CertificationEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -167,7 +156,7 @@ final class CertificationEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/certification/{id}', name: 'app_certification_edit', requirements: ['id' => '\d+'])]
-  public function certificationEdit(Request $request, EntityManagerInterface $entityManager, string $username, int $id): Response
+  public function certificationEdit(Request $request, EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username, int $id): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -175,13 +164,7 @@ final class CertificationEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -218,7 +201,7 @@ final class CertificationEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/certification/{id}/delete', name: 'app_certification_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-  public function certificationDelete(EntityManagerInterface $entityManager, string $username, int $id): Response
+  public function certificationDelete(EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username, int $id): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -226,13 +209,7 @@ final class CertificationEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -265,7 +242,7 @@ final class CertificationEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/certification/toggle-visibility', name: 'app_certification_toggle_visibility', methods: ['POST'])]
-  public function toggleVisibility(EntityManagerInterface $entityManager, string $username): Response
+  public function toggleVisibility(EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -273,13 +250,7 @@ final class CertificationEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -296,11 +267,11 @@ final class CertificationEditController extends AbstractController
     }
 
     if ($certificationSection) {
-      $certificationSection->setIsVisible(!$certificationSection->isIsVisible());
+      $certificationSection->setIsVisible(!$certificationSection->isVisible());
       $profile->setUpdatedAt(new \DateTimeImmutable());
       $entityManager->flush();
 
-      $message = $certificationSection->isIsVisible() ? 'Certifications section is now visible' : 'Certifications section is now hidden';
+      $message = $certificationSection->isVisible() ? 'Certifications section is now visible' : 'Certifications section is now hidden';
       $this->addFlash('success', $message);
     }
 
@@ -310,7 +281,7 @@ final class CertificationEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/certification/change-order', name: 'app_certification_change_order', methods: ['POST'])]
-  public function changeOrder(Request $request, EntityManagerInterface $entityManager, string $username): Response
+  public function changeOrder(Request $request, EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -318,13 +289,7 @@ final class CertificationEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');

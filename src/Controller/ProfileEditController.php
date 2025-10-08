@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\User;
 use App\Form\ProfileFormType;
+use App\Repository\ProfileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -39,7 +40,7 @@ final class ProfileEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/general', name: 'app_profile_edit')]
-  public function profileEdit(string $username, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+  public function profileEdit(string $username, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, ProfileRepository $profileRepository): Response
   {
     $redirectResponse = $this->checkUserAccess();
     if ($redirectResponse) {
@@ -52,13 +53,7 @@ final class ProfileEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -134,7 +129,7 @@ final class ProfileEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/general/remove-picture', name: 'app_profile_remove_picture', methods: ['GET'])]
-  public function removePicture(string $username, EntityManagerInterface $entityManager): Response
+  public function removePicture(string $username, EntityManagerInterface $entityManager, ProfileRepository $profileRepository): Response
   {
     $redirectResponse = $this->checkUserAccess();
     if ($redirectResponse) {
@@ -147,13 +142,7 @@ final class ProfileEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');

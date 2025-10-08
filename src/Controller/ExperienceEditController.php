@@ -7,6 +7,7 @@ use App\Entity\Experience;
 use App\Entity\ResumeSection;
 use App\Entity\User;
 use App\Form\ExperienceFormType;
+use App\Repository\ProfileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ final class ExperienceEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/experience', name: 'app_experience_list')]
-    public function experienceList(string $username, EntityManagerInterface $entityManager): Response
+    public function experienceList(string $username, ProfileRepository $profileRepository): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -49,13 +50,7 @@ final class ExperienceEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -88,7 +83,7 @@ final class ExperienceEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/experience/new', name: 'app_experience_new')]
-    public function experienceNew(Request $request, EntityManagerInterface $entityManager, string $username): Response
+    public function experienceNew(Request $request, EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -96,13 +91,7 @@ final class ExperienceEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -158,7 +147,7 @@ final class ExperienceEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/experience/{id}', name: 'app_experience_edit', requirements: ['id' => '\d+'])]
-    public function experienceEdit(Request $request, EntityManagerInterface $entityManager, string $username, int $id): Response
+    public function experienceEdit(Request $request, EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username, int $id): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -166,13 +155,7 @@ final class ExperienceEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -209,7 +192,7 @@ final class ExperienceEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/experience/{id}/delete', name: 'app_experience_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function experienceDelete(EntityManagerInterface $entityManager, string $username, int $id): Response
+    public function experienceDelete(EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username, int $id): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -217,13 +200,7 @@ final class ExperienceEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -256,7 +233,7 @@ final class ExperienceEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/experience/toggle-visibility', name: 'app_experience_toggle_visibility', methods: ['POST'])]
-    public function toggleVisibility(EntityManagerInterface $entityManager, string $username): Response
+    public function toggleVisibility(EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -264,13 +241,7 @@ final class ExperienceEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -296,7 +267,7 @@ final class ExperienceEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/experience/change-order', name: 'app_experience_change_order', methods: ['POST'])]
-    public function changeOrder(Request $request, EntityManagerInterface $entityManager, string $username): Response
+    public function changeOrder(Request $request, EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -304,13 +275,7 @@ final class ExperienceEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');

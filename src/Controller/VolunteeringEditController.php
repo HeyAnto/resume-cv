@@ -7,6 +7,7 @@ use App\Entity\Volunteering;
 use App\Entity\ResumeSection;
 use App\Entity\User;
 use App\Form\VolunteeringFormType;
+use App\Repository\ProfileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,7 @@ final class VolunteeringEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/volunteering', name: 'app_volunteering_list')]
-  public function volunteeringList(string $username, EntityManagerInterface $entityManager): Response
+  public function volunteeringList(string $username, ProfileRepository $profileRepository): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -50,13 +51,7 @@ final class VolunteeringEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -89,7 +84,7 @@ final class VolunteeringEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/volunteering/new', name: 'app_volunteering_new')]
-  public function volunteeringNew(Request $request, EntityManagerInterface $entityManager, string $username): Response
+  public function volunteeringNew(Request $request, EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -97,13 +92,7 @@ final class VolunteeringEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -167,7 +156,7 @@ final class VolunteeringEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/volunteering/{id}', name: 'app_volunteering_edit', requirements: ['id' => '\d+'])]
-  public function volunteeringEdit(Request $request, EntityManagerInterface $entityManager, string $username, int $id): Response
+  public function volunteeringEdit(Request $request, EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username, int $id): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -175,13 +164,7 @@ final class VolunteeringEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -218,7 +201,7 @@ final class VolunteeringEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/volunteering/{id}/delete', name: 'app_volunteering_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-  public function volunteeringDelete(EntityManagerInterface $entityManager, string $username, int $id): Response
+  public function volunteeringDelete(EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username, int $id): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -226,13 +209,7 @@ final class VolunteeringEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -265,7 +242,7 @@ final class VolunteeringEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/volunteering/toggle-visibility', name: 'app_volunteering_toggle_visibility', methods: ['POST'])]
-  public function toggleVisibility(EntityManagerInterface $entityManager, string $username): Response
+  public function toggleVisibility(EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -273,13 +250,7 @@ final class VolunteeringEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -296,11 +267,11 @@ final class VolunteeringEditController extends AbstractController
     }
 
     if ($volunteeringSection) {
-      $volunteeringSection->setIsVisible(!$volunteeringSection->isIsVisible());
+      $volunteeringSection->setIsVisible(!$volunteeringSection->isVisible());
       $profile->setUpdatedAt(new \DateTimeImmutable());
       $entityManager->flush();
 
-      $message = $volunteeringSection->isIsVisible() ? 'Volunteering section is now visible' : 'Volunteering section is now hidden';
+      $message = $volunteeringSection->isVisible() ? 'Volunteering section is now visible' : 'Volunteering section is now hidden';
       $this->addFlash('success', $message);
     }
 
@@ -310,7 +281,7 @@ final class VolunteeringEditController extends AbstractController
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #[Route('/{username}/volunteering/change-order', name: 'app_volunteering_change_order', methods: ['POST'])]
-  public function changeOrder(Request $request, EntityManagerInterface $entityManager, string $username): Response
+  public function changeOrder(Request $request, EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
   {
     $usernameCheck = $this->checkUsernameAccess($username);
     if ($usernameCheck) {
@@ -318,13 +289,7 @@ final class VolunteeringEditController extends AbstractController
     }
 
     // Get user and profile by username
-    $targetUser = $entityManager->getRepository(User::class)
-      ->createQueryBuilder('u')
-      ->join('u.profile', 'p')
-      ->where('p.username = :username')
-      ->setParameter('username', $username)
-      ->getQuery()
-      ->getOneOrNullResult();
+    $targetUser = $profileRepository->findUserByUsername($username);
 
     if (!$targetUser) {
       throw $this->createNotFoundException('User not found');
@@ -375,3 +340,4 @@ final class VolunteeringEditController extends AbstractController
     return $this->redirectToRoute('app_volunteering_list', ['username' => $username]);
   }
 }
+

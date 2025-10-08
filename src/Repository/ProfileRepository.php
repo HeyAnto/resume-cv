@@ -16,6 +16,32 @@ class ProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, Profile::class);
     }
 
+    /**
+     * Find a user by profile username
+     */
+    public function findUserByUsername(string $username): ?\App\Entity\User
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.user', 'u')
+            ->addSelect('u')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult()?->getUser();
+    }
+
+    /**
+     * Find a profile by username
+     */
+    public function findByUsername(string $username): ?Profile
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Profile[] Returns an array of Profile objects
 //     */

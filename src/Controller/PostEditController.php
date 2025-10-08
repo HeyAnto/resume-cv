@@ -6,6 +6,7 @@ use App\Controller\Trait\UserRedirectionTrait;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Form\PostFormType;
+use App\Repository\ProfileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -42,7 +43,7 @@ final class PostEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/post', name: 'app_post_list')]
-    public function postList(string $username, EntityManagerInterface $entityManager): Response
+    public function postList(string $username, EntityManagerInterface $entityManager, ProfileRepository $profileRepository): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -50,13 +51,7 @@ final class PostEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -78,7 +73,7 @@ final class PostEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/post/new', name: 'app_post_new')]
-    public function postNew(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, string $username): Response
+    public function postNew(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, string $username, ProfileRepository $profileRepository): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -86,13 +81,7 @@ final class PostEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -167,7 +156,7 @@ final class PostEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/post/{id}', name: 'app_post_edit', requirements: ['id' => '\d+'])]
-    public function postEdit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, string $username, int $id): Response
+    public function postEdit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, string $username, int $id, ProfileRepository $profileRepository): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -175,13 +164,7 @@ final class PostEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -264,7 +247,7 @@ final class PostEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/post/{id}/delete', name: 'app_post_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function postDelete(EntityManagerInterface $entityManager, string $username, int $id): Response
+    public function postDelete(EntityManagerInterface $entityManager, string $username, int $id, ProfileRepository $profileRepository): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -272,13 +255,7 @@ final class PostEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -309,7 +286,7 @@ final class PostEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/post/{id}/toggle-visibility', name: 'app_post_toggle_visibility', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function toggleVisibility(EntityManagerInterface $entityManager, string $username, int $id): Response
+    public function toggleVisibility(EntityManagerInterface $entityManager, string $username, int $id, ProfileRepository $profileRepository): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -317,13 +294,7 @@ final class PostEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');

@@ -7,6 +7,7 @@ use App\Entity\Project;
 use App\Entity\ResumeSection;
 use App\Entity\User;
 use App\Form\ProjectFormType;
+use App\Repository\ProfileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -45,7 +46,7 @@ final class ProjectEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/project', name: 'app_project_list')]
-    public function projectList(string $username, EntityManagerInterface $entityManager): Response
+    public function projectList(string $username, ProfileRepository $profileRepository): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -53,13 +54,7 @@ final class ProjectEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -92,7 +87,7 @@ final class ProjectEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/project/new', name: 'app_project_new')]
-    public function projectNew(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, string $username): Response
+    public function projectNew(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, ProfileRepository $profileRepository, string $username): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -100,13 +95,7 @@ final class ProjectEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -173,7 +162,7 @@ final class ProjectEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/project/{id}', name: 'app_project_edit', requirements: ['id' => '\d+'])]
-    public function projectEdit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, string $username, int $id): Response
+    public function projectEdit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, ProfileRepository $profileRepository, string $username, int $id): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -181,13 +170,7 @@ final class ProjectEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -227,7 +210,7 @@ final class ProjectEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/project/{id}/delete', name: 'app_project_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function projectDelete(EntityManagerInterface $entityManager, string $username, int $id): Response
+    public function projectDelete(EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username, int $id): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -235,13 +218,7 @@ final class ProjectEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -274,7 +251,7 @@ final class ProjectEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/project/toggle-visibility', name: 'app_project_toggle_visibility', methods: ['POST'])]
-    public function toggleVisibility(EntityManagerInterface $entityManager, string $username): Response
+    public function toggleVisibility(EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -282,13 +259,7 @@ final class ProjectEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
@@ -305,11 +276,11 @@ final class ProjectEditController extends AbstractController
         }
 
         if ($projectSection) {
-            $projectSection->setIsVisible(!$projectSection->isIsVisible());
+            $projectSection->setIsVisible(!$projectSection->isVisible());
             $profile->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
 
-            $message = $projectSection->isIsVisible() ? 'Projects section is now visible' : 'Projects section is now hidden';
+            $message = $projectSection->isVisible() ? 'Projects section is now visible' : 'Projects section is now hidden';
             $this->addFlash('success', $message);
         }
 
@@ -319,7 +290,7 @@ final class ProjectEditController extends AbstractController
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #[Route('/{username}/project/change-order', name: 'app_project_change_order', methods: ['POST'])]
-    public function changeOrder(Request $request, EntityManagerInterface $entityManager, string $username): Response
+    public function changeOrder(Request $request, EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username): Response
     {
         $usernameCheck = $this->checkUsernameAccess($username);
         if ($usernameCheck) {
@@ -327,13 +298,7 @@ final class ProjectEditController extends AbstractController
         }
 
         // Get user and profile by username
-        $targetUser = $entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->join('u.profile', 'p')
-            ->where('p.username = :username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $targetUser = $profileRepository->findUserByUsername($username);
 
         if (!$targetUser) {
             throw $this->createNotFoundException('User not found');
