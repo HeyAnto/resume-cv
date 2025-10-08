@@ -231,6 +231,9 @@ final class ProjectEditController extends AbstractController
             throw $this->createNotFoundException('Project not found');
         }
 
+        // Delete project images if they exist
+        $this->deleteProjectImages($project);
+
         $resumeSection = $project->getResumeSection();
         $entityManager->remove($project);
 
@@ -411,6 +414,28 @@ final class ProjectEditController extends AbstractController
         }
 
         return $this->redirectToRoute('app_project_edit', ['username' => $username, 'id' => $id]);
+    }
+
+    private function deleteProjectImages(Project $project): void
+    {
+        $projectDir = $this->getParameter('kernel.project_dir');
+        $uploadDir = $projectDir . '/public/uploads/projects/';
+
+        // Delete all project images
+        $imageFields = ['imagePath', 'imagePath2', 'imagePath3'];
+
+        foreach ($imageFields as $field) {
+            $getter = 'get' . ucfirst($field);
+            if (method_exists($project, $getter)) {
+                $imagePath = $project->$getter();
+                if ($imagePath) {
+                    $fullPath = $uploadDir . $imagePath;
+                    if (file_exists($fullPath)) {
+                        unlink($fullPath);
+                    }
+                }
+            }
+        }
     }
 
     private function handleImageUploads($form, Project $project, SluggerInterface $slugger): void

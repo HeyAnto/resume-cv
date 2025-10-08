@@ -114,14 +114,8 @@ final class AccountEditController extends AbstractController
         }
         $profile = $targetUser->getProfile();
 
-        // Delete profile picture
-        $profilePicturePath = $profile->getProfilePicturePath();
-        if ($profilePicturePath && $profilePicturePath !== 'images/img_default_user.webp') {
-            $pictureFile = $this->getParameter('kernel.project_dir') . '/public/' . $profilePicturePath;
-            if (file_exists($pictureFile)) {
-                unlink($pictureFile);
-            }
-        }
+        // Delete all user-related images before deleting the account
+        $this->deleteAllUserImages($targetUser);
 
         // Only disconnect if admin is deleting their own account
         if ($this->getUser() === $targetUser) {
@@ -160,11 +154,60 @@ final class AccountEditController extends AbstractController
             return $this->redirectToRoute('app_profile', ['username' => $username]);
         }
 
+        // Delete all user-related images before deleting the account
+        $this->deleteAllUserImages($targetUser);
+
         // Remove user
         $entityManager->remove($targetUser);
         $entityManager->flush();
 
         $this->addFlash('success', 'User account has been deleted successfully.');
         return $this->redirectToRoute('admin_users_list');
+    }
+
+    private function deleteAllUserImages(User $user): void
+    {
+        $projectDir = $this->getParameter('kernel.project_dir');
+        $profile = $user->getProfile();
+
+        // Delete profile picture
+        $profilePicturePath = $profile->getProfilePicturePath();
+        if ($profilePicturePath && $profilePicturePath !== 'images/img_default_user.webp') {
+            $pictureFile = $projectDir . '/public/' . $profilePicturePath;
+            if (file_exists($pictureFile)) {
+                unlink($pictureFile);
+            }
+        }
+
+        // Delete all post images
+        foreach ($user->getPosts() as $post) {
+            if ($post->getImagePath()) {
+                $imagePath = $projectDir . '/public/uploads/posts/' . $post->getImagePath();
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+        }
+
+        // Delete all project images
+        foreach ($profile->getResumeSections() as $section) {
+            if ($section->getLabel() === 'Projects') {
+                foreach ($section->getProjects() as $project) {
+                    $imageFields = ['imagePath', 'imagePath2', 'imagePath3'];
+                    foreach ($imageFields as $field) {
+                        $getter = 'get' . ucfirst($field);
+                        if (method_exists($project, $getter)) {
+                            $imagePath = $project->$getter();
+                            if ($imagePath) {
+                                $fullPath = $projectDir . '/public/uploads/projects/' . $imagePath;
+                                if (file_exists($fullPath)) {
+                                    unlink($fullPath);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
