@@ -12,13 +12,21 @@
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:title" content="{% block og_title %}{{ block('title') }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{{ block('meta_description') }}{% endblock %}">
-    {% block og_image %}{% endblock %}
+    {% block og_image %}
+    <meta property="og:image" content="{{ absolute_url(asset('images/meta-banner.png')) }}">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Resume.cv - Plateforme professionnelle">
+    <meta property="og:site_name" content="Resume.cv">
+    {% endblock %}
     <meta property="og:url" content="{{ app.request.uri }}">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ block('og_title') }}">
     <meta name="twitter:description" content="{{ block('og_description') }}">
+    <meta name="twitter:image" content="{{ absolute_url(asset('images/meta-banner.png')) }}">
 
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
