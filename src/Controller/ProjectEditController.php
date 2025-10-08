@@ -349,6 +349,70 @@ final class ProjectEditController extends AbstractController
         return $this->redirectToRoute('app_project_list', ['username' => $username]);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #[Route('/{username}/project/{id}/remove-image/{imageField}', name: 'app_project_remove_image', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function removeImage(EntityManagerInterface $entityManager, ProfileRepository $profileRepository, string $username, int $id, string $imageField): Response
+    {
+        $usernameCheck = $this->checkUsernameAccess($username);
+        if ($usernameCheck) {
+            return $usernameCheck;
+        }
+
+        // Validate image field parameter
+        $allowedFields = ['imagePath', 'imagePath2', 'imagePath3'];
+        if (!in_array($imageField, $allowedFields)) {
+            throw $this->createNotFoundException('Invalid image field');
+        }
+
+        // Get user and profile by username
+        $targetUser = $profileRepository->findUserByUsername($username);
+
+        if (!$targetUser) {
+            throw $this->createNotFoundException('User not found');
+        }
+        $profile = $targetUser->getProfile();
+
+        // Get project
+        $project = $entityManager->getRepository(Project::class)->find($id);
+
+        if (!$project || $project->getResumeSection()->getProfile() !== $profile) {
+            throw $this->createNotFoundException('Project not found');
+        }
+
+        // Get current image path
+        $getter = 'get' . ucfirst($imageField);
+        if (!method_exists($project, $getter)) {
+            throw $this->createNotFoundException('Invalid image field method');
+        }
+
+        $currentImagePath = $project->$getter();
+
+        if ($currentImagePath) {
+            // Delete physical file
+            $fullPath = $this->getParameter('kernel.project_dir') . '/public/uploads/projects/' . $currentImagePath;
+            if (file_exists($fullPath)) {
+                unlink($fullPath);
+            }
+
+            // Clear image path in database
+            $setter = 'set' . ucfirst($imageField);
+            if (method_exists($project, $setter)) {
+                $project->$setter(null);
+            }
+
+            $project->setUpdatedAt(new \DateTimeImmutable());
+            $profile->setUpdatedAt(new \DateTimeImmutable());
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Image removed successfully!');
+        } else {
+            $this->addFlash('info', 'No image to remove');
+        }
+
+        return $this->redirectToRoute('app_project_edit', ['username' => $username, 'id' => $id]);
+    }
+
     private function handleImageUploads($form, Project $project, SluggerInterface $slugger): void
     {
 

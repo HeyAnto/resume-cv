@@ -25,6 +25,9 @@ document.addEventListener("turbo:load", function () {
 
             const existingImage =
                 previewContainer.querySelector(".img-edit-postform");
+            const existingWrapper = previewContainer.querySelector(
+                ".image-preview-wrapper"
+            );
 
             // Remove existing preview if any
             const existingPreview =
@@ -54,8 +57,10 @@ document.addEventListener("turbo:load", function () {
                 const reader = new FileReader();
 
                 reader.onload = function (e) {
-                    // Hide existing image
-                    if (existingImage) {
+                    // Hide existing image wrapper
+                    if (existingWrapper) {
+                        existingWrapper.style.display = "none";
+                    } else if (existingImage) {
                         existingImage.style.display = "none";
                     }
 
@@ -63,8 +68,7 @@ document.addEventListener("turbo:load", function () {
                     const preview = document.createElement("img");
                     preview.src = e.target.result;
                     preview.alt = "Preview";
-                    preview.className =
-                        "image-preview img-edit-postform post-img";
+                    preview.className = "image-preview img-edit-postform";
                     preview.style.cursor = "pointer";
 
                     // Add to preview container
@@ -73,7 +77,9 @@ document.addEventListener("turbo:load", function () {
 
                 reader.readAsDataURL(file);
             } else {
-                if (existingImage) {
+                if (existingWrapper) {
+                    existingWrapper.style.display = "block";
+                } else if (existingImage) {
                     existingImage.style.display = "block";
                 }
             }

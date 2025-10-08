@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block importmap %}
-{{ importmap(['app', 'character-counter', 'image-preview', 'image-modal']) }}
+{{ importmap(['app', 'character-counter', 'image-modal', 'project-image-removal']) }}
 {% endblock %}
 
 {% block title %}Profile Cooking — Resume.cv{% endblock %}
@@ -83,8 +83,17 @@
         <div class="text-14 text-color-red">{{ form_errors(form.imagePath) }}</div>
         <div id="image-preview-container-1">
           {% if project and project.imagePath %}
-          <img src="{{ asset('uploads/projects/' ~ project.imagePath) }}" alt="Current project image 1"
-            class="img-edit-postform post-img">
+          <div class="image-preview-wrapper">
+            <img src="{{ asset('uploads/projects/' ~ project.imagePath) }}" alt="Current project image 1"
+              class="img-edit-postform">
+            <button type="button" class="image-remove-btn" title="Remove image"
+              onclick="removeProjectImage('{{ username }}', '{{ project.id }}', 'imagePath')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
           {% endif %}
         </div>
       </div>
@@ -96,8 +105,17 @@
         <div class="text-14 text-color-red">{{ form_errors(form.imagePath2) }}</div>
         <div id="image-preview-container-2">
           {% if project and project.imagePath2 %}
-          <img src="{{ asset('uploads/projects/' ~ project.imagePath2) }}" alt="Current project image 2"
-            class="img-edit-postform post-img">
+          <div class="image-preview-wrapper">
+            <img src="{{ asset('uploads/projects/' ~ project.imagePath2) }}" alt="Current project image 2"
+              class="img-edit-postform">
+            <button type="button" class="image-remove-btn" title="Remove image"
+              onclick="removeProjectImage('{{ username }}', '{{ project.id }}', 'imagePath2')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
           {% endif %}
         </div>
       </div>
@@ -109,8 +127,17 @@
         <div class="text-14 text-color-red">{{ form_errors(form.imagePath3) }}</div>
         <div id="image-preview-container-3">
           {% if project and project.imagePath3 %}
-          <img src="{{ asset('uploads/projects/' ~ project.imagePath3) }}" alt="Current project image 3"
-            class="img-edit-postform post-img">
+          <div class="image-preview-wrapper">
+            <img src="{{ asset('uploads/projects/' ~ project.imagePath3) }}" alt="Current project image 3"
+              class="img-edit-postform">
+            <button type="button" class="image-remove-btn" title="Remove image"
+              onclick="removeProjectImage('{{ username }}', '{{ project.id }}', 'imagePath3')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
           {% endif %}
         </div>
       </div>

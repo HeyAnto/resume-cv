@@ -55,4 +55,8 @@ return [
         'path' => './assets/js/profile-picture-upload.js',
         'entrypoint' => true,
     ],
+    'project-image-removal' => [
+        'path' => './assets/js/project-image-removal.js',
+        'entrypoint' => true,
+    ],
 ];
