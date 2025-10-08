@@ -6,6 +6,7 @@ gap: 16px;">
     <div style="
     padding: 16px 24px;">
         <h1 style="
+            font-family: 'Arial', sans-serif;
             font-size: 1.25rem;
             margin: 0;
             color: #222222;">
@@ -16,12 +17,14 @@ gap: 16px;">
     <div style="
         padding: 16px 24px;">
         <h2 style="
+            font-family: 'Arial', sans-serif;
             font-size: 1.25rem;
             margin: 0;
             color: #222222;">
             <bold>Verify your account</bold>
         </h2>
         <p style="
+            font-family: 'Arial', sans-serif;
             font-size: 1rem;
             font-weight: 500;
             color: #898989;">
@@ -31,13 +34,14 @@ gap: 16px;">
 
     <div style="
         padding: 16px 24px;">
-        <img src="https://i.ibb.co/LzZqsjqr/img-hannah-lee.jpg" alt="Creative Illustration"
+        <img src="{{ absolute_url(asset('images/img-hannah-lee.webp')) }}" alt="Welcome to Resume.cv"
             style="max-width: 100%; height: auto;">
     </div>
 
     <div style="
         padding: 16px 24px;">
         <p style="
+            font-family: 'Arial', sans-serif;
             font-size: 1rem;
             margin: 0;
             color: #222222;">
@@ -52,15 +56,3 @@ gap: 16px;">
     </div>
 
 </div>
-
-{# <h1>Hi! Please confirm your email!</h1>
-
-<p>
-    Please confirm your email address by clicking the following link: <br><br>
-    <a href="{{ signedUrl|raw }}">Confirm my Email</a>.
-    This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
-</p>
-
-<p>
-    Cheers!
-</p> #}
