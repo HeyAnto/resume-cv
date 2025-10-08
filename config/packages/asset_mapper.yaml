@@ -9,5 +9,5 @@ when@prod:
     framework:
         asset_mapper:
             missing_import_mode: warn
-            # Désactiver les source maps en production
-            enable_source_maps: false
+            # Configuration optimisée pour la production
+            precompress: true

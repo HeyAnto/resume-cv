@@ -16,6 +16,5 @@ when@test:
 
 when@prod:
     framework:
-        # Désactiver les source maps et optimiser pour la production
-        asset_mapper:
-            enable_source_maps: false
+        # Configuration optimisée pour la production
+        http_method_override: false

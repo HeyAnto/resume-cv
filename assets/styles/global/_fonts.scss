@@ -1,17 +1,44 @@
+/* BDO Grotesk Light */
 @font-face {
     font-family: "BDO Grotesk";
-    src: asset("/fonts/BDOGrotesk-VF.ttf") format("truetype");
+    src: asset("/fonts/BDOGrotesk-Light.ttf") format("truetype");
     font-display: optional;
-    font-weight: 400 700;
+    font-weight: 300;
     font-style: normal;
 }
 
-/* Fallback pour éviter les erreurs de chargement */
-@supports not (font-display: optional) {
-    @font-face {
-        font-family: "BDO Grotesk";
-        src: asset("/fonts/BDOGrotesk-VF.ttf") format("truetype");
-        font-weight: 400 700;
-        font-style: normal;
-    }
+/* BDO Grotesk Regular */
+@font-face {
+    font-family: "BDO Grotesk";
+    src: asset("/fonts/BDOGrotesk-Regular.ttf") format("truetype");
+    font-display: optional;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* BDO Grotesk Medium */
+@font-face {
+    font-family: "BDO Grotesk";
+    src: asset("/fonts/BDOGrotesk-Medium.ttf") format("truetype");
+    font-display: optional;
+    font-weight: 500;
+    font-style: normal;
+}
+
+/* BDO Grotesk DemiBold */
+@font-face {
+    font-family: "BDO Grotesk";
+    src: asset("/fonts/BDOGrotesk-DemiBold.ttf") format("truetype");
+    font-display: optional;
+    font-weight: 600;
+    font-style: normal;
+}
+
+/* BDO Grotesk Bold */
+@font-face {
+    font-family: "BDO Grotesk";
+    src: asset("/fonts/BDOGrotesk-Bold.ttf") format("truetype");
+    font-display: optional;
+    font-weight: 700;
+    font-style: normal;
 }
