@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Validator\UniqueEmail;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -27,6 +28,7 @@ class EmailFormType extends AbstractType
                     new Email([
                         'message' => 'Please enter a valid email address',
                     ]),
+                    new UniqueEmail()
                 ]
             ]);
     }

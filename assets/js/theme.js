@@ -1,25 +1,23 @@
-// Immediate theme initialization (before DOM is ready)
-(function () {
-    const theme = localStorage.getItem("theme") || "dark";
-    document.documentElement.className = theme;
-    document.documentElement.setAttribute("data-theme", theme);
-})();
-
 // Theme management after Turbo load
 document.addEventListener("turbo:load", function () {
     const themeSelect = document.getElementById("theme-select");
     const html = document.documentElement;
 
-    // LocalStorage
+    // Get current theme from localStorage or default to dark
     const currentTheme = localStorage.getItem("theme") || "dark";
 
-    // Initial theme (ensure it's set correctly)
-    setTheme(currentTheme);
+    // Ensure theme is correctly applied (theme should already be set by inline script in base.html.twig)
+    // But we double-check in case something went wrong
+    if (!html.className || html.className !== currentTheme) {
+        setTheme(currentTheme);
+    }
+
+    // Set the select value to match current theme
     if (themeSelect) {
         themeSelect.value = currentTheme;
     }
 
-    // Theme changes
+    // Handle theme changes
     if (themeSelect) {
         themeSelect.addEventListener("change", function () {
             const newTheme = this.value;

@@ -60,32 +60,74 @@ final class AccountEditController extends AbstractController
         $usernameForm = $this->createForm(UsernameFormType::class, $profile);
         $emailForm = $this->createForm(EmailFormType::class, $targetUser);
 
-        // Store original username
+        // Store original username and email for comparison
         $originalUsername = $profile->getUsername();
+        $originalEmail = $targetUser->getEmail();
 
         $usernameForm->handleRequest($request);
         $emailForm->handleRequest($request);
 
         if ($usernameForm->isSubmitted()) {
-            // Skip validation unchanged
-            $usernameChanged = $profile->getUsername() !== $originalUsername;
+            if ($usernameForm->isValid()) {
+                // Check if username was actually changed
+                $usernameChanged = $profile->getUsername() !== $originalUsername;
 
-            if (!$usernameChanged || $usernameForm->isValid()) {
                 if ($usernameChanged) {
                     $profile->setUpdatedAt(new \DateTimeImmutable());
                     $entityManager->flush();
                     $this->addFlash('success', 'Username updated successfully');
                     return $this->redirectToRoute('app_account_edit', ['username' => $profile->getUsername()]);
+                } else {
+                    // Username unchanged, but form was submitted successfully
+                    $this->addFlash('info', 'No changes made to username');
+                    return $this->redirectToRoute('app_account_edit', ['username' => $username]);
                 }
-                $profile->setUpdatedAt(new \DateTimeImmutable());
-                $entityManager->flush();
+            } else {
+                // Form validation failed - reset to original value and show error
+                $profile->setUsername($originalUsername);
+
+                $errors = $usernameForm->get('username')->getErrors();
+                $errorMessage = 'Please fix the following errors:';
+
+                foreach ($errors as $error) {
+                    $errorMessage = $error->getMessage();
+                    break; // Show only the first error for simplicity
+                }
+
+                $this->addFlash('error', $errorMessage);
+                return $this->redirectToRoute('app_account_edit', ['username' => $username]);
             }
         }
 
-        if ($emailForm->isSubmitted() && $emailForm->isValid()) {
-            $profile->setUpdatedAt(new \DateTimeImmutable());
-            $entityManager->flush();
-            $this->addFlash('success', 'Email updated successfully');
+        if ($emailForm->isSubmitted()) {
+            if ($emailForm->isValid()) {
+                // Check if email was actually changed
+                $emailChanged = $targetUser->getEmail() !== $originalEmail;
+
+                $profile->setUpdatedAt(new \DateTimeImmutable());
+                $entityManager->flush();
+
+                if ($emailChanged) {
+                    $this->addFlash('success', 'Email updated successfully');
+                } else {
+                    $this->addFlash('info', 'No changes made to email');
+                }
+                return $this->redirectToRoute('app_account_edit', ['username' => $username]);
+            } else {
+                // Form validation failed - reset to original value and show error
+                $targetUser->setEmail($originalEmail);
+
+                $errors = $emailForm->get('email')->getErrors();
+                $errorMessage = 'Please fix the following errors:';
+
+                foreach ($errors as $error) {
+                    $errorMessage = $error->getMessage();
+                    break; // Show only the first error for simplicity
+                }
+
+                $this->addFlash('error', $errorMessage);
+                return $this->redirectToRoute('app_account_edit', ['username' => $username]);
+            }
         }
 
         return $this->render('profile-edit/account-edit.html.twig', [
