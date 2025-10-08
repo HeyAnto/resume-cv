@@ -5,6 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Resume.cv{% endblock %}</title>
+    <meta name="description"
+        content="{% block meta_description %}Resume.cv - Plateforme professionnelle pour créer, partager et découvrir des CV et opportunités d'emploi. Connectez-vous avec des professionnels et explorez le job board.{% endblock %}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{{ block('title') }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ block('meta_description') }}{% endblock %}">
+    {% block og_image %}{% endblock %}
+    <meta property="og:url" content="{{ app.request.uri }}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ block('og_title') }}">
+    <meta name="twitter:description" content="{{ block('og_description') }}">
+
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     <script>

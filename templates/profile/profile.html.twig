@@ -6,6 +6,16 @@
 
 {% block title %}{{ profile.displayName }} — Resume.cv{% endblock %}
 
+{% block meta_description %}Découvrez le profil professionnel de {{ profile.displayName }} sur Resume.cv. Consultez son
+CV, ses projets et ses expériences.{% endblock %}
+
+{% block og_title %}{{ profile.displayName }} — Resume.cv{% endblock %}
+
+{% block og_description %}Découvrez le profil professionnel de {{ profile.displayName }} sur Resume.cv. Consultez son
+CV, ses projets et ses expériences.{% endblock %}
+
+{% block og_type %}profile{% endblock %}
+
 {% block main %}
 
 {% include "_components/sidebar.html.twig" %}
