@@ -1,0 +1,30 @@
+DirectoryIndex index.php
+
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(ttf|otf|eot|woff|woff2)$">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Cross-Origin-Resource-Policy "cross-origin"
+    Header set Cross-Origin-Embedder-Policy "require-corp"
+    Header set Access-Control-Allow-Methods "GET, OPTIONS"
+    Header set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    RewriteCond %{ENV:REDIRECT_STATUS} ^$
+    RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteRule .* index.php [L]
+</IfModule>
