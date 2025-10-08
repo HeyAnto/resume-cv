@@ -1,59 +1,124 @@
 <div style="
-width: 100%; 
-max-width: 600px;
-gap: 16px;">
+    width: 100%;
+    background-color: #f8f9fa;
+    padding: 40px 20px;
+    font-family: 'Arial', sans-serif;">
 
+  <!-- Container centré -->
   <div style="
-    padding: 16px 24px;">
-    <h1 style="
-            font-family: 'Arial', sans-serif;
-            font-size: 1.25rem;
-            margin: 0;
-            color: #222222;">
-      <bold>Resume.cv</bold>
-    </h1>
-  </div>
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;">
 
-  <div style="
-        padding: 16px 24px;">
-    <h2 style="
-            font-family: 'Arial', sans-serif;
-            font-size: 1.25rem;
-            margin: 0;
-            color: #222222;">
-      <bold>Reset your password</bold>
-    </h2>
-    <p style="
-            font-family: 'Arial', sans-serif;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #898989;">
-      Don't worry, it happens to the best of us.
-    </p>
-  </div>
+    <!-- Header -->
+    <div style="
+            padding: 32px 40px 24px 40px;
+            border-bottom: 1px solid #e9ecef;">
+      <h1 style="
+                font-family: 'Arial', sans-serif;
+                font-size: 1.5rem;
+                font-weight: bold;
+                margin: 0;
+                color: #222222;">
+        Resume.cv
+      </h1>
+    </div>
 
-  <div style="
-        padding: 16px 24px;">
-    <img src="{{ image_base64('images/img-hannah-lee.png') }}" alt="Reset your password"
-      style="max-width: 100%; height: auto;">
-  </div>
+    <!-- Content -->
+    <div style="
+            padding: 40px;
+            text-align: center;">
 
-  <div style="
-        padding: 16px 24px;">
-    <p style="
-            font-family: 'Arial', sans-serif;
-            font-size: 1rem;
-            margin: 0;
-            color: #222222;">
-      To reset your password, please click the following link:
-      <br><br>
-      <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">
-        <bold>Reset my Password</bold>
-      </a>
-      <br><br>
-      This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData,
-      'ResetPasswordBundle') }}.
-    </p>
-  </div>
+      <div style="
+                text-align: left;
+                margin-bottom: 32px;">
+        <h2 style="
+                  font-family: 'Arial', sans-serif;
+                  font-size: 1.5rem;
+                  font-weight: bold;
+                  margin: 0 0 8px 0;
+                  color: #222222;">
+          Reset your password
+        </h2>
 
+        <p style="
+                  font-family: 'Arial', sans-serif;
+                  font-size: 1rem;
+                  font-weight: 500;
+                  color: #898989;
+                  margin: 0;
+                  line-height: 1.5;">
+          Don't worry, it happens to the best of us.
+        </p>
+      </div>
+
+      <!-- Image centrée -->
+      <div style="
+                margin: 32px 0;">
+        <img src="{{ absolute_url(asset('images/img-hannah-lee.png')) }}" alt="Reset your password" style="
+                        max-width: 200px;
+                        height: auto;
+                        border-radius: 8px;">
+      </div>
+
+      <p style="
+                font-family: 'Arial', sans-serif;
+                font-size: 1rem;
+                margin: 32px 0;
+                color: #222222;
+                line-height: 1.6;">
+        To reset your password, please click the following button:
+      </p>
+
+      <!-- Bouton centré -->
+      <div style="
+                margin: 32px 0;">
+        <a href="{{ url('app_reset_password', {token: resetToken.token}) }}" style="
+                    display: inline-block;
+                    padding: 16px 32px;
+                    font-family: 'Arial', sans-serif;
+                    font-size: 16px;
+                    font-weight: 600;
+                    text-decoration: none;
+                    text-align: center;
+                    border-radius: 8px;
+                    border: none;
+                    cursor: pointer;
+                    color: #ffffff;
+                    background-color: #222222;
+                    transition: opacity 0.2s ease;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+          Reset my Password
+        </a>
+      </div>
+
+      <p style="
+                font-family: 'Arial', sans-serif;
+                font-size: 0.875rem;
+                margin: 32px 0 0 0;
+                color: #898989;
+                line-height: 1.5;">
+        This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData,
+        'ResetPasswordBundle') }}.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="
+            padding: 24px 40px;
+            background-color: #f8f9fa;
+            text-align: center;
+            border-top: 1px solid #e9ecef;">
+      <p style="
+                font-family: 'Arial', sans-serif;
+                font-size: 0.75rem;
+                margin: 0;
+                color: #898989;">
+        © 2025 Resume.cv
+      </p>
+    </div>
+  </div>
 </div>
