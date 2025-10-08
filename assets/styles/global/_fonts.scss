@@ -1,7 +1,17 @@
 @font-face {
     font-family: "BDO Grotesk";
     src: asset("/fonts/BDOGrotesk-VF.ttf") format("truetype");
-    font-display: swap;
+    font-display: optional;
     font-weight: 400 700;
     font-style: normal;
+}
+
+/* Fallback pour éviter les erreurs de chargement */
+@supports not (font-display: optional) {
+    @font-face {
+        font-family: "BDO Grotesk";
+        src: asset("/fonts/BDOGrotesk-VF.ttf") format("truetype");
+        font-weight: 400 700;
+        font-style: normal;
+    }
 }
